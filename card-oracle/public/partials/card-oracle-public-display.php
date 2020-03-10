@@ -6,7 +6,7 @@
  * This file is used to markup the public-facing aspects of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.3.0
+ * @since      1.0.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/public/partials

@@ -7,7 +7,7 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://cdgraham.com
- * @since      0.3.0
+ * @since      1.0.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
@@ -22,7 +22,7 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      0.3.0
+ * @since      1.0.0
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
  * @author     Christopher Graham <chris@chillichalli.com>
@@ -33,7 +33,7 @@ class Card_Oracle {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      Card_Oracle_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
@@ -42,7 +42,7 @@ class Card_Oracle {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
@@ -51,7 +51,7 @@ class Card_Oracle {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
@@ -64,13 +64,13 @@ class Card_Oracle {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 */
 	public function __construct() {
 		if ( defined( 'CARD_ORACLE_VERSION' ) ) {
 			$this->version = CARD_ORACLE_VERSION;
 		} else {
-			$this->version = '0.3.0';
+			$this->version = '1.0.0';
 		}
 		$this->plugin_name = 'card-oracle';
 
@@ -94,7 +94,7 @@ class Card_Oracle {
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function load_dependencies() {
@@ -112,13 +112,6 @@ class Card_Oracle {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-i18n.php';
 
 		/**
-		 * The class responsible for defining database functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-db.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-db-sets.php';
-
-		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-card-oracle-admin.php';
@@ -128,15 +121,6 @@ class Card_Oracle {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-card-oracle-public.php';
-
-		/**
-		 * The class responsible for list functionalities
-		 */
-		if ( ! class_exists( 'WP_List_Table' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-		}
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-list-sets.php';
-
 
 		$this->loader = new Card_Oracle_Loader();
 
@@ -148,7 +132,7 @@ class Card_Oracle {
 	 * Uses the Card_Oracle_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function set_locale() {
@@ -163,7 +147,7 @@ class Card_Oracle {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -173,16 +157,18 @@ class Card_Oracle {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		// Hooks into admin_menu hook to add custom page
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
+		// call custom post types
+		$this->loader->add_action( 'init', $plugin_admin, 'new_cpt_sets' );
 
+		// Add metabox
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_card_sets_box' );
 	}
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function define_public_hooks() {
@@ -197,7 +183,7 @@ class Card_Oracle {
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 */
 	public function run() {
 		$this->loader->run();
@@ -207,7 +193,7 @@ class Card_Oracle {
 	 * The name of the plugin used to uniquely identify it within the context of
 	 * WordPress and to define internationalization functionality.
 	 *
-	 * @since     0.3.0
+	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
@@ -217,7 +203,7 @@ class Card_Oracle {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @since     0.3.0
+	 * @since     1.0.0
 	 * @return    Card_Oracle_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
@@ -227,7 +213,7 @@ class Card_Oracle {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     0.3.0
+	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {

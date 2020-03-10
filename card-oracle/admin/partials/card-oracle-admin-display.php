@@ -6,7 +6,7 @@
  * This file is used to markup the admin-facing aspects of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.3.0
+ * @since      1.0.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin/partials
@@ -14,6 +14,3 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<div class="wrap">
-    <h2>Card Oracle</h2>
-</div>

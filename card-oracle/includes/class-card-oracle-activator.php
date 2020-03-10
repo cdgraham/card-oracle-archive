@@ -4,7 +4,7 @@
  * Fired during plugin activation
  *
  * @link       https://cdgraham.com
- * @since      0.3.0
+ * @since      1.0.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
@@ -15,7 +15,7 @@
  *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since      0.3.0
+ * @since      1.0.0
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
  * @author     Christopher Graham <chris@chillichalli.com>
@@ -27,15 +27,11 @@ class Card_Oracle_Activator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 */
 	public static function activate() {
 
-		$dbsets = new CO_Sets_DB;
-		$dbsets->create_table();
-
-		//$dbcards = new CO_Cards_DB;
-		//$dbcards->create_table();
+		
 	}
 
 }

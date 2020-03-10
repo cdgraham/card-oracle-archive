@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.3.0
+ * @since      1.0.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin
@@ -25,7 +25,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -51,12 +51,20 @@ class Card_Oracle_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+
 	}
+
+	public function add_card_sets_box() {
+		
+		$screens = array( 'co_sets' );
+
+		add_meta_box( 'reading_position', __( 'Reading Positions', 'card-oracle' ), 'reading_position_meta', $screens, 'normal', 'default' );
+	} // add_card_sets_box
 
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
 
@@ -79,7 +87,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    0.3.0
+	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
 
@@ -99,50 +107,58 @@ class Card_Oracle_Admin {
 
 	}
 
-	public function add_plugin_admin_menu() {
-
-		// Create the Card Oracle Admin Page
-		add_menu_page( 'Card Oracle', 'Card Oracle', 'manage_options', 
-			$this->plugin_name, array( $this, 'display_card_oracle_setup_page' ), 'dashicons-admin-page', 200 );
-
-		add_submenu_page( $this->plugin_name, 'Card Oracle', 'Settings', 'manage_options', 
-			$this->plugin_name, array( $this, 'display_card_oracle_setup_page' ) );
-
-		add_submenu_page( $this->plugin_name, 'Card Sets', 'Card Sets', 'manage_options', 
-			'card_oracle_card_sets', array ( $this, 'display_card_oracle_card_sets_page' ) );
-
-	}
 	/**
-	 * Add settings action link to the plugin page.
 	 * 
-	 * @since	0.3.0
+	 * Create our custom post type for card sets
 	 */
+	public function new_cpt_sets() {
 
-	 public function add_action_links( $links ) {
-		 $settings_link = array (
-			'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', $this->plugin_name) . '</a>',
+		// Set the labels for the custom post type
+		$labels = array(
+			'name'				 => __( 'Card Sets' ),
+			'singular_name'		 => __( 'Card Set' ),
+			'add_new'			 => __( 'Add New Card Set'),
+			'add_new_item'		 => __( 'Add New Card Set'),
+			'edit_item'			 => __( 'Edit Card Set'),
+			'new_item'			 => __( 'New Card Set'),
+			'all_items'			 => __( 'All Card Sets'),
+			'view_item'			 => __( 'View Card Set'),
+			'search_items'		 => __( 'Search Card Sets'),
+			'featured_image'	 => 'Card Back',
+			'set_featured_image' => 'Add Card Back'
 		);
-		return array_merge(  $settings_link, $links );
 
-	 }
+		// Settings for our post type
+		$args = array(
+			
+			'description'		=> 'Holds our card set information',
+			'has_archive'		=> false,
+			'labels'			=> $labels,
+			'menu_icon'			=> 'dashicons-admin-page',
+			'menu_position'		=> 25,
+			'public'			=> true,
+			'show_in_admin_bar'	=> true,
+			'show_in_nav_menus'	=> false,
+			'supports'			=> array( 'title', 'thumbnail' ),
+			'query_var'			=> true,
+		);
 
+		register_post_type( 'co_sets', $args );
+	} // new_cpt_sets
+	
 	/**
-	 * Render the settings page for this plugin
+	 * Create the card set custom post type for Card Oracle
 	 * 
-	 * @since	0.3.0
+	 * @since	1.0.0
+	 * @return	
 	 */
+	public function reading_position_meta() {
+		global $post;
 
-	public function display_card_oracle_setup_page() {
+		echo '<input type="hidden" name="reading_noncename" id="reading_noncename" value="' .
+		wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
 
-
-		require_once ( plugin_dir_path( __FILE__ ) . '/partials/card-oracle-admin-display.php' );
-	}
-
-	public function display_card_oracle_card_sets_page() {
-
-		$set_obj = new Sets_List;
-		$set_obj->prepare_items();
-
-		require_once ( plugin_dir_path( __FILE__ ) . '/partials/card-oracle-cardsets-display.php' );		
+		echo '<p><label for=reading_position">Reading Position</label></br />';
+		echo '<input type="text" name="" value="' . mysql_escape_string( get_post_meta( $post->ID, 'reading_position', true ) ) . '" /></p>';
 	}
 }

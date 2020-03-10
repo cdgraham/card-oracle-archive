@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://cdgraham.com
- * @since             0.3.0
+ * @since             1.0.0
  * @package           Card_Oracle
  *
  * @wordpress-plugin
  * Plugin Name:       Card Oracle
  * Plugin URI:        https://cuspstudios.com/card-oracle
- * Description:       Give card readings on your site with you own custom set of cards.
- * Version:           0.3.0
+ * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Version:           1.0.0
  * Author:            Christopher Graham
  * Author URI:        https://cdgraham.com
  * License:           GPL-2.0+
@@ -26,15 +26,16 @@
  */
 
 // If this file is called directly, abort.
-defined( 'ABSPATH' ) or die( 'Go get a life script kiddies' );
-
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
 /**
  * Currently plugin version.
- * Start at version 0.3.0 and use SemVer - https://semver.org
+ * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CARD_ORACLE_VERSION', '0.3.0' );
+define( 'CARD_ORACLE_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -70,7 +71,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-card-oracle.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    0.3.0
+ * @since    1.0.0
  */
 function run_card_oracle() {
 
