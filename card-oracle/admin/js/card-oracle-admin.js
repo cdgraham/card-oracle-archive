@@ -29,4 +29,17 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	$(document).on("click", ".copy-action-btn", function() { 
+		var trigger = $(this);
+		$(".copy-action-btn").removeClass("text-success");
+		var $tempElement = $("<input>");
+		  $("body").append($tempElement);
+		  var copyType = $(this).data("value");
+		  $tempElement.val(copyType).select();
+		  document.execCommand("Copy");
+		  $tempElement.remove();
+		  $(trigger).addClass("text-success");
+  
+	});
+
 })( jQuery );

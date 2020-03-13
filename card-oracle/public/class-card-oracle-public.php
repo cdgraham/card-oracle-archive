@@ -100,4 +100,71 @@ class Card_Oracle_Public {
 
 	}
 
+	/**
+	 * Card Oracle shortcode to display card reading
+	 * 
+	 * @since	1.0.0
+	 * @return
+	 */
+	public function display_card_oracle_set( $atts ) {
+
+		global $wpdb;
+
+		extract( shortcode_atts( array( 'id' => 1 ), $atts));
+
+		// create a zero position idea when card position has not been defined yet.
+		$zero_position = array( 'blank' );
+		
+		// get the card position meta data, strip leading and trailing spaces and merge it.
+		$positions = array_map('trim', explode( ',', get_post_meta( $id, 'co_positions', true ) ) );
+		$positions_count = count( $positions );
+
+		$position_text = array_merge( $zero_position, $positions );
+
+
+		// print_r ( $position_text );
+
+		$args = array(
+			'fields' => 'ids',
+			'post_type' => 'co_cards',
+			'meta_query' => array(
+				array(
+					'key' => 'co_reading_id',
+					'value' => $id,
+				),
+				array(
+					'key' => 'co_card_position',
+					'value' => 1,
+				),
+			),
+		);
+
+		$cards = new WP_Query( $args );
+
+		print_r( $cards->posts );
+
+		// The number of cards returned
+		$card_count = count( $cards->posts );
+
+		// Get just the card ids and shuffle them
+		$card_ids = $cards->posts;
+		shuffle( $card_ids );
+		print_r( $card_ids );
+
+		// Display the form
+		echo '<form name="form2" action="" method="post">
+			<input name="question" id="question" type="text" size="40" placeholder="Enter your question?" required/>
+			  <input name="picks" id="picks" type="hidden">
+			<div class="btn-block">
+				<button name="Submit" type="submit" id="Submit">Submit</button>
+			</div>
+		</form>
+		<h2>Next select ' . $positions_count . ' cards</h2>';
+
+		// Display the back of the cards
+		for ( $i = 0; $i < $card_count; $i++) {
+			echo '<button type="button" value="'. $i .'" id="id' . $i .'" onclick="this.disabled = true;" class="btn btn-default clicked"></button>';
+		}
+
+	}
 }

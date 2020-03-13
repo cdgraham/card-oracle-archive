@@ -122,6 +122,13 @@ class Card_Oracle {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-card-oracle-public.php';
 
+		/**
+		 * The class responsible for defining all actions that occur in the meta boxes
+		 * side of the site.
+		 */
+		// CDG update later
+		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-meta-boxes.php';
+
 		$this->loader = new Card_Oracle_Loader();
 
 	}
@@ -158,10 +165,30 @@ class Card_Oracle {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		// call custom post types
-		$this->loader->add_action( 'init', $plugin_admin, 'new_cpt_sets' );
+		$this->loader->add_action( 'init', $plugin_admin, 'register_card_oracle_cpt' );
 
-		// Add metabox
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_card_sets_box' );
+		// Custom columns for admin screens
+		$this->loader->add_filter( 'manage_edit-co_cards_columns', $plugin_admin, 'set_custom_cards_columns' );
+		$this->loader->add_filter( 'manage_edit-co_cards_sortable_columns', $plugin_admin, 'set_custom_sortable_card_columns' );
+		$this->loader->add_filter( 'manage_edit-co_readings_columns', $plugin_admin, 'set_custom_readings_columns' );
+		$this->loader->add_filter( 'manage_edit-co_positions_columns', $plugin_admin, 'set_custom_positions_columns' );
+		$this->loader->add_filter( 'manage_edit-co_positions_sortable_columns', $plugin_admin, 'set_custom_sortable_position_columns' );
+		$this->loader->add_action( 'manage_co_cards_posts_custom_column', $plugin_admin, 'custom_card_column' );
+		$this->loader->add_action( 'manage_co_readings_posts_custom_column', $plugin_admin, 'custom_card_column' );
+		$this->loader->add_action( 'manage_co_positions_posts_custom_column', $plugin_admin, 'custom_card_column' );
+
+
+		// Add metaboxes
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_and_order_box' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_box' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_card_and_positions_box' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_data' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_reading_data' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_position_data' );
+		$this->loader->add_action( 'do_meta_boxes', $plugin_admin, 'cpt_image_box' );
+
+		// Add Quickedit TODO CDG
+		$this->loader->add_action( 'quick_edit_custom_box', $plugin_admin, 'display_card_oracle_quick_edit' );
 	}
 
 	/**
@@ -177,6 +204,9 @@ class Card_Oracle {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		// Add the shortchode
+		$this->loader->add_shortcode( 'card-oracle', $plugin_public, 'display_card_oracle_set' );
 
 	}
 
@@ -219,5 +249,5 @@ class Card_Oracle {
 	public function get_version() {
 		return $this->version;
 	}
-
+	
 }
