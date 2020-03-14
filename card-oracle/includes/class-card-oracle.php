@@ -170,25 +170,29 @@ class Card_Oracle {
 		// Custom columns for admin screens
 		$this->loader->add_filter( 'manage_edit-co_cards_columns', $plugin_admin, 'set_custom_cards_columns' );
 		$this->loader->add_filter( 'manage_edit-co_cards_sortable_columns', $plugin_admin, 'set_custom_sortable_card_columns' );
+		$this->loader->add_filter( 'manage_edit-co_descriptions_columns', $plugin_admin, 'set_custom_descriptions_columns' );
+		$this->loader->add_filter( 'manage_edit-co_descriptions_sortable_columns', $plugin_admin, 'set_custom_sortable_description_columns' );
 		$this->loader->add_filter( 'manage_edit-co_readings_columns', $plugin_admin, 'set_custom_readings_columns' );
 		$this->loader->add_filter( 'manage_edit-co_positions_columns', $plugin_admin, 'set_custom_positions_columns' );
 		$this->loader->add_filter( 'manage_edit-co_positions_sortable_columns', $plugin_admin, 'set_custom_sortable_position_columns' );
 		$this->loader->add_action( 'manage_co_cards_posts_custom_column', $plugin_admin, 'custom_card_column' );
+		$this->loader->add_action( 'manage_co_descriptions_posts_custom_column', $plugin_admin, 'custom_card_column' );
 		$this->loader->add_action( 'manage_co_readings_posts_custom_column', $plugin_admin, 'custom_card_column' );
 		$this->loader->add_action( 'manage_co_positions_posts_custom_column', $plugin_admin, 'custom_card_column' );
 
+		// Add Menu items
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'card_oracle_menu_items' );
 
 		// Add metaboxes
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_and_order_box' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_box' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_card_and_positions_box' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_data' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'save_reading_data' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'save_position_data' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_oracle_meta_data' );
 		$this->loader->add_action( 'do_meta_boxes', $plugin_admin, 'cpt_image_box' );
 
 		// Add Quickedit TODO CDG
 		$this->loader->add_action( 'quick_edit_custom_box', $plugin_admin, 'display_card_oracle_quick_edit' );
+		
 	}
 
 	/**

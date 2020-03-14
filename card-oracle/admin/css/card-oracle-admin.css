@@ -20,3 +20,7 @@
 .co-metabox-textbox {
     width: 5em;
 }
+
+input.co-shortcode {
+    text-align: center;
+}

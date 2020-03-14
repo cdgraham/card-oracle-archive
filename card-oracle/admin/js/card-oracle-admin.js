@@ -34,8 +34,8 @@
 		$(".copy-action-btn").removeClass("text-success");
 		var $tempElement = $("<input>");
 		  $("body").append($tempElement);
-		  var copyType = $(this).data("value");
-		  $tempElement.val(copyType).select();
+		  var copyText = this.value;
+		  $tempElement.val(copyText).select();
 		  document.execCommand("Copy");
 		  $tempElement.remove();
 		  $(trigger).addClass("text-success");

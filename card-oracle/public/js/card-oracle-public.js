@@ -29,4 +29,30 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	$(document).ready(function() {
+		var clickedButtons = new Array();
+		var count = 0;
+	
+		$( ".btn-block" ).hide();
+		$( "#Submit" ).prop( "disabled", true );
+	
+		$('button.clicked').click(function() {
+			count++;
+	
+			if (count <= 6) {
+				$(this).css('opacity','0.75');
+					clickedButtons.push( this.value);
+				$("#picks").val(clickedButtons.join());
+	
+			if (count == 6) {
+				$( ".btn-block" ).show();
+				$( "#Submit" ).prop( "disabled", false );
+				$('html, body').animate({
+					scrollTop: ($("h1").offset().top)
+				},500);
+			   }
+			}
+		  }) 
+	})
+
 })( jQuery );
