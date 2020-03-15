@@ -4,7 +4,7 @@
  * Fired during plugin activation
  *
  * @link       https://cdgraham.com
- * @since      0.4.0
+ * @since      0.4.1
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
@@ -15,7 +15,7 @@
  *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since      0.4.0
+ * @since      0.4.1
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
  * @author     Christopher Graham <chris@chillichalli.com>
@@ -27,7 +27,7 @@ class Card_Oracle_Activator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 */
 	public static function activate() {
 

@@ -20,7 +20,7 @@
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
  * @link       https://cdgraham.com
- * @since      1.0.0
+ * @since      0.4.1
  *
  * @package    Card_Oracle
  */
@@ -29,13 +29,13 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 
-	$sql = 'DELETE posts, terms, meta
+	$sql = "DELETE posts, terms, meta
 	FROM wpl9_posts posts
 	LEFT JOIN wpl9_term_relationships terms
 		ON (posts.ID = terms.object_id)
 	LEFT JOIN wpl9_postmeta meta
 		ON (posts.ID = meta.post_id)
-	WHERE posts.post_type in ( "co_cards", "co_descriptions", "co_positions", "co_readings" );';
+	WHERE posts.post_type in ( 'co_cards', 'co_descriptions', 'co_positions', 'co_readings' );";
 
 	$wpdb->get_results( $sql, OBJECT );
 

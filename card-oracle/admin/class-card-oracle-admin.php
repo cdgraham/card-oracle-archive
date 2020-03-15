@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      1.0.0
+ * @since      0.4.1
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin
@@ -25,7 +25,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Add an options page under the Card Oracle menu
 	 *
-	 * @since  1.0.0
+	 * @since  0.4.1
 	 */
 	public function add_card_oracle_options_page() {
 
@@ -71,15 +71,48 @@ class Card_Oracle_Admin {
 	}
 
 	/**
+	 * Get the total counts of a cpt
+	 * 
+	 * @since 0.4.1
+	 * @Return int count 
+	 */
+	public function get_card_oracle_cpt_count( $card_oracle_cpt ) {
+
+		return ( wp_count_posts( $card_oracle_cpt )->publish );
+
+	}
+
+	public function co_get_positions_per_reading( $reading_id ) {
+		$args = array(
+			'fields' => 'ids',
+			'post_type' => 'co_positions',
+			'post_status' => 'publish',
+			'meta_query' => array(
+				array(
+					'key' => 'co_reading_id',
+					'value' => $reading_id,
+				),
+			),
+		);
+
+		$cards = new WP_Query( $args );
+
+		// The number of cards returned
+		$count = count( $cards->posts );
+		
+		return $count;
+	}
+
+	/**
 	 * Render the options page for plugin
 	 *
-	 * @since  1.0.0
+	 * @since  0.4.1
 	 */
 	public function display_card_oracle_options_page() {
-		$readings_count = ( wp_count_posts( 'co_readings' )->publish );
-		$cards_count = ( wp_count_posts( 'co_cards' )->publish );
-		$positions_count = ( wp_count_posts( 'co_positions' )->publish );
-		$descriptions_count = ( wp_count_posts( 'co_descriptions' )->publish );
+		$readings_count = $this->get_card_oracle_cpt_count( 'co_readings' );
+		$cards_count =  $this->get_card_oracle_cpt_count( 'co_cards' );
+		$positions_count = $this->get_card_oracle_cpt_count( 'co_positions' );
+		$descriptions_count = $this->get_card_oracle_cpt_count( 'co_descriptions' );
 
 		include_once 'partials/card-oracle-admin-display.php';
 	}
@@ -87,7 +120,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function add_reading_and_order_box() {
 	
@@ -98,7 +131,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function add_reading_box() {
 	
@@ -109,7 +142,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for card positions
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function add_card_and_positions_box() {
 	
@@ -138,7 +171,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our menu and submenus
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function card_oracle_menu_items() {
 
@@ -154,7 +187,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for card readings
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 /* 	function add_readings_box() {
 	
@@ -163,18 +196,24 @@ class Card_Oracle_Admin {
 		add_meta_box( 'description-position', __( 'Description Positions', 'card-oracle' ), array( $this, 'render_position_list_metabox' ), $screens, 'normal', 'default' );
 	} // add_readings_box */
 
+
 	/**
 	 * Move the featured image box for card readings
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function cpt_image_box() {
 
 		// Move the image metabox from the sidebar to the normal position 
-		$screens = array( 'co_cards', 'co_readings' );
+		$screens = array( 'co_cards' );
+		remove_meta_box( 'postimagediv', $screens, 'side' );
+		add_meta_box( 'postimagediv', __('Front of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'normal', 'default' );
+	
+		// Move the image metabox from the sidebar to the normal position 
+		$screens = array( 'co_readings' );
 		remove_meta_box( 'postimagediv', $screens, 'side' );
 		add_meta_box( 'postimagediv', __('Back of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'normal', 'default' );
-	
+
 		//remove Astra metaboxes from our cpt
 		$screens = array( 'co_cards', 'co_readings', 'co_positions', 'co_descriptions' );
 		remove_meta_box( 'astra_settings_meta_box', $screens, 'side' );	// Remove Astra Settings in Posts
@@ -184,7 +223,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Display the custom admin columns for Cards
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	function custom_card_column( $column ) {
 
@@ -206,18 +245,12 @@ class Card_Oracle_Admin {
 			break;
 
 			case 'co_shortcode' :
-				/* echo '[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]<button class="copyAction copy-action-btn" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" width="13" alt="Copy to clipboard"></button>'; */
-					echo '<input class="co-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
+				echo '<input class="co-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"><button class="copyAction copy-action-btn" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" width="13" alt="Copy to clipboard"></button>';
-			/* 	echo '<input id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"><button class="btn" data-clipboard-target="#copy' .
-					$post->ID . '"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" width="13" alt="Copy to clipboard"></button>'; */
 			break;
 
-			case 'number_positions' :
+			case 'number_card_positions' :
 
 				$sql = "SELECT * FROM " . $wpdb->postmeta . " " .
 					"INNER JOIN " . $wpdb->prefix . "posts" . " " . 
@@ -226,7 +259,20 @@ class Card_Oracle_Admin {
 					"AND meta_value = " . $post->ID . " " .
 					"AND post_status = 'publish'";
 				$wpdb->get_results( $sql, OBJECT );
-				echo $wpdb->num_rows;
+				$rows = $wpdb->num_rows;
+
+				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
+				$positions = $this->co_get_positions_per_reading( $reading_id );
+
+				if ( $rows == $positions ) {
+					echo $rows;
+				} else {
+					echo '<font color="red">' . $rows . '</font>';
+				}
+			break;
+
+			case 'number_reading_positions' :
+				echo $this->co_get_positions_per_reading( $post->ID );
 			break;
 
 			case 'card_title' :
@@ -253,7 +299,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	public function enqueue_styles() {
 
@@ -276,7 +322,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	public function enqueue_scripts() {
 
@@ -299,7 +345,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom post type for card readings
 	 * 
-	 * @since    1.0.0
+	 * @since    0.4.1
 	 */
 	public function register_card_oracle_cpt() {
 
@@ -450,7 +496,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Card Metabox for Card Oracle
 	 * 
-	 * @since	1.0.0
+	 * @since	0.4.1
 	 * @return	
 	 */
 	function render_card_and_position_metabox() {
@@ -483,7 +529,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading Metabox for Card Oracle
 	 * 
-	 * @since	1.0.0
+	 * @since	0.4.1
 	 * @return	
 	 */
 	function render_reading_metabox() {
@@ -506,7 +552,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading and Order Metabox for Card Oracle
 	 * 
-	 * @since	1.0.0
+	 * @since	0.4.1
 	 * @return	
 	 */
 	function render_reading_and_order_metabox() {
@@ -534,7 +580,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the card readings Metaboxes for Card Oracle
 	 * 
-	 * @since	1.0.0
+	 * @since	0.4.1
 	 * @return	
 	 */
 /* 	function render_position_list_metabox( ) {
@@ -553,7 +599,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Save the card post meta for Card Oracle
 	 * 
-	 * @since	1.0.0
+	 * @since	0.4.1
 	 * @return	
 	 */
 	function save_card_oracle_meta_data() {
@@ -599,7 +645,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Cards
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_cards_columns( $columns ) {
@@ -607,7 +653,7 @@ class Card_Oracle_Admin {
 		unset($columns['date']);
 
 		$columns['card_reading'] = __('Card Reading', $this->plugin_name );
-		$columns['number_positions'] = __('Number of Positions', $this->plugin_name );
+		$columns['number_card_positions'] = __('Number of Positions', $this->plugin_name );
 		$columns['date'] = __('Date', $this->plugin_name );
 
 		return $columns;
@@ -616,18 +662,18 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Descriptions
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_descriptions_columns( $columns ) {
 		// unset the date so we can move it to the end
-		unset($columns['title']);
-		unset($columns['date']);
+		unset( $columns['title'] );
+		unset( $columns['date'] );
 
-		$columns['card_title'] = __('Card', $this->plugin_name );
-		$columns['position_title'] = __('Position', $this->plugin_name );
-		$columns['position_number'] = __('Position Number', $this->plugin_name );
-		$columns['date'] = __('Date', $this->plugin_name );
+		$columns['card_title'] = __( 'Card', $this->plugin_name );
+		$columns['position_title'] = __( 'Position', $this->plugin_name );
+		$columns['position_number'] = __( 'Position Number', $this->plugin_name );
+		$columns['date'] = __( 'Date', $this->plugin_name );
 
 		return $columns;
 	}
@@ -635,15 +681,16 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Readings
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_readings_columns( $columns ) {
 		// unset the date so we can move it to the end
-		unset($columns['date']);
+		unset( $columns['date'] );
 
-		$columns['co_shortcode'] = __('Shortcode', $this->plugin_name );
-		$columns['date'] = __('Date', $this->plugin_name );
+		$columns['co_shortcode'] = __( 'Shortcode', $this->plugin_name );
+		$columns['number_reading_positions'] = __( 'Positions', $this->plugin_name );
+		$columns['date'] = __( 'Date', $this->plugin_name );
 
 		return $columns;
 	}
@@ -651,16 +698,16 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Positions
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_positions_columns( $columns ) {
 		// unset the date so we can move it to the end
-		unset($columns['date']);
+		unset( $columns['date'] );
 
-		$columns['card_reading'] = __('Card Reading', $this->plugin_name );
-		$columns['card_order'] = __('Position', $this->plugin_name );
-		$columns['date'] = __('Date', $this->plugin_name );
+		$columns['card_reading'] = __( 'Card Reading', $this->plugin_name );
+		$columns['card_order'] = __( 'Position', $this->plugin_name );
+		$columns['date'] = __( 'Date', $this->plugin_name );
 
 		return $columns;
 	}
@@ -668,14 +715,14 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Cards
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_sortable_card_columns( $columns ) {
 		// unset the date so we can move it to the end
 	
 		$columns['card_reading'] = 'card_reading';
-		$columns['number_positions'] = 'number_positions';
+		$columns['number_card_positions'] = 'number_card_positions';
 
 		return $columns;
 	}
@@ -683,7 +730,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Descriptions
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_sortable_description_columns( $columns ) {
@@ -699,7 +746,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Positions
 	 * 
-	 * @since	 1.0.0
+	 * @since	 0.4.1
 	 * @return
 	 */
 	function set_custom_sortable_position_columns( $columns ) {

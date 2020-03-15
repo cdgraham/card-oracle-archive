@@ -4,7 +4,7 @@
  * The public-facing functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.0
+ * @since      0.4.1
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/public
@@ -25,7 +25,7 @@ class Card_Oracle_Public {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Public {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Public {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 */
 	public function enqueue_styles() {
 
@@ -80,7 +80,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
-	 * @since    0.4.0
+	 * @since    0.4.1
 	 */
 	public function enqueue_scripts() {
 
@@ -103,7 +103,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.0
+	 * @since	0.4.1
 	 * @return
 	 */
 	public function display_card_oracle_set( $atts ) {
@@ -131,25 +131,18 @@ class Card_Oracle_Public {
 		$positions_count = $wpdb->num_rows;
 
 		if( !isset( $_POST['Submit'] ) ):
-			$args = array(
-				'fields' => 'ids',
-				'post_type' => 'co_cards',
-				'post_status' => 'publish',
-				'meta_query' => array(
-					array(
-						'key' => 'co_reading_id',
-						'value' => $id,
-					),
-				),
-			);
+			$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
+				"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
+				"ON ( p1.ID = m1.post_id ) " . 
+				"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value = '" . $id . 
+				"' ) ) AND p1.post_type = 'co_cards' AND ( ( p1.post_status = 'publish' ) )";
 
-			$cards = new WP_Query( $args );
+			$card_ids = $wpdb->get_results( $sql, OBJECT );
 
 			// The number of cards returned
-			$card_count = count( $cards->posts );
+			$card_count = $wpdb->num_rows;
 
 			// Get just the card ids and shuffle them
-			$card_ids = $cards->posts;
 			shuffle( $card_ids );
 
 			// Display the form
@@ -164,7 +157,7 @@ class Card_Oracle_Public {
 
 			// Display the back of the cards
 			for ( $i = 0; $i < $card_count; $i++) {
-				echo '<button type="button" value="'. $card_ids[$i] .'" id="id' . $card_ids[$i] .
+				echo '<button type="button" value="'. $card_ids[$i]->ID .'" id="id' . $card_ids[$i]->ID .
 					'" onclick="this.disabled = true;" class="btn btn-default clicked"></button>';
 			}
 		endif;
