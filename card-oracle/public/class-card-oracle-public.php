@@ -159,7 +159,7 @@ class Card_Oracle_Public {
 			// Display the back of the cards
 			for ( $i = 0; $i < $card_count; $i++) {
 				echo '<button type="button" value="'. $card_ids[$i]->ID .'" id="id' . $card_ids[$i]->ID .
-					'" onclick="this.disabled = true;" data-positions="' . $positions_count . '" class="btn btn-default clicked"></button>';
+					'" onclick="this.disabled = true;" class="btn btn-default clicked"></button>';
 			}
 			echo '</div>';
 		endif;

@@ -34,7 +34,7 @@
 		var count = 0;
 		var positions = $( "div.data" ).data( "positions" );
 	
-		alert( positions );
+		console.log( positions );
 
 		$(".btn-block").hide();
 		$("#Submit").prop( "disabled", true );
