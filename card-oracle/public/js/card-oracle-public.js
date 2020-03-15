@@ -32,21 +32,24 @@
 	$(document).ready(function() {
 		var clickedButtons = new Array();
 		var count = 0;
+		var positions = $( "div.data" ).data( "positions" );
 	
-		$( ".btn-block" ).hide();
-		$( "#Submit" ).prop( "disabled", true );
+		alert( positions );
+
+		$(".btn-block").hide();
+		$("#Submit").prop( "disabled", true );
 	
-		$('button.clicked').click(function() {
+		$('button.clicked').click( function() {
 			count++;
 	
-			if (count <= 6) {
+			if (count <= positions) {
 				$(this).css('opacity','0.75');
-					clickedButtons.push( this.value);
-				$("#picks").val(clickedButtons.join());
+					clickedButtons.push(this.value);
+				$("#picks").val( clickedButtons.join());
 	
-			if (count == 6) {
-				$( ".btn-block" ).show();
-				$( "#Submit" ).prop( "disabled", false );
+			if (count == positions) {
+				$(".btn-block").show();
+				$("#Submit").prop("disabled", false);
 				$('html, body').animate({
 					scrollTop: ($("h1").offset().top)
 				},500);
