@@ -109,12 +109,112 @@ class Card_Oracle_Admin {
 	 * @since  0.4.1
 	 */
 	public function display_card_oracle_options_page() {
+		global $wpdb;
+
 		$readings_count = $this->get_card_oracle_cpt_count( 'co_readings' );
 		$cards_count =  $this->get_card_oracle_cpt_count( 'co_cards' );
 		$positions_count = $this->get_card_oracle_cpt_count( 'co_positions' );
 		$descriptions_count = $this->get_card_oracle_cpt_count( 'co_descriptions' );
 
+		$readings = $this->get_co_reading_id_title();
+
 		include_once 'partials/card-oracle-admin-display.php';
+	}
+
+	/**
+	 * Get all the reading post ids and titles
+	 * 
+	 * @since 0.4.1
+	 * @return array of IDs and Titles for all post_types co_readings
+	 */
+	function get_co_reading_id_title() {
+		global $wpdb;
+
+		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
+					"WHERE post_type = 'co_readings' " .
+					"AND post_status = 'publish' " . 
+					"ORDER BY post_title";
+					
+		// The $positions is an array of all the positions in a reading, it consists of
+		// the position title and position ID
+		$reading_ids = $wpdb->get_results( $sql, OBJECT );
+
+		return $reading_ids;
+	}
+
+	/**
+	 * Get all the card post ids and titles for a reading id and post_type co_cards
+	 * 
+	 * @since 0.4.1
+	 * @return array of card IDs and Titles
+	 */
+	function get_co_card_id_title( $reading_id ) {
+		global $wpdb;
+
+		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
+					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
+					"WHERE post_type = 'co_cards' " .
+					"AND post_status = 'publish' " .
+					"AND meta_value = '" . $reading_id . "'" . 
+					"ORDER BY post_title";
+					
+		// The $positions is an array of all the positions in a reading, it consists of
+		// the position title and position ID
+		$results = $wpdb->get_results( $sql, OBJECT );
+
+		return $results;
+	}
+
+	/**
+	 * Get all the descriptions post ids and content for a reading id and post_type co_descriptions
+	 * 
+	 * @since 0.4.1
+	 * @return array of card IDs and Content
+	 */
+	function get_co_description_id_content( $reading_id ) {
+		global $wpdb;
+
+		$sql = "SELECT ID, post_content FROM " . $wpdb->posts . " " .
+					"INNER JOIN $wpdb->postmeta ON ID = post_id " .
+					"WHERE post_type = 'co_descriptions' " .
+					"AND post_status = 'publish' " .
+					"AND meta_key = 'co_card_id' " .
+					"AND meta_value IN (" . 
+					"SELECT DISTINCT(id) FROM " . $wpdb->posts . " " .
+					"INNER JOIN $wpdb->postmeta ON ID = post_id " .
+					"WHERE post_type = 'co_cards' " . 
+					"AND post_status = 'publish' " .
+					"AND meta_key = 'co_reading_id' " . 
+					"AND meta_value = '" . $reading_id . "')";
+					
+		// The $positions is an array of all the positions in a reading, it consists of
+		// the position title and position ID
+		$results = $wpdb->get_results( $sql, OBJECT );
+
+		return $results;
+	}
+
+	/**
+	 * Get all the position post ids and titles for a reading id and post_type co_positions
+	 * 
+	 * @since 0.4.1
+	 * @return array of card IDs and Titles
+	 */
+	function get_co_position_id_title( $reading_id ) {
+		global $wpdb;
+
+		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
+					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
+					"WHERE post_type = 'co_positions' " .
+					"AND post_status = 'publish' " .
+					"AND meta_value = '" . $reading_id . "'" . 
+					"ORDER BY post_title";
+					
+		// The $positions is an array of all the positions in a reading, it consists of
+		// the position title and position ID
+		$results = $wpdb->get_results( $sql, OBJECT );
+
+		return $results;
 	}
 
 	/**
@@ -183,19 +283,6 @@ class Card_Oracle_Admin {
 		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Descriptions Admin', 'Descriptions', 'manage_options', 'edit.php?post_type=co_descriptions' );
 
 	}
-
-	/**
-	 * Create our custom metabox for card readings
-	 * 
-	 * @since    0.4.1
-	 */
-/* 	function add_readings_box() {
-	
-		$screens = array( 'co_readings' );
-
-		add_meta_box( 'description-position', __( 'Description Positions', 'card-oracle' ), array( $this, 'render_position_list_metabox' ), $screens, 'normal', 'default' );
-	} // add_readings_box */
-
 
 	/**
 	 * Move the featured image box for card readings
@@ -316,6 +403,7 @@ class Card_Oracle_Admin {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/card-oracle-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 
 	}
 

@@ -2,3 +2,20 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+.btn-default {
+    display: inline-block;
+    height: auto;
+    width: 100px;
+    margin: 4px;
+    padding: 0px;
+    border: none;
+    background-color: white;
+}
+
+.img-btn {
+    display: block;
+    height: 137px;  
+    width: 100px;
+    background-size: 100%;
+}

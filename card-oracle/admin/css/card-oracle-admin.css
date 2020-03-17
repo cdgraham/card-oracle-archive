@@ -2,14 +2,10 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-/*  #card-reading, #card-position, #postimagediv {
-    overflow: hidden;
-    padding-bottom: 1em;
-    display: block;
-    float: left;
-    width: 255px;
-    margin: 15px;
-} */
+
+.admin-display {
+    margin-right: 20px;
+}
 
 .co-metabox {
     font-weight: bold;
@@ -23,4 +19,85 @@
 
 input.co-shortcode {
     text-align: center;
+}
+
+.co__dashboard {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.co__dashboard i {
+    padding-right: 10px;
+}
+
+.co__cards {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(225px, 1fr));
+    gap: 1rem;
+}
+
+.co__card {
+    border: 2px solid #e7e7e7;
+    border-radius: 4px;
+}
+
+.co__card-header {
+    padding: 15px;
+    display: flex;
+    background-color: #cccccc;
+    font-size: 1.5rem;
+    border-top: 4px solid darkcyan;
+    color: #000000;
+}
+
+.co__card-body {
+    padding: 15px;
+    display: flex;
+    background-color: #eeeeee;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.25rem;
+}
+
+.co__cards a {
+    text-decoration: none;
+}
+
+.co__readings {
+    margin: 1rem 0 1rem 0;
+    display: grid;
+    grid-template-columns: minmax(500px, 1fr);
+}
+
+.co__table-reading {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.co__table-reading th {
+    height: 50px;
+    width: 25%;
+    padding-left: 10px;
+    text-align: left;
+    font-size: 1.25rem;
+    color: white;
+    background-color: darkcyan;
+}
+
+.co__table-reading td {
+    width: 25%;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.push-right {
+    float: right;
+}
+
+.icon-container {
+    font-size: 24px;
+    height: 24px;
+    width: 24px;
 }

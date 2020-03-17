@@ -157,9 +157,14 @@ class Card_Oracle_Public {
 			<h2>Next select ' . $positions_count . ' cards</h2>';
 
 			// Display the back of the cards
+			// 					style="background: url(' . get_the_post_thumbnail_url( $id, 'medium' ) . ')">
 			for ( $i = 0; $i < $card_count; $i++) {
-				echo '<button type="button" value="'. $card_ids[$i]->ID .'" id="id' . $card_ids[$i]->ID .
-					'" onclick="this.disabled = true;" class="btn btn-default clicked"></button>';
+				echo '<button type="button" value="'. $card_ids[$i]->ID .
+					'" id="id' . $card_ids[$i]->ID .
+					'" onclick="this.disabled = true;" 
+					class="btn btn-default clicked" 
+					><img class="img-btn" src="' . get_the_post_thumbnail_url( $id, 'medium' ) . '">
+					</button>';
 			}
 			echo '</div>';
 		endif;
@@ -182,8 +187,6 @@ class Card_Oracle_Public {
 					"AND m1.meta_value = " . $positions[$i]->ID;
 
 				$description_id = $wpdb->get_results( $sql, OBJECT );
-
-				//				if ( count( $description_id ) > 0 ) {
 
 				echo '<div class="w3-row-padding">
 					<h3 class="w3-container w3-center w3-indigo w3-round-large w3-padding-16">' . $positions[$i]->post_title . '</h3>

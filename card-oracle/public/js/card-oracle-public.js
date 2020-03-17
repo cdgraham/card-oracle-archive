@@ -34,7 +34,7 @@
 		var count = 0;
 		var positions = $( "div.data" ).data( "positions" );
 	
-		console.log( positions );
+		console.log( 'Number of card positions is ' + positions );
 
 		$(".btn-block").hide();
 		$("#Submit").prop( "disabled", true );
