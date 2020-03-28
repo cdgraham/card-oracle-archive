@@ -4,7 +4,8 @@
  */
 
 .admin-display {
-    margin-right: 20px;
+    margin: 0 20px 20px 0;
+    display: block;
 }
 
 .co-metabox {
@@ -27,12 +28,17 @@ input.co-shortcode {
     align-items: center;
 }
 
-.co__dashboard i {
+.co__dashboard span {
     padding-right: 10px;
 }
 
 .co__cards {
+    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
+    border: 1px solid darkcyan;
+    border-radius: 4px;
     margin: 0 auto;
+    margin-bottom: 1rem;
+    padding: 5px;
     display: grid;
     grid-template-columns: repeat(4, minmax(225px, 1fr));
     gap: 1rem;
@@ -41,6 +47,10 @@ input.co-shortcode {
 .co__card {
     border: 2px solid #e7e7e7;
     border-radius: 4px;
+}
+
+.co__card p {
+    font-size: 1.25rem;
 }
 
 .co__card-header {
@@ -61,6 +71,11 @@ input.co-shortcode {
     font-size: 1.25rem;
 }
 
+.co__card-table {
+    padding: 15px;
+    font-size: 1.25rem;
+}
+
 .co__cards a {
     text-decoration: none;
 }
@@ -71,7 +86,12 @@ input.co-shortcode {
     grid-template-columns: minmax(500px, 1fr);
 }
 
+.co__statistics {
+    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
+    padding: 15px;
+}
 .co__table-reading {
+    padding-right: 15px;
     width: 100%;
     overflow-x: auto;
 }
@@ -89,7 +109,9 @@ input.co-shortcode {
 .co__table-reading td {
     width: 25%;
     padding-left: 10px;
+    padding-top: 10px;
     text-align: left;
+    font-size: 1.25rem;
 }
 
 .push-right {
@@ -100,4 +122,13 @@ input.co-shortcode {
     font-size: 24px;
     height: 24px;
     width: 24px;
+}
+
+#wpfooter {
+    background-color: #eeeeee;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    display: inline-block;
 }

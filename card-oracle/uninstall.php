@@ -29,6 +29,8 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 
+	delete_option( 'card_oracle_version' );
+	
 	$sql = "DELETE posts, terms, meta
 	FROM wpl9_posts posts
 	LEFT JOIN wpl9_term_relationships terms

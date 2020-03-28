@@ -35,7 +35,8 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 0.4.1 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CARD_ORACLE_VERSION', '0.4.1' );
+if ( ! defined( 'CARD_ORACLE_VERSION' ) )
+	define( 'CARD_ORACLE_VERSION', '0.4.1' );
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**

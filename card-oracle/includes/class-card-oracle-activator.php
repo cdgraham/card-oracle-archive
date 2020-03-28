@@ -31,6 +31,9 @@ class Card_Oracle_Activator {
 	 */
 	public static function activate() {
 
+		// Installed version number
+		update_option( 'card_oracle_version', CARD_ORACLE_VERSION );
+		
 		flush_rewrite_rules();
 
 	}

@@ -16,7 +16,7 @@
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="admin-display">
     <div class="co__dashboard">
-        <i class="dashicons dashicons-dashboard"></i>
+        <span class="dashicons dashicons-dashboard"></span>
         <h2>Card Oracle</h2>
     </div>
     <div class="co__cards">
@@ -66,25 +66,48 @@
             </a>
         </div>
     </div> <!-- Cards -->
-    <div class="co__readings">
-        <div class="co__readings-body">
-            <table class="co__table-reading">
-                <tr>
-                    <th>Readings</th>
-                    <th>Positions</th>
-                    <th>Cards</th>
-                    <th>Descriptions</th>
-                </tr>
-            <?php for($i = 0; $i < count( $readings ); $i++ ) {
-                echo '<tr>';
-                echo '<td>' . $readings[$i]->post_title . '</td>';
-                echo '<td>' . count( $this->get_co_position_id_title( $readings[$i]->ID ) ) . '</td>';
-                echo '<td>' . count( $this->get_co_card_id_title( $readings[$i]->ID ) ) . '</td>';
-                echo '<td>' . count( $this->get_co_description_id_content( $readings[$i]->ID ) ) . '</td>';
-                echo '</tr>';
-            } ?>
-            </table>
-        </div>
+    <div class="co__dashboard">
+        <span class="dashicons dashicons-chart-bar"></span>
+        <h2>Statistics</h2>
     </div>
+        <div class="co__cards"> <!-- Statistics for each Reading -->
+            <div class="co__card">
+                    <div class="co__card-header">
+                        Readings
+                    </div>
+                    <div class="co__card-body">
+                        <div class="count"><?php echo ( $reading_titles ); ?></div>
+                    </div>
+            </div>
+            <div class="co__card">
+                    <div class="co__card-header">
+                        Positions
+                    </div>
+                    <div class="co__card-table">
+                        <?php echo ( $reading_pos ); ?>
+                    </div>
+            </div>
+            <div class="co__card">
+                    <div class="co__card-header">
+                        Cards
+                    </div>
+                    <div class="co__card-body">
+                        <div class="count"><?php echo ( $reading_card ); ?></div>
+                    </div>
+            </div>
+            <div class="co__card">
+                    <div class="co__card-header">
+                        Descriptions
+                    </div>
+                    <div class="co__card-body">
+                        <div class="count"><?php echo ( $reading_desc ); ?></div>
+                    </div>
+            </div>
+        </div> <!-- Statistics for each Reading -->
+
+
+
+
+    </div> <!-- co__statistics -->
 
 </div> <!-- the-admin-display -->

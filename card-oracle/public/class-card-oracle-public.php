@@ -107,10 +107,9 @@ class Card_Oracle_Public {
 	 * @return
 	 */
 	public function display_card_oracle_set( $atts ) {
-
 		global $wpdb;
 
-		extract( shortcode_atts( array( 'id' => 1 ), $atts));
+		extract( shortcode_atts( array( 'id' => 1 ), $atts ) );
 
 		$sql = "SELECT p1.post_title, p1.ID FROM " . $wpdb->posts . " p1 " .
 					"INNER JOIN " . $wpdb->prefix . "postmeta mt1" . " " . 
@@ -157,7 +156,6 @@ class Card_Oracle_Public {
 			<h2>Next select ' . $positions_count . ' cards</h2>';
 
 			// Display the back of the cards
-			// 					style="background: url(' . get_the_post_thumbnail_url( $id, 'medium' ) . ')">
 			for ( $i = 0; $i < $card_count; $i++) {
 				echo '<button type="button" value="'. $card_ids[$i]->ID .
 					'" id="id' . $card_ids[$i]->ID .
@@ -174,7 +172,7 @@ class Card_Oracle_Public {
 			$cards = explode( ',', $_POST['picks'] );
 
 			echo '<div class="w3-container">
-			<h2>Your Question: '.$_POST["question"].'</h2>';
+			<h2>Your Question: ' . $_POST["question"] . '</h2>';
 
 			for ( $i = 0; $i < count( $cards ); $i++ ) {
 		
@@ -201,19 +199,9 @@ class Card_Oracle_Public {
 					echo '<p>' . apply_filters('the_content', $description->post_content ) .  '</p>';
 				}
 
-				echo '	</div>
-					</div>';
+				echo '</div></div>';
 			}
-
-
 		} // End POST submit
-
-
-
 	} // End display_card_oracle_set
-
-
-
-
 
 } // End Class Card_Oracle_Public

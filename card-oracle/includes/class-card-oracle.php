@@ -78,6 +78,8 @@ class Card_Oracle {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		// Check update when plugin loaded
+		$this->card_oracle_check_version();
 
 	}
 
@@ -193,6 +195,8 @@ class Card_Oracle {
 		// Add Quickedit TODO CDG
 		$this->loader->add_action( 'quick_edit_custom_box', $plugin_admin, 'display_card_oracle_quick_edit' );
 		
+		// Limit number of Readings and Positions
+		$this->loader->add_action( 'wp_insert_post', $plugin_admin, 'limit_positions_cpt_count' );
 	}
 
 	/**
@@ -254,4 +258,21 @@ class Card_Oracle {
 		return $this->version;
 	}
 	
+	/**
+	 * Update anything after the version number of the plugin changes.
+	 *
+	 * @since     0.4.1
+	 * @return    
+	 */
+	public function card_oracle_check_version() {
+
+		// if the version in the db and the plugin version are different do updates
+		if ( $this->get_version() !== get_option( 'card_oracle_version' ) ) {
+			// Add any updates required to the DB or options here when 
+			// updating from one version to another
+			
+			update_option( 'card_oracle_version', CARD_ORACLE_VERSION );
+		}
+
+	}
 }
