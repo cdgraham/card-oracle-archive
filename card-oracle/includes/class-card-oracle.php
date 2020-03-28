@@ -128,8 +128,6 @@ class Card_Oracle {
 		 * The class responsible for defining all actions that occur in the meta boxes
 		 * side of the site.
 		 */
-		// CDG update later
-		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-card-oracle-meta-boxes.php';
 
 		$this->loader = new Card_Oracle_Loader();
 
@@ -192,7 +190,7 @@ class Card_Oracle {
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_oracle_meta_data' );
 		$this->loader->add_action( 'do_meta_boxes', $plugin_admin, 'cpt_image_box' );
 
-		// Add Quickedit TODO CDG
+		// Add Quickedit
 		$this->loader->add_action( 'quick_edit_custom_box', $plugin_admin, 'display_card_oracle_quick_edit' );
 		
 		// Limit number of Readings and Positions
