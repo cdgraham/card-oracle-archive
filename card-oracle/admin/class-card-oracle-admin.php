@@ -374,8 +374,8 @@ class Card_Oracle_Admin {
 
 			case 'co_shortcode' :
 				echo '<input class="co-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"><button class="copyAction copy-action-btn" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" width="13" alt="Copy to clipboard"></button>';
+					'&quot;]"><button class="copyAction copy-action-btn button" value="[card-oracle id=&quot;' . $post->ID . 
+					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
 			break;
 
 			case 'number_card_positions' :

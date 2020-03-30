@@ -19,7 +19,20 @@
 }
 
 input.co-shortcode {
-    text-align: center;
+    padding: 0 8px;
+    border-radius: 3px;
+    box-shadow: 0 0 0 transparent;
+    border: 1px solid #7e8993;
+    background-color: white;
+    color: #32373c;
+    line-height: 2;
+    min-height: 30px;
+    margin-right: 5px;
+}
+
+.copy-action-btn img {
+    display: inline-block;
+    width: 12px;
 }
 
 .co__dashboard {
