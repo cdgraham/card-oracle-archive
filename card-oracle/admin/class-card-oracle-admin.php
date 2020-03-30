@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.1
+ * @since      0.4.2
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin
@@ -25,7 +25,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.1
+	 * @since    0.4.2
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.1
+	 * @since    0.4.2
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @param	string	$plugin_name	The name of this plugin.
 	 * @param	string	$version		The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Add an options page under the Card Oracle menu
 	 *
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function add_card_oracle_options_page() {
 
@@ -73,7 +73,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get the total counts of a cpt
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @param	string	$card_oracle_cpt	The name of the custom post type.
 	 * @return	int							The count of custom post types.
 	 */
@@ -85,7 +85,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get the total counts of a cpt
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @param	string	$reading_id		The post ID of the reading.
 	 * @return	int		$count			The number of positions per reading.
 	 */
@@ -113,7 +113,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the options page for plugin
 	 *
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function display_card_oracle_options_page() {
 		global $wpdb;
@@ -143,7 +143,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the reading post ids and titles
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$reading_ids	The array of IDs and Titles for all post_types co_readings
 	 */
 	public function get_co_reading_id_title() {
@@ -164,7 +164,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the card post ids and titles for a reading id and post_type co_cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$card_ids	The array of card IDs and Titles
 	 */
 	public function get_co_card_id_title( $reading_id ) {
@@ -189,7 +189,7 @@ class Card_Oracle_Admin {
 	 * can include all cards when $card_id is not set or one or more cards when it is set. $card_id
 	 * can be a single id or an array of ids.
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$description_ids	The array of description IDs and Content
 	 */
 	public function get_co_description_id_content( $reading_id, $card_id = NULL ) {
@@ -223,7 +223,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the position post ids and titles for a reading id and post_type co_positions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	array of card IDs and Titles
 	 */
 	public function get_co_position_id_title( $reading_id ) {
@@ -246,7 +246,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function get_reading_dropdown_box( $selected_reading ) {
 		if ( TRUE ) { // Unlimited Readings in Premium
@@ -261,7 +261,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function add_reading_and_order_box() {
 	
@@ -272,7 +272,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function add_reading_box() {
 	
@@ -283,7 +283,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for card positions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function add_card_and_positions_box() {
 	
@@ -311,7 +311,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our menu and submenus
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function card_oracle_menu_items() {
 		$co_admin_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg height="100px" width="100px"  fill="black" xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve"><g><g i:extraneous="self"><circle fill="black" cx="49.926" cy="57.893" r="10.125"></circle><path fill="black" d="M50,78.988c-19.872,0-35.541-16.789-36.198-17.503l-1.95-2.12l1.788-2.259c0.164-0.208,4.097-5.142,10.443-10.102 C32.664,40.296,41.626,36.751,50,36.751c8.374,0,17.336,3.546,25.918,10.253c6.346,4.96,10.278,9.894,10.443,10.102l1.788,2.259 l-1.95,2.12C85.541,62.2,69.872,78.988,50,78.988z M20.944,59.019C25.56,63.219,36.99,72.238,50,72.238 c13.059,0,24.457-9.013,29.061-13.214C74.565,54.226,63.054,43.501,50,43.501C36.951,43.501,25.444,54.218,20.944,59.019z"></path><path fill="black" d="M44.305,30.939L50,21.075l5.695,9.864c3.002,0.427,6.045,1.185,9.102,2.265L50,7.575L35.203,33.204 C38.26,32.124,41.303,31.366,44.305,30.939z"></path><path fill="black" d="M81.252,74.857L87.309,85H12.691l6.057-10.143c-2.029-1.279-3.894-2.629-5.578-3.887L1,92h98L86.83,70.97 C85.146,72.228,83.28,73.578,81.252,74.857z"></path></g></g></svg>' );
@@ -328,7 +328,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Move the featured image box for card readings
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function cpt_image_box() {
 
@@ -351,7 +351,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Display the custom admin columns for Cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function custom_card_column( $column ) {
 
@@ -420,7 +420,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function enqueue_styles() {
 
@@ -443,7 +443,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 */
 	public function enqueue_scripts() {
 
@@ -466,7 +466,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Limit the number of Readings and Positions custom post type
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	 
 	 */
 	public function limit_positions_cpt_count() {
@@ -519,7 +519,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom post type for card readings
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return
 	 */
 	public function register_card_oracle_cpt() {
@@ -671,7 +671,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Card Metabox for Card Oracle
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	
 	 */
 	public function render_card_and_position_metabox() {
@@ -704,7 +704,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading Metabox for Card Oracle
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	
 	 */
 	public function render_reading_metabox() {
@@ -727,7 +727,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading and Order Metabox for Card Oracle
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	
 	 */
 	public function render_reading_and_order_metabox() {
@@ -755,7 +755,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Save the card post meta for Card Oracle
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	
 	 */
 	public function save_card_oracle_meta_data() {
@@ -801,7 +801,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns 
 	 */
 	public function set_custom_cards_columns( $columns ) {
@@ -818,7 +818,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Descriptions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return
 	 */
 	public function set_custom_descriptions_columns( $columns ) {
@@ -837,7 +837,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Readings
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function set_custom_readings_columns( $columns ) {
@@ -854,7 +854,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Positions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function set_custom_positions_columns( $columns ) {
@@ -871,7 +871,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Cards
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_card_columns( $columns ) {
@@ -886,7 +886,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Descriptions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_description_columns( $columns ) {
@@ -902,7 +902,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Positions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_position_columns( $columns ) {
@@ -917,7 +917,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Check the user has permissions
 	 * 
-	 * @since	0.4.1
+	 * @since	0.4.2
 	 * @return	$columns
 	 */
 	public function co_check_rights() {
