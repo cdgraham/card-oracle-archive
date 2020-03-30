@@ -314,9 +314,10 @@ class Card_Oracle_Admin {
 	 * @since	0.4.1
 	 */
 	public function card_oracle_menu_items() {
+		$co_admin_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg height="100px" width="100px"  fill="black" xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve"><g><g i:extraneous="self"><circle fill="black" cx="49.926" cy="57.893" r="10.125"></circle><path fill="black" d="M50,78.988c-19.872,0-35.541-16.789-36.198-17.503l-1.95-2.12l1.788-2.259c0.164-0.208,4.097-5.142,10.443-10.102 C32.664,40.296,41.626,36.751,50,36.751c8.374,0,17.336,3.546,25.918,10.253c6.346,4.96,10.278,9.894,10.443,10.102l1.788,2.259 l-1.95,2.12C85.541,62.2,69.872,78.988,50,78.988z M20.944,59.019C25.56,63.219,36.99,72.238,50,72.238 c13.059,0,24.457-9.013,29.061-13.214C74.565,54.226,63.054,43.501,50,43.501C36.951,43.501,25.444,54.218,20.944,59.019z"></path><path fill="black" d="M44.305,30.939L50,21.075l5.695,9.864c3.002,0.427,6.045,1.185,9.102,2.265L50,7.575L35.203,33.204 C38.26,32.124,41.303,31.366,44.305,30.939z"></path><path fill="black" d="M81.252,74.857L87.309,85H12.691l6.057-10.143c-2.029-1.279-3.894-2.629-5.578-3.887L1,92h98L86.83,70.97 C85.146,72.228,83.28,73.578,81.252,74.857z"></path></g></g></svg>' );
 
-		add_menu_page( 'Card Oracle', 'Card Oracle', 'manage_options', 'card-oracle-admin-menu', array( $this, 'display_card_oracle_options_page'), 'dashicons-admin-page', 40 );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Optionss', 'Options', 'manage_options', 'card-oracle-admin-menu', array ($this, 'display_card_oracle_options_page') );
+		add_menu_page( 'Card Oracle', 'Card Oracle', 'manage_options', 'card-oracle-admin-menu', array( $this, 'display_card_oracle_options_page'), $co_admin_icon, 40 );
+		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Optionss', 'Dashboard', 'manage_options', 'card-oracle-admin-menu', array ($this, 'display_card_oracle_options_page') );
 		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Readings Admin', 'Readings', 'manage_options', 'edit.php?post_type=co_readings' );
 		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Positions Admin', 'Positions', 'manage_options', 'edit.php?post_type=co_positions' );
 		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Cards Admin', 'Cards', 'manage_options', 'edit.php?post_type=co_cards' );
@@ -470,6 +471,11 @@ class Card_Oracle_Admin {
 	 */
 	public function limit_positions_cpt_count() {
 		global $typenow;
+		global $action;
+
+		if ( $action === 'editpost' ) {
+			return;
+		}
 
 		if ( $typenow === 'co_readings' ) {
 			$type = 'Readings';
@@ -492,12 +498,12 @@ class Card_Oracle_Admin {
 		} else {
 			return;
 		}
-		
-		echo '<p>Sorry, the maximum number of '. $type . ' for the free version of the plugin have been reached.</p>';
-		echo '<p>Please consider upgrading to our premium version.</p>';
 	
 		# Condition match, block new post
-		if( $total && count( $total ) >= $limit )
+		if ( !empty( $total ) && count( $total ) >= $limit ) {
+			echo '<p>Sorry, the maximum number of '. $type . ' for the free version of the plugin have been reached.</p>';
+			echo '<p>Please consider upgrading to our premium version.</p>';
+
 			wp_die(
 				'You can purchase it here:', 
 				'Maximum reached',  
@@ -505,7 +511,8 @@ class Card_Oracle_Admin {
 					'response' => 500, 
 					'back_link' => true 
 				)
-		);
+			);
+		}
 
 	}
 
@@ -739,7 +746,8 @@ class Card_Oracle_Admin {
 		echo '</p>';
 
 		echo '<p><label class="co-metabox" for="co_card_order">Card Order</label><br />';
-		echo '<input class="co-metabox-textbox" type="text" name="co_card_order" value="' . 
+		echo '<input class="co-metabox-textbox" name="co_card_order" type="number" min="1" ' . 
+			 'ondrop="return false" onpaste="return false" value="' . 
 			esc_html( get_post_meta( $post->ID, "co_card_order", true ) ) . '" /></p>';
 		
 	} // render_reading_and_order_metabox

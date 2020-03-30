@@ -1,25 +1,27 @@
-=== Plugin Name ===
+=== Tarot Card Oracle ===
 Contributors: (this should be a list of wordpress.org userid's)
-Donate link: https://cdgraham.com
+Donate link: https://example.com/
 Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
+Requires at least: 4.6
+Tested up to: 5.3
+Stable tag: 
+Requires PHP: 5.6.20
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+This plugin lets you create tarot and oracle readings using your own cards, spreads and interpretations.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+Used to create your own oracle and tarot readings. Use this plugin to build any spread, using any deck of cards and any interpretation of those cards. 
+If cards have different meanings in different positions, it’s possible to define each card for each position.
 
 For backwards compatibility, if this section is missing, the full length of the short description will be used, and
 Markdown parsed.
 
 A few notes about the sections above:
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
+*   "Contributors" is a comma separated list of wordpress.org usernames
 *   "Tags" is a comma separated list of tags that apply to the plugin
 *   "Requires at least" is the lowest version that the plugin will work on
 *   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
@@ -43,9 +45,11 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload `card-oracle.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Use the Settings->Plugin Name screen to configure the plugin
+1. (Make your instructions match the desired user flow for activating and installing your plugin. Include any steps that might be needed for explanatory purposes)
+
 
 == Frequently Asked Questions ==
 
@@ -67,20 +71,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
 = 0.5 =
-* List versions from most recent at top to oldest at bottom.
+* Initial beta release.
 
 == Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
 
 == Arbitrary section ==
 
@@ -102,10 +96,10 @@ Unordered list:
 * something else
 * third thing
 
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
+Here's a link to [WordPress](https://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
 Titles are optional, naturally.
 
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
+[markdown syntax]: https://daringfireball.net/projects/markdown/syntax
             "Markdown is what the parser uses to process much of the readme file"
 
 Markdown uses email style notation for blockquotes and I've been told:
