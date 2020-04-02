@@ -54,6 +54,8 @@ class Card_Oracle_Admin {
 
 	}
 
+	include_once 'partials/card-oracle-meta-boxes.php';
+
 	/**
 	 * Add an options page under the Card Oracle menu
 	 *
@@ -125,16 +127,13 @@ class Card_Oracle_Admin {
 
 		$readings = $this->get_co_reading_id_title();
 
-		$reading_titles = "";
-		$reading_pos = "";
-		$reading_card = "";
-		$reading_desc = "";
+		$reading_array = array();
 
 		for($i = 0; $i < count( $readings ); $i++ ) {
-			$reading_titles .= '<p>' . $readings[$i]->post_title . '</p>';
-			$reading_pos .= '<p>' . count( $this->get_co_position_id_title( $readings[$i]->ID ) ) . '</p>';
-			$reading_card .= '<p>' . count( $this->get_co_card_id_title( $readings[$i]->ID ) ) . '</p>';
-			$reading_desc .= '<p>' . count( $this->get_co_description_id_content( $readings[$i]->ID ) ) . '</p>';
+			$reading_array[$i] = new stdClass();
+			$reading_array[$i]->positions = count( $this->get_co_position_id_title( $readings[$i]->ID ) );
+			$reading_array[$i]->cards = count( $this->get_co_card_id_title( $readings[$i]->ID ) );
+			$reading_array[$i]->descriptions = count( $this->get_co_description_id_content( $readings[$i]->ID ) );
 		}
 
 		include_once 'partials/card-oracle-admin-display.php';
@@ -378,7 +377,7 @@ class Card_Oracle_Admin {
 					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
 			break;
 
-			case 'number_card_positions' :
+			case 'number_card_descriptions' :
 
 				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
 
@@ -473,6 +472,10 @@ class Card_Oracle_Admin {
 		global $typenow;
 		global $action;
 
+		// Current License is ok return
+		return;
+
+		// If it's an edit don't block and return
 		if ( $action === 'editpost' ) {
 			return;
 		}
@@ -809,7 +812,7 @@ class Card_Oracle_Admin {
 		unset($columns['date']);
 
 		$columns['card_reading'] = __('Card Reading', $this->plugin_name );
-		$columns['number_card_positions'] = __('Number of Positions', $this->plugin_name );
+		$columns['number_card_descriptions'] = __('Number of Descriptions', $this->plugin_name );
 		$columns['date'] = __('Date', $this->plugin_name );
 
 		return $columns;
@@ -878,7 +881,7 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 	
 		$columns['card_reading'] = 'card_reading';
-		$columns['number_card_positions'] = 'number_card_positions';
+		$columns['number_card_descriptions'] = 'number_card_descriptions';
 
 		return $columns;
 	}

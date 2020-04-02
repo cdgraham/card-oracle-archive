@@ -53,8 +53,17 @@ input.co-shortcode {
     margin-bottom: 1rem;
     padding: 5px;
     display: grid;
-    grid-template-columns: repeat(4, minmax(225px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
     gap: 1rem;
+}
+
+.co__stats {
+    display: grid;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    padding: 5px;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
 }
 
 .co__card {
@@ -66,7 +75,8 @@ input.co-shortcode {
     font-size: 1.25rem;
 }
 
-.co__card-header {
+.co__card-header,
+.co__stat-header {
     padding: 15px;
     display: flex;
     background-color: #cccccc;
@@ -84,11 +94,6 @@ input.co-shortcode {
     font-size: 1.25rem;
 }
 
-.co__card-table {
-    padding: 15px;
-    font-size: 1.25rem;
-}
-
 .co__cards a {
     text-decoration: none;
 }
@@ -99,32 +104,21 @@ input.co-shortcode {
     grid-template-columns: minmax(500px, 1fr);
 }
 
-.co__statistics {
+.co__stat {
     box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
-    padding: 15px;
-}
-.co__table-reading {
-    padding-right: 15px;
-    width: 100%;
-    overflow-x: auto;
+    border: 1px solid darkcyan;
+    border-radius: 4px;
+    padding: 5px;
 }
 
-.co__table-reading th {
-    height: 50px;
-    width: 25%;
-    padding-left: 10px;
-    text-align: left;
+.co__stat-body p {
+    text-align: "." right;
     font-size: 1.25rem;
-    color: white;
-    background-color: darkcyan;
+    padding-left: 15px;
 }
 
-.co__table-reading td {
-    width: 25%;
-    padding-left: 10px;
-    padding-top: 10px;
-    text-align: left;
-    font-size: 1.25rem;
+.co__stat-left {
+    float: left;
 }
 
 .push-right {
