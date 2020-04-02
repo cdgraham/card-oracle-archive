@@ -54,8 +54,6 @@ class Card_Oracle_Admin {
 
 	}
 
-	include_once 'partials/card-oracle-meta-boxes.php';
-
 	/**
 	 * Add an options page under the Card Oracle menu
 	 *
@@ -258,38 +256,51 @@ class Card_Oracle_Admin {
 	}
 
 	/**
-	 * Create our custom metabox for cards
+	 * Create our custom metabox for readings
 	 * 
 	 * @since	0.4.2
 	 */
-	public function add_reading_and_order_box() {
+	public function add_meta_boxes_for_readings_cpt() {
+	
+		$screens = array( 'co_readings' );
+		add_meta_box( 'card-reading', __( 'Settings', 'card-oracle' ), array( $this, 'render_reading_metabox' ), $screens, 'normal', 'high' );
+
+	} // add_meta_boxes_for_readings_cpt() {
+
+	/**
+	 * Create our custom metabox for positions
+	 * 
+	 * @since	0.4.2
+	 */
+	public function add_meta_boxes_for_positions_cpt() {
 	
 		$screens = array( 'co_positions' );
-		add_meta_box( 'card-reading', __( 'Settings', 'card-oracle' ), array( $this, 'render_reading_and_order_metabox' ), $screens, 'normal', 'high' );
-	} // add_card_box
+		add_meta_box( 'card-reading', __( 'Settings', 'card-oracle' ), array( $this, 'render_position_metabox' ), $screens, 'normal', 'high' );
+	} // add_meta_boxes_for_positions_cpt() {
+
 
 	/**
 	 * Create our custom metabox for cards
 	 * 
 	 * @since	0.4.2
 	 */
-	public function add_reading_box() {
+	public function add_meta_boxes_for_cards_cpt() {
 	
 		$screens = array( 'co_cards' );
-		add_meta_box( 'card-reading', __( 'Settings', 'card-oracle' ), array( $this, 'render_reading_metabox' ), $screens, 'normal', 'high' );
-	} // add_card_box
+		add_meta_box( 'card-reading', __( 'Settings', 'card-oracle' ), array( $this, 'render_card_metabox' ), $screens, 'normal', 'high' );
+	} // add_meta_boxes_for_cards_cpt
 
 	/**
-	 * Create our custom metabox for card positions
+	 * Create our custom metabox for descriptions
 	 * 
 	 * @since	0.4.2
 	 */
-	public function add_card_and_positions_box() {
+	public function add_meta_boxes_for_descriptions_cpt() {
 	
 		$screens = array( 'co_descriptions' );
 
-		add_meta_box( 'card', __( 'Settings', 'card-oracle' ), array( $this, 'render_card_and_position_metabox' ), $screens, 'normal', 'high' );
-	} // add_card_box
+		add_meta_box( 'card', __( 'Settings', 'card-oracle' ), array( $this, 'render_description_metabox' ), $screens, 'normal', 'high' );
+	} // add_meta_boxes_for_descriptions_cpt
 
 	public function display_card_oracle_quick_edit( $column ) {
 
@@ -672,12 +683,35 @@ class Card_Oracle_Admin {
 	} // register_card_oracle_cpt
 		
 	/**
-	 * Render the Card Metabox for Card Oracle
+	 * Render the Reading Metabox for Cards CPT
 	 * 
 	 * @since	0.4.2
 	 * @return	
 	 */
-	public function render_card_and_position_metabox() {
+	public function render_card_metabox() {
+
+		global $post;
+		
+		// Generate nonce
+		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
+
+		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
+
+		echo '<p><label class="co-metabox">Card Reading</label><br />';
+		
+		echo $this->get_reading_dropdown_box( $selected_reading );
+		
+		echo '</p>';
+		
+	} // render_card_metabox
+
+	/**
+	 * Render the Card Metabox for Descriptions CPT
+	 * 
+	 * @since	0.4.2
+	 * @return	
+	 */
+	public function render_description_metabox() {
 
 		global $post;
 
@@ -702,38 +736,15 @@ class Card_Oracle_Admin {
 		echo $pages;
 		echo '</p>';
 
-	} // render_card_and_position_metabox
+	} // render_description_metabox
 
 	/**
-	 * Render the Reading Metabox for Card Oracle
+	 * Render the Reading and Order Metabox for Positions CPT
 	 * 
 	 * @since	0.4.2
 	 * @return	
 	 */
-	public function render_reading_metabox() {
-
-		global $post;
-		
-		// Generate nonce
-		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
-
-		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
-
-		echo '<p><label class="co-metabox">Card Reading</label><br />';
-		
-		echo $this->get_reading_dropdown_box( $selected_reading );
-		
-		echo '</p>';
-		
-	} // render_reading_metabox
-
-	/**
-	 * Render the Reading and Order Metabox for Card Oracle
-	 * 
-	 * @since	0.4.2
-	 * @return	
-	 */
-	public function render_reading_and_order_metabox() {
+	public function render_position_metabox() {
 
 		global $post;
 		
@@ -753,7 +764,35 @@ class Card_Oracle_Admin {
 			 'ondrop="return false" onpaste="return false" value="' . 
 			esc_html( get_post_meta( $post->ID, "co_card_order", true ) ) . '" /></p>';
 		
-	} // render_reading_and_order_metabox
+	} // render_position_metabox
+
+	/**
+	 * Render the Reading Metabox for Cards CPT
+	 * 
+	 * @since	0.4.2
+	 * @return	
+	 */
+	public function render_reading_metabox() {
+
+		global $post;
+		
+		// Generate nonce
+		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
+
+		$display_input_checked = get_post_meta( $post->ID, 'display_question', true );
+		if ( $display_input_checked == "yes" ) {
+			$display_input_checked = 'checked="checked"';
+		}
+
+		echo '<p><input class="co-metabox" type="checkbox" name="display_question" value="yes" ' . $display_input_checked . ' />';
+		echo '<label for="display_question" class="co-metabox">Display Input Box</label></p>';
+		echo '<p class="co__help-text">Checking this box will display an input field to the users to enter a question.</p>';
+
+		echo '<p><label for="question_text" class="co-metabox">Text for question input box</label><br />';
+		echo '<input class="co-metabox" name="question_text" type="text" value="' . 
+			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
+		
+	} // render_reading_metabox
 
 	/**
 	 * Save the card post meta for Card Oracle
@@ -771,6 +810,20 @@ class Card_Oracle_Admin {
 			update_post_meta( $post->ID, 'co_reading_id', $_POST['co_reading_id'] );
 		}
 		
+		// If the Card Reading Display has been selected update it.
+		if ( isset ( $_POST['display_question'] ) ) {
+			update_post_meta( $post->ID, 'display_question', $_POST['display_question'] );
+		} else {
+			delete_post_meta( $post->ID, 'display_question' );
+		}
+
+		// If the Card Reading Display has been selected update it.
+		if ( isset ( $_POST['question_text'] ) ) {
+			update_post_meta( $post->ID, 'question_text', $_POST['question_text'] );
+		} else {
+			delete_post_meta( $post->ID, 'question_text' );
+		}
+
 		// If the Card Position has been selected update it.
 		if ( isset( $_POST[ 'co_card_position' ] ) ) {
 			update_post_meta( $post->ID, 'co_card_position', wp_kses_post( $_POST[ 'co_card_position' ] ) );

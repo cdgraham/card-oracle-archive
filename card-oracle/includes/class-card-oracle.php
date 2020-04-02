@@ -184,9 +184,10 @@ class Card_Oracle {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'card_oracle_menu_items' );
 
 		// Add metaboxes
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_and_order_box' );
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_reading_box' );
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_card_and_positions_box' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_readings_cpt' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_positions_cpt' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_cards_cpt' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_descriptions_cpt' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_oracle_meta_data' );
 		$this->loader->add_action( 'do_meta_boxes', $plugin_admin, 'cpt_image_box' );
 

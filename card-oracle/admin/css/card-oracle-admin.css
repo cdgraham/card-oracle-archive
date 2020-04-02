@@ -98,6 +98,9 @@ input.co-shortcode {
     text-decoration: none;
 }
 
+.co__help-text {
+    font-style: italic;
+}
 .co__readings {
     margin: 1rem 0 1rem 0;
     display: grid;

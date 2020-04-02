@@ -146,9 +146,14 @@ class Card_Oracle_Public {
 
 			// Display the form
 			echo '<div class="data" data-positions="' . $positions_count .'">
-				<form name="form2" action="" method="post">
-				<input name="question" id="question" type="text" size="40" placeholder="Enter your question?" required/>
-				<input name="picks" id="picks" type="hidden">
+				<form name="form2" action="" method="post">';
+
+			if ( get_post_meta( $id, 'display_question', true ) === "yes" ) {
+				echo '<input name="question" id="question" type="text" size="40" placeholder="' . 
+					get_post_meta( $id, 'question_text', true ) . '" required/>';
+			}
+
+			echo '<input name="picks" id="picks" type="hidden">
 				<div class="btn-block">
 					<button name="Submit" type="submit" id="Submit">Submit</button>
 				</div>
