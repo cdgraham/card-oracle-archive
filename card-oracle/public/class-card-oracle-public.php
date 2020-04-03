@@ -4,7 +4,7 @@
  * The public-facing functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.2
+ * @since      0.4.3
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/public
@@ -25,7 +25,7 @@ class Card_Oracle_Public {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.2
+	 * @since    0.4.3
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Public {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.2
+	 * @since    0.4.3
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Public {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.4.2
+	 * @since    0.4.3
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
-	 * @since    0.4.2
+	 * @since    0.4.3
 	 */
 	public function enqueue_styles() {
 
@@ -80,7 +80,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
-	 * @since    0.4.2
+	 * @since    0.4.3
 	 */
 	public function enqueue_scripts() {
 
@@ -103,7 +103,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.2
+	 * @since	0.4.3
 	 * @return
 	 */
 	public function display_card_oracle_set( $atts ) {
