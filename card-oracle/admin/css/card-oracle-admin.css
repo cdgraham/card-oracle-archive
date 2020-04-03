@@ -107,7 +107,8 @@ input.co-shortcode {
     grid-template-columns: minmax(500px, 1fr);
 }
 
-.co__stat {
+.co__stat,
+.co__card_reading_metabox {
     box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
     border: 1px solid darkcyan;
     border-radius: 4px;

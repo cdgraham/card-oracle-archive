@@ -171,9 +171,9 @@ class Card_Oracle_Admin {
 					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
 					"WHERE post_type = 'co_cards' " .
 					"AND post_status = 'publish' " .
-					"AND meta_value = '" . $reading_id . "'" . 
+					"AND meta_value LIKE '%" . serialize( $reading_id ) . "%' " . 
 					"ORDER BY post_title";
-					
+
 		// The $positions is an array of all the positions in a reading, it consists of
 		// the position title and position ID
 		$card_ids = $wpdb->get_results( $sql, OBJECT );
@@ -200,7 +200,7 @@ class Card_Oracle_Admin {
 			"WHERE post_type = 'co_cards' " . 
 			"AND post_status = 'publish' " .
 			"AND meta_key = 'co_reading_id' " . 
-			"AND meta_value = '" . $reading_id . "'";
+			"AND meta_value LIKE '%" . serialize( $reading_id ) . "%'";
 		}
 
 		$sql = "SELECT ID, post_content FROM " . $wpdb->posts . " " .
@@ -230,7 +230,7 @@ class Card_Oracle_Admin {
 					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
 					"WHERE post_type = 'co_positions' " .
 					"AND post_status = 'publish' " .
-					"AND meta_value = '" . $reading_id . "'" . 
+					"AND meta_value LIKE '%" . serialize( $reading_id ) . "%'" . 
 					"ORDER BY post_title";
 					
 		// The $positions is an array of all the positions in a reading, it consists of
@@ -246,11 +246,12 @@ class Card_Oracle_Admin {
 	 * @since	0.4.2
 	 */
 	public function get_reading_dropdown_box( $selected_reading ) {
+		
 		if ( TRUE ) { // Unlimited Readings in Premium
-			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_id', 
+			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_dropdown', 
 				'show_option_none' => __( '(no reading)' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
 		} else { // Limited to 1 Reading in Free
-			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_id', 
+			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_dropdown', 
 				'sort_column'=> 'post_title', 'number' => 1, 'echo' => 0 ) );
 		}
 	}
@@ -370,8 +371,14 @@ class Card_Oracle_Admin {
 	
 		switch ( $column ) {
 			case 'card_reading' :
-				$reading = get_post_meta( $post->ID, 'co_reading_id', true );
-				echo get_the_title( $reading );
+				$readings = get_post_meta( $post->ID, 'co_reading_id', true );
+				if ( is_array( $readings ) ) {
+					foreach ( $readings as $reading ) {
+						echo '<p>';
+						echo get_the_title( $reading );
+						echo '</p>';
+					}
+				}
 			break;
 
 			case 'cards_position' :
@@ -695,13 +702,21 @@ class Card_Oracle_Admin {
 		// Generate nonce
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
-		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
+		$readings = $this->get_co_reading_id_title();
+		$selected_readings = get_post_meta( $post->ID, 'co_reading_id', true );
 
-		echo '<p><label class="co-metabox">Card Reading</label><br />';
-		
-		echo $this->get_reading_dropdown_box( $selected_reading );
-		
-		echo '</p>';
+		echo '<div class=""><p><label class="co-metabox" for="co_reading_id">Card Reading</label></p>';
+		foreach ( $readings as $id ) {
+			if ( is_array( $selected_readings ) && in_array( $id->ID, $selected_readings ) ) {
+				$checked = 'checked="checked"';
+			} else {
+				$checked = null;
+			}
+
+			echo '<p><input type="checkbox" name="co_reading_id[]" value="' . 
+				$id->ID . '" ' . $checked . ' />' . $id->post_title . '</p>';
+		}
+		echo '</div>';
 		
 	} // render_card_metabox
 
@@ -752,11 +767,9 @@ class Card_Oracle_Admin {
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
 		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
-
+		
 		echo '<p><label class="co-metabox">Card Reading</label><br />';
-
-		echo $this->get_reading_dropdown_box( $selected_reading );
-
+		echo $this->get_reading_dropdown_box( $selected_reading[0] );
 		echo '</p>';
 
 		echo '<p><label class="co-metabox" for="co_card_order">Card Order</label><br />';
@@ -807,9 +820,13 @@ class Card_Oracle_Admin {
 
 		// If the Card Reading has been selected update it.
 		if (isset ( $_POST['co_reading_id'] ) ) {
-			update_post_meta( $post->ID, 'co_reading_id', $_POST['co_reading_id'] );
+			update_post_meta( $post->ID, 'co_reading_id', is_array( $_POST['co_reading_id'] ) ? $_POST['co_reading_id'] : serialize( $_POST['co_reading_id'] ) );
 		}
 		
+		if (isset ( $_POST['co_reading_dropdown'] ) ) {
+			update_post_meta( $post->ID, 'co_reading_id', array( $_POST['co_reading_dropdown'] ) );
+		}
+
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['display_question'] ) ) {
 			update_post_meta( $post->ID, 'display_question', $_POST['display_question'] );
@@ -864,7 +881,7 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 		unset($columns['date']);
 
-		$columns['card_reading'] = __('Card Reading', $this->plugin_name );
+		$columns['card_reading'] = __('Associated Reading(s)', $this->plugin_name );
 		$columns['number_card_descriptions'] = __('Number of Descriptions', $this->plugin_name );
 		$columns['date'] = __('Date', $this->plugin_name );
 
@@ -994,6 +1011,15 @@ class Card_Oracle_Admin {
 
         return true;
 
+	}
+
+	function console_log($output, $with_script_tags = true) {
+		$js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
+	');';
+		if ($with_script_tags) {
+			$js_code = '<script>' . $js_code . '</script>';
+		}
+		echo $js_code;
 	}
 
 }

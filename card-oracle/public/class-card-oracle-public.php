@@ -117,7 +117,7 @@ class Card_Oracle_Public {
 					"INNER JOIN " . $wpdb->prefix . "postmeta mt2" . " " . 
 					"ON p1.id = mt2.post_id " .
 					"WHERE mt1.meta_key = 'co_reading_id' " . 
-					"AND mt1.meta_value = " . $id . " " .
+					"AND mt1.meta_value LIKE '%" . serialize( $id ) . "%' " .
 					"AND mt2.meta_key = 'co_card_order' " .
 					"AND p1.post_type = 'co_positions' " .
 					"AND post_status = 'publish' " . 
@@ -133,8 +133,8 @@ class Card_Oracle_Public {
 			$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
 				"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
 				"ON ( p1.ID = m1.post_id ) " . 
-				"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value = '" . $id . 
-				"' ) ) AND p1.post_type = 'co_cards' AND ( ( p1.post_status = 'publish' ) )";
+				"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value LIKE '%" . serialize( $id ) . 
+				"%' ) ) AND p1.post_type = 'co_cards' AND ( ( p1.post_status = 'publish' ) )";
 
 			$card_ids = $wpdb->get_results( $sql, OBJECT );
 
