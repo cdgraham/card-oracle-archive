@@ -18,6 +18,24 @@
     width: 5em;
 }
 
+.co__shortcode-header {
+    justify-content: center;
+    display: flex;
+    background-color: #cccccc;
+    font-size: 1.25rem;
+    border-top: 4px solid darkcyan;
+    color: #000000;
+}
+
+.co__shortcode-header p {
+    justify-items: center;
+}
+
+.co__shortcode-body {
+    display: flex;
+    justify-content: space-between;
+}
+
 input.co-shortcode {
     padding: 0 8px;
     border-radius: 3px;

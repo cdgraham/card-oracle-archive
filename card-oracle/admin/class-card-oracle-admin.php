@@ -118,10 +118,22 @@ class Card_Oracle_Admin {
 	public function display_card_oracle_options_page() {
 		global $wpdb;
 
-		$readings_count = $this->get_card_oracle_cpt_count( 'co_readings' );
-		$cards_count =  $this->get_card_oracle_cpt_count( 'co_cards' );
-		$positions_count = $this->get_card_oracle_cpt_count( 'co_positions' );
-		$descriptions_count = $this->get_card_oracle_cpt_count( 'co_descriptions' );
+		$readings_count = number_format_i18n( $this->get_card_oracle_cpt_count( 'co_readings' ) );
+		/* translators: %d is a number */
+		$readings_text = esc_html( sprintf( _n( '%d Total', '%d Total', $readings_count, 'card-oracle' ), $readings_count ) );
+
+		
+		$cards_count = number_format_i18n( $this->get_card_oracle_cpt_count( 'co_cards' ) );
+		/* translators: %d is a number */
+		$cards_text = esc_html( sprintf( _n( '%d Total', '%d Total', $cards_count, 'card-oracle' ), $cards_count ) );
+		
+		$positions_count = number_format_i18n( $this->get_card_oracle_cpt_count( 'co_positions' ) );
+		/* translators: %d is a number */
+		$positions_text = esc_html( sprintf( _n( '%d Total', '%d Total', $positions_count, 'card-oracle' ), $positions_count ) );
+
+		$descriptions_count = number_format_i18n( $this->get_card_oracle_cpt_count( 'co_descriptions' ) );
+		/* translators: %d is a number */
+		$descriptions_text = esc_html( sprintf( _n( '%d Total', '%d Total', $descriptions_count, 'card-oracle' ), $descriptions_count ) );
 
 		$readings = $this->get_co_reading_id_title();
 
@@ -325,14 +337,38 @@ class Card_Oracle_Admin {
 	 * @since	0.4.3
 	 */
 	public function card_oracle_menu_items() {
-		$co_admin_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg height="100px" width="100px"  fill="black" xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve"><g><g i:extraneous="self"><circle fill="black" cx="49.926" cy="57.893" r="10.125"></circle><path fill="black" d="M50,78.988c-19.872,0-35.541-16.789-36.198-17.503l-1.95-2.12l1.788-2.259c0.164-0.208,4.097-5.142,10.443-10.102 C32.664,40.296,41.626,36.751,50,36.751c8.374,0,17.336,3.546,25.918,10.253c6.346,4.96,10.278,9.894,10.443,10.102l1.788,2.259 l-1.95,2.12C85.541,62.2,69.872,78.988,50,78.988z M20.944,59.019C25.56,63.219,36.99,72.238,50,72.238 c13.059,0,24.457-9.013,29.061-13.214C74.565,54.226,63.054,43.501,50,43.501C36.951,43.501,25.444,54.218,20.944,59.019z"></path><path fill="black" d="M44.305,30.939L50,21.075l5.695,9.864c3.002,0.427,6.045,1.185,9.102,2.265L50,7.575L35.203,33.204 C38.26,32.124,41.303,31.366,44.305,30.939z"></path><path fill="black" d="M81.252,74.857L87.309,85H12.691l6.057-10.143c-2.029-1.279-3.894-2.629-5.578-3.887L1,92h98L86.83,70.97 C85.146,72.228,83.28,73.578,81.252,74.857z"></path></g></g></svg>' );
+		$co_admin_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg height="100px" width="100px"  fill="black" 
+			xmlns:x="http://ns.adobe.com/Extensibility/1.0/" 
+			xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" 
+			xmlns:graph="http://ns.adobe.com/Graphs/1.0/" 
+			xmlns="http://www.w3.org/2000/svg" 
+			xmlns:xlink="http://www.w3.org/1999/xlink" 
+			version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" 
+			xml:space="preserve"><g><g i:extraneous="self">
+			<circle fill="black" cx="49.926" cy="57.893" r="10.125"></circle>
+			<path fill="black" d="M50,78.988c-19.872,0-35.541-16.789-36.198-17.503l-1.95-2.12l1.788-2.259c0.164-0.208,4.097-5.142,
+				10.443-10.102 C32.664,40.296,41.626,36.751,50,36.751c8.374,0,17.336,3.546,25.918,10.253c6.346,4.96,10.278,9.894,
+				10.443,10.102l1.788,2.259 l-1.95,2.12C85.541,62.2,69.872,78.988,50,78.988z M20.944,59.019C25.56,63.219,36.99,
+				72.238,50,72.238 c13.059,0,24.457-9.013,29.061-13.214C74.565,54.226,63.054,43.501,50,43.501C36.951,43.501,25.444,
+				54.218,20.944,59.019z"></path>
+			<path fill="black" d="M44.305,30.939L50,21.075l5.695,9.864c3.002,0.427,6.045,1.185,9.102,2.265L50,7.575L35.203,33.204 
+				C38.26,32.124,41.303,31.366,44.305,30.939z"></path>
+			<path fill="black" d="M81.252,74.857L87.309,85H12.691l6.057-10.143c-2.029-1.279-3.894-2.629-5.578-3.887L1,92h98L86.83,
+				70.97 C85.146,72.228,83.28,73.578,81.252,74.857z"></path>
+			</g></g></svg>' );
 
-		add_menu_page( 'Card Oracle', 'Card Oracle', 'manage_options', 'card-oracle-admin-menu', array( $this, 'display_card_oracle_options_page'), $co_admin_icon, 40 );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Optionss', 'Dashboard', 'manage_options', 'card-oracle-admin-menu', array ($this, 'display_card_oracle_options_page') );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Readings Admin', 'Readings', 'manage_options', 'edit.php?post_type=co_readings' );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Positions Admin', 'Positions', 'manage_options', 'edit.php?post_type=co_positions' );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Cards Admin', 'Cards', 'manage_options', 'edit.php?post_type=co_cards' );
-		add_submenu_page( 'card-oracle-admin-menu', 'Card Oracle Descriptions Admin', 'Descriptions', 'manage_options', 'edit.php?post_type=co_descriptions' );
+		add_menu_page( __( 'Card Oracle', 'card-oracle' ), __( 'Card Oracle', 'card-oracle' ),
+		'manage_options', 'card-oracle-admin-menu', array( $this, 'display_card_oracle_options_page'), $co_admin_icon, 40 );
+		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle Options', 'card-oracle' ), __( 'Dashboard', 'card-oracle' ),
+			'manage_options', 'card-oracle-admin-menu', array ($this, 'display_card_oracle_options_page') );
+		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle Readings Admin', 'card-oracle' ), __( 'Readings', 'card-oracle' ),
+			'manage_options', 'edit.php?post_type=co_readings' );
+		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle positions Admin', 'card-oracle' ), __( 'Positions', 'card-oracle' ),
+			'manage_options', 'edit.php?post_type=co_positions' );
+		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle cards Admin', 'card-oracle' ), __( 'Cards', 'card-oracle' ),
+			'manage_options', 'edit.php?post_type=co_cards' );
+		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle Descriptions Admin', 'card-oracle' ), __( 'Descriptions', 'card-oracle' ),
+			'manage_options', 'edit.php?post_type=co_descriptions' );
 
 	}
 
@@ -346,12 +382,12 @@ class Card_Oracle_Admin {
 		// Move the image metabox from the sidebar to the normal position 
 		$screens = array( 'co_cards' );
 		remove_meta_box( 'postimagediv', $screens, 'side' );
-		add_meta_box( 'postimagediv', __('Front of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'normal', 'default' );
+		add_meta_box( 'postimagediv', __('Front of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'side', 'default' );
 	
 		// Move the image metabox from the sidebar to the normal position 
 		$screens = array( 'co_readings' );
 		remove_meta_box( 'postimagediv', $screens, 'side' );
-		add_meta_box( 'postimagediv', __('Back of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'normal', 'default' );
+		add_meta_box( 'postimagediv', __('Back of Card Image', 'card-oracle'), 'post_thumbnail_meta_box', $screens, 'side', 'default' );
 
 		//remove Astra metaboxes from our cpt
 		$screens = array( 'co_cards', 'co_readings', 'co_positions', 'co_descriptions' );
@@ -372,6 +408,7 @@ class Card_Oracle_Admin {
 		switch ( $column ) {
 			case 'card_reading' :
 				$readings = get_post_meta( $post->ID, 'co_reading_id', true );
+
 				if ( is_array( $readings ) ) {
 					foreach ( $readings as $reading ) {
 						echo '<p>';
@@ -392,15 +429,19 @@ class Card_Oracle_Admin {
 			case 'co_shortcode' :
 				echo '<input class="co-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"><button class="copyAction copy-action-btn button" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"> <img src="' . plugin_dir_url( __DIR__ ) . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
+					'&quot;]"> <img src="' . PLUGIN_URL . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
+			break;
+
+			case 'description_reading' :
+				$position_id = get_post_meta( $post->ID, 'co_position_id', true );		
+				$reading_id = get_post_meta( $position_id, 'co_reading_id', true );
+				echo get_the_title( $reading_id[0] );
 			break;
 
 			case 'number_card_descriptions' :
 
 				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
-
 				$count = count( $this->get_co_description_id_content( $reading_id, $post->ID ) );
-
 				$positions = $this->co_get_positions_per_reading( $reading_id );
 
 				if ( $count == $positions ) {
@@ -505,7 +546,7 @@ class Card_Oracle_Admin {
 			$total = get_posts( array( 
 				'post_type' => 'co_readings', 
 				'numberposts' => -1, 
-				'post_status' => 'publish,future,draft' 
+				'post_status' => 'publish, future, draft' 
 			));
 		} elseif ( $typenow === 'co_positions' ) {
 			$type = 'Positions';
@@ -514,7 +555,7 @@ class Card_Oracle_Admin {
 			$total = get_posts( array( 
 				'post_type' => 'co_positions', 
 				'numberposts' => -1, 
-				'post_status' => 'publish,future,draft' 
+				'post_status' => 'publish, future, draft' 
 			));
 		} else {
 			return;
@@ -574,7 +615,7 @@ class Card_Oracle_Admin {
 			'show_in_menu'      => false,
 			'show_in_admin_bar'	=> true,
 			'show_in_nav_menus'	=> false,
-			'supports'			=> array( 'title', 'thumbnail' ),
+			'supports'			=> array( 'title', 'editor', 'thumbnail' ),
 			'query_var'			=> true,
 		);
 
@@ -705,7 +746,10 @@ class Card_Oracle_Admin {
 		$readings = $this->get_co_reading_id_title();
 		$selected_readings = get_post_meta( $post->ID, 'co_reading_id', true );
 
-		echo '<div class=""><p><label class="co-metabox" for="co_reading_id">Card Reading</label></p>';
+		echo '<div class=""><p><label class="co-metabox" for="co_reading_id">';
+		_e( 'Card Reading', 'card-oracle' );
+		echo '</label></p>';
+
 		foreach ( $readings as $id ) {
 			if ( is_array( $selected_readings ) && in_array( $id->ID, $selected_readings ) ) {
 				$checked = 'checked="checked"';
@@ -736,7 +780,11 @@ class Card_Oracle_Admin {
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
 		$selected_card = get_post_meta( $post->ID, 'co_card_id', true );
-		echo '<p><label class="co-metabox">Card</label><br />';
+
+		echo '<p><label class="co-metabox">';
+		_e( 'Card', 'card-oracle' );
+		echo '</label><br />';
+
 		$pages = wp_dropdown_pages( array( 'post_type' => 'co_cards', 'selected' => $selected_card, 'name' => 'co_card_id', 
 			'show_option_none' => __( '(no card)' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
 
@@ -744,7 +792,11 @@ class Card_Oracle_Admin {
 		echo '</p>';
 
 		$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
-		echo '<label class="co-metabox">Description Position</label><br />';
+
+		echo '<label class="co-metabox">';
+		_e( 'Description Position', 'card-oracle' );
+		echo '</label><br />';
+
 		$pages = wp_dropdown_pages( array( 'post_type' => 'co_positions', 'selected' => $selected_position, 'name' => 'co_position_id', 
 		'show_option_none' => __( '(no card)' ), 'sort_column'=> 'co_card_order', 'echo' => 0 ) );
 
@@ -768,14 +820,20 @@ class Card_Oracle_Admin {
 
 		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
 		
-		echo '<p><label class="co-metabox">Card Reading</label><br />';
+		echo '<p><label class="co-metabox">';
+		_e( 'Card Reading', 'card-oracle' );
+		echo '</label><br />';
 		echo $this->get_reading_dropdown_box( $selected_reading[0] );
 		echo '</p>';
 
-		echo '<p><label class="co-metabox" for="co_card_order">Card Order</label><br />';
+		echo '<p><label class="co-metabox" for="co_card_order">';
+		_e( 'Card Order', 'card-oracle' );
+		echo '</label><br />';
 		echo '<input class="co-metabox-textbox" name="co_card_order" type="number" min="1" ' . 
 			 'ondrop="return false" onpaste="return false" value="' . 
-			esc_html( get_post_meta( $post->ID, "co_card_order", true ) ) . '" /></p>';
+			 esc_html( $post->co_card_order ) . '" /></p>';
+
+//			 esc_html( get_post_meta( $post->ID, "co_card_order", true ) ) . '" /></p>';
 		
 	} // render_position_metabox
 
@@ -798,10 +856,15 @@ class Card_Oracle_Admin {
 		}
 
 		echo '<p><input class="co-metabox" type="checkbox" name="display_question" value="yes" ' . $display_input_checked . ' />';
-		echo '<label for="display_question" class="co-metabox">Display Input Box</label></p>';
-		echo '<p class="co__help-text">Checking this box will display an input field to the users to enter a question.</p>';
-
-		echo '<p><label for="question_text" class="co-metabox">Text for question input box</label><br />';
+		echo '<label for="display_question" class="co-metabox">';
+		_e( 'Display Input Box', 'card-oracle' );
+		echo '</label></p>';
+		echo '<p class="co__help-text">';
+		_e( 'Checking this box will display an input field to the users to enter a question.', 'card-oracle' );
+		echo '</p>';
+		echo '<p><label for="question_text" class="co-metabox">';
+		_e( 'Text for question input box', 'card-oracle' );
+		echo '</label><br />';
 		echo '<input class="co-metabox" name="question_text" type="text" value="' . 
 			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
 		
@@ -881,9 +944,9 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 		unset($columns['date']);
 
-		$columns['card_reading'] = __('Associated Reading(s)', $this->plugin_name );
-		$columns['number_card_descriptions'] = __('Number of Descriptions', $this->plugin_name );
-		$columns['date'] = __('Date', $this->plugin_name );
+		$columns['card_reading'] = __('Associated Reading(s)', 'card-oracle' );
+		$columns['number_card_descriptions'] = __('Number of Descriptions', 'card-oracle' );
+		$columns['date'] = __('Date', 'card-oracle' );
 
 		return $columns;
 	}
@@ -899,10 +962,11 @@ class Card_Oracle_Admin {
 		unset( $columns['title'] );
 		unset( $columns['date'] );
 
-		$columns['card_title'] = __( 'Card', $this->plugin_name );
-		$columns['position_title'] = __( 'Position', $this->plugin_name );
-		$columns['position_number'] = __( 'Position Number', $this->plugin_name );
-		$columns['date'] = __( 'Date', $this->plugin_name );
+		$columns['card_title'] = __( 'Card', 'card-oracle' );
+		$columns['description_reading'] = __( 'Card Reading', 'card-oracle' );
+		$columns['position_title'] = __( 'Position', 'card-oracle' );
+		$columns['position_number'] = __( 'Position Number', 'card-oracle' );
+		$columns['date'] = __( 'Date', 'card-oracle' );
 
 		return $columns;
 	}
@@ -917,9 +981,9 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 		unset( $columns['date'] );
 
-		$columns['co_shortcode'] = __( 'Shortcode', $this->plugin_name );
-		$columns['number_reading_positions'] = __( 'Positions', $this->plugin_name );
-		$columns['date'] = __( 'Date', $this->plugin_name );
+		$columns['co_shortcode'] = __( 'Shortcode', 'card-oracle' );
+		$columns['number_reading_positions'] = __( 'Positions', 'card-oracle' );
+		$columns['date'] = __( 'Date', 'card-oracle' );
 
 		return $columns;
 	}
@@ -934,9 +998,9 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 		unset( $columns['date'] );
 
-		$columns['card_reading'] = __( 'Card Reading', $this->plugin_name );
-		$columns['card_order'] = __( 'Position', $this->plugin_name );
-		$columns['date'] = __( 'Date', $this->plugin_name );
+		$columns['card_reading'] = __( 'Card Reading', 'card-oracle' );
+		$columns['card_order'] = __( 'Position', 'card-oracle' );
+		$columns['date'] = __( 'Date', 'card-oracle' );
 
 		return $columns;
 	}
@@ -966,6 +1030,7 @@ class Card_Oracle_Admin {
 		// unset the date so we can move it to the end
 	
 		$columns['card_title'] = 'card_title';
+		$columns['description_reading'] = 'description_reading';
 		$columns['position_title'] = 'position_title';
 		$columns['position_number'] = 'position_number';
 

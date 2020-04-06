@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Card Oracle
  * Plugin URI:        https://cuspstudios.com/card-oracle
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This plugin lets you create tarot and oracle readings using your own cards, spreads and interpretations.
  * Version:           0.4.3
  * Author:            Christopher Graham
  * Author URI:        https://cdgraham.com
@@ -35,8 +35,10 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 0.4.3 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-if ( ! defined( 'CARD_ORACLE_VERSION' ) )
+if ( ! defined( 'CARD_ORACLE_VERSION' ) ) {
 	define( 'CARD_ORACLE_VERSION', '0.4.3' );
+}
+
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**

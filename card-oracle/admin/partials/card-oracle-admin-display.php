@@ -14,10 +14,11 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<?php add_thickbox(); ?>
 <div class="admin-display">
     <div class="co__dashboard">
         <span class="dashicons dashicons-dashboard"></span>
-        <h2>Card Oracle</h2>
+        <h2><?php esc_html_e( 'Card Oracle', 'card-oracle' ); ?></h2>
     </div>
 
     <?php $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'dashboard_options'; ?>
@@ -31,10 +32,10 @@
             <div class="co__card">
                 <a class="stats-link" href="<?php echo admin_url( 'edit.php?post_type=co_readings' ); ?>">
                     <div class="co__card-header">
-                        Readings
+                        <?php esc_html_e( 'Readings', 'card-oracle' ); ?>
                     </div>
                     <div class="co__card-body">
-                        <div class="count"><?php echo ( $readings_count ); ?> Total</div>
+                        <div class="count"><?php echo ( $readings_text ); ?></div>
                         <div class="icon-container push-right dashicons dashicons-welcome-view-site"></div>
                     </div>
                 </a>
@@ -42,10 +43,10 @@
             <div class="co__card">
                 <a class="stats-link" href="<?php echo admin_url( 'edit.php?post_type=co_positions' ); ?>">
                     <div class="co__card-header">
-                        Positions
+                    <?php esc_html_e( 'Positions', 'card-oracle' ); ?>
                     </div>
                     <div class="co__card-body">
-                        <div class="count"><?php echo ( $positions_count ); ?> Total</div>
+                        <div class="count"><?php echo ( $positions_text ); ?></div>
                         <div class="icon-container push-right dashicons dashicons-editor-ol"></div>
                     </div>
                 </a>
@@ -53,10 +54,10 @@
             <div class="co__card">
                 <a class="stats-link" href="<?php echo admin_url( 'edit.php?post_type=co_cards' ); ?>">
                     <div class="co__card-header">
-                        Cards
+                    <?php esc_html_e( 'Cards', 'card-oracle' ); ?>
                     </div>
                     <div class="co__card-body">
-                        <div class="count"><?php echo ( $cards_count ); ?> Total</div>
+                        <div class="count"><?php echo ( $cards_text ); ?></div>
                         <div class="icon-container push-right dashicons dashicons-admin-page"></div>
                     </div>
                 </a>
@@ -65,10 +66,10 @@
             <div class="co__card">
                 <a class="stats-link" href="<?php echo admin_url( 'edit.php?post_type=co_descriptions' ); ?>">
                     <div class="co__card-header">
-                        Descriptions
+                    <?php esc_html_e( 'Descriptions', 'card-oracle' ); ?>
                     </div>
                     <div class="co__card-body">
-                        <div class="count"><?php echo ( $descriptions_count ); ?> Total</div>
+                        <div class="count"><?php echo ( $descriptions_text ); ?></div>
                         <div class="icon-container push-right dashicons dashicons-media-text"></div>
                     </div>
                 </a>
@@ -76,19 +77,64 @@
         </div> <!-- Cards -->
         <div class="co__dashboard">
             <span class="dashicons dashicons-chart-bar"></span>
-            <h2>Reading Statistics</h2>
+            <h2><?php esc_html_e( 'Reading Statistics', 'card-oracle' ); ?></h2>
         </div>
             <div class="co__stats"> <!-- Statistics for each Reading -->
-                <?php for ( $i = 0; $i < count( $readings ); $i++ ) { ?>
+                <?php for ( $i = 0; $i < count( $readings ); $i++ ) {
+                    
+                    /* translators: %d is a number */
+                    $position_text = esc_html( sprintf( _n( '%d position', '%d positions', $reading_array[$i]->positions, 'card-oracle' ), 
+                        number_format_i18n( $reading_array[$i]->positions ) ) );
+                    /* translators: %d is a number */
+                    $card_text = esc_html( sprintf( _n( '%d card', '%d cards', $reading_array[$i]->cards, 'card-oracle' ), 
+                        number_format_i18n( $reading_array[$i]->cards ) ) );
+                    /* translators: %d is a number */
+                    $description_text = esc_html( sprintf( _n( '%d description', '%d descriptions', $reading_array[$i]->descriptions, 'card-oracle' ), 
+                        number_format_i18n( $reading_array[$i]->descriptions ) ) );
+                    ?>
                 
                     <div class="co__stat">
                         <div class="co__stat-header">
                             <?php echo ( $readings[$i]->post_title ); ?>
                         </div>
                         <div class="co__stat-body">
-                            <p><?php echo $reading_array[$i]->positions . ' positions'; ?></p>
-                            <p><?php echo $reading_array[$i]->cards . ' cards'; ?></p>
-                            <p><?php echo $reading_array[$i]->descriptions . ' descriptions'; ?></p>
+                            <p><?php echo $position_text ?></p>
+                            <p><?php echo $card_text; ?></p>
+                            <p><?php echo $description_text; ?></p>
+                            <a href="#TB_inline?&width=274&height=350&inlineId=co-shortcodes-<?php echo $i?>" 
+                                class="thickbox" name="Card Oracle Shortcodes"><?php esc_html_e( 'Reading Shortcodes' ); ?></a>	
+                            <div id="co-shortcodes-<?php echo $i?>" style="display:none;">
+                                <p class="co__shortcode-header"><?php esc_html_e( 'Reading Shortcode' ); ?></p>
+                                <div class="co__shortcode-body">
+                                    <input class="co-shortcode" id="copy<?php echo $readings[$i]->ID;?>"  size="24"
+                                        value="[card-oracle id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                    <button class="copyAction copy-action-btn button"
+                                        title="<?php esc_html_e( 'Click to copy shortcode' ); ?>"
+                                        value="[card-oracle id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="Copy to clipboard">
+                                    </button>
+                                </div>
+                                <p class="co__shortcode-header"><?php esc_html_e( 'Daily Card Shortcode' ); ?></p>
+                                <div class="co__shortcode-body">
+                                    <input class="co-shortcode" id="copy<?php echo $readings[$i]->ID;?>-daily"  size="24"
+                                        value="[card-oracle-daily id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                    <button class="copyAction copy-action-btn button"
+                                        title="<?php esc_html_e( 'Click to copy shortcode' ); ?>"
+                                        value="[card-oracle-daily id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="Copy to clipboard">
+                                    </button>
+                                </div>
+                                <p class="co__shortcode-header"><?php esc_html_e( 'Random Card Shortcode' ); ?></p>
+                                <div class="co__shortcode-body">
+                                    <input class="co-shortcode" id="copy<?php echo $readings[$i]->ID;?>-random" size="24"
+                                        value="[card-oracle-random id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                    <button class="copyAction copy-action-btn button"
+                                        title="<?php esc_html_e( 'Click to copy shortcode' ); ?>"
+                                        value="[card-oracle-random id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
+                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="Copy to clipboard">
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php } ?>

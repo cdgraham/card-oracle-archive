@@ -101,6 +101,68 @@ class Card_Oracle_Public {
 	}
 
 	/**
+	 * Get all the published cards for a specific reading
+	 * 
+	 * @since	0.4.3
+	 * @return
+	 */
+	public function get_cards_for_reading( $reading_id ) {
+		global $wpdb;
+
+		$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
+			"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
+			"ON ( p1.ID = m1.post_id ) " . 
+			"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value LIKE '%" . serialize( $reading_id ) . 
+			"%' ) ) AND p1.post_type = 'co_cards' AND ( ( p1.post_status = 'publish' ) )";
+
+		return $wpdb->get_results( $sql, OBJECT );
+	}
+
+	/**
+	 * Card Oracle shortcode to display card reading
+	 * 
+	 * @since	0.4.3
+	 * @return
+	 */
+	public function display_card_oracle_card_of_day( $atts ) {
+
+		extract( shortcode_atts( array( 'id' => 1 ), $atts ) );
+
+		$card_ids = $this->get_cards_for_reading( $id );
+		$index = date( 'z' ) % count( $card_ids );
+		$card_of_day = get_post( $card_ids[$index]->ID );
+
+		echo '<div class="cotd-wrapper">
+				<cotd-header>' . $card_of_day->post_title . '</cotd-header>
+				<cotd-aside><img src="' . get_the_post_thumbnail_url( $card_of_day, 'medium' ) . '"></cotd-aside>
+				<cotd-main>' . $card_of_day->post_content . '</cotd-main>
+				<cotd-footer>For your own readings Join Now</cotd-footer>
+			  </div>';
+	}
+
+	/**
+	 * Card Oracle shortcode to display card reading
+	 * 
+	 * @since	0.4.3
+	 * @return
+	 */
+	public function display_card_oracle_random_card( $atts ) {
+
+		extract( shortcode_atts( array( 'id' => 1 ), $atts ) );
+
+		$card_ids = $this->get_cards_for_reading( $id );
+		$card_count = count( $card_ids ) - 1;
+		$card_of_day = get_post( $card_ids[rand( 0, $card_count )]->ID );
+
+		echo '<div class="cotd-wrapper">
+				<cotd-header>' . $card_of_day->post_title . '</cotd-header>
+				<cotd-aside><img src="' . get_the_post_thumbnail_url( $card_of_day, 'medium' ) . '"></cotd-aside>
+				<cotd-main>' . $card_of_day->post_content . '</cotd-main>
+				<cotd-footer>For your own readings Join Now</cotd-footer>
+			  </div>';
+	}
+
+	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
 	 * @since	0.4.3
@@ -129,14 +191,12 @@ class Card_Oracle_Public {
 		// Get the number of positions for this reading type.
 		$positions_count = $wpdb->num_rows;
 
-		if( !isset( $_POST['Submit'] ) ):
-			$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
-				"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
-				"ON ( p1.ID = m1.post_id ) " . 
-				"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value LIKE '%" . serialize( $id ) . 
-				"%' ) ) AND p1.post_type = 'co_cards' AND ( ( p1.post_status = 'publish' ) )";
+		// Get the question text
+		$question_text = get_post_meta( $id, 'question_text', true );
 
-			$card_ids = $wpdb->get_results( $sql, OBJECT );
+		if( !isset( $_POST['Submit'] ) ):
+			// Get all the published cards for this reading
+			$card_ids = $this->get_cards_for_reading( $id );
 
 			// The number of cards returned
 			$card_count = $wpdb->num_rows;
@@ -150,15 +210,21 @@ class Card_Oracle_Public {
 
 			if ( get_post_meta( $id, 'display_question', true ) === "yes" ) {
 				echo '<input name="question" id="question" type="text" size="40" placeholder="' . 
-					get_post_meta( $id, 'question_text', true ) . '" required/>';
+					$question_text . '" required/>';
 			}
+
+			echo $question_text;
+
+			/* translators: %d is a number */
+			$select_cards = esc_html( sprintf( _n( 'Next select %d card.', 'Next select %d cards.', $positions_count, 'card-oracle' ),
+				number_format_i18n( $positions_count ) ) );
 
 			echo '<input name="picks" id="picks" type="hidden">
 				<div class="btn-block">
 					<button name="Submit" type="submit" id="Submit">Submit</button>
 				</div>
 			</form>
-			<h2>Next select ' . $positions_count . ' cards</h2>';
+			<h2>' . $select_cards . '</h2>';
 
 			// Display the back of the cards
 			for ( $i = 0; $i < $card_count; $i++) {
@@ -177,7 +243,7 @@ class Card_Oracle_Public {
 			$cards = explode( ',', $_POST['picks'] );
 
 			echo '<div class="w3-container">
-			<h2>Your Question: ' . $_POST["question"] . '</h2>';
+			<h2>' . $question_text . '</h2><h3>' . $_POST["question"] . '</h3>';
 
 			for ( $i = 0; $i < count( $cards ); $i++ ) {
 		
@@ -190,22 +256,23 @@ class Card_Oracle_Public {
 					"AND m1.meta_value = " . $positions[$i]->ID;
 
 				$description_id = $wpdb->get_results( $sql, OBJECT );
-
-				echo '<div class="w3-row-padding">
-					<h3 class="w3-container w3-center w3-indigo w3-round-large w3-padding-16">' . $positions[$i]->post_title . '</h3>
-					<div class="w3-center">
-						' . get_the_post_thumbnail( $cards[$i], 'medium' ) . '
-					</div>
-					<div class="w3-container">
-						<h3>' . get_the_title( $cards[$i] ) . '</h3>';
-
+				
 				if ( $description_id ) {
 					$description = get_post( $description_id[0]->post_id );
-					echo '<p>' . apply_filters('the_content', $description->post_content ) .  '</p>';
+					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3>' .
+						apply_filters('the_content', $description->post_content ) . '</cotd-main>';
+				} else {
+					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3></cotd-main>';
 				}
 
-				echo '</div></div>';
+				echo '<div class="cotd-wrapper">
+						<cotd-header>' . $positions[$i]->post_title . '</cotd-header>
+						<cotd-aside><img src="' . get_the_post_thumbnail_url( $cards[$i], 'medium' ) . '"></cotd-aside>' . 
+						$main_text . 
+					 '</div>';
 			}
+
+			echo '</div>';
 		} // End POST submit
 	} // End display_card_oracle_set
 

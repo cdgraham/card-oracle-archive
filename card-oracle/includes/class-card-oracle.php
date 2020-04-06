@@ -214,6 +214,8 @@ class Card_Oracle {
 
 		// Add the shortchode
 		$this->loader->add_shortcode( 'card-oracle', $plugin_public, 'display_card_oracle_set' );
+		$this->loader->add_shortcode( 'card-oracle-daily', $plugin_public, 'display_card_oracle_card_of_day' );
+		$this->loader->add_shortcode( 'card-oracle-random', $plugin_public, 'display_card_oracle_random_card' );
 
 	}
 
