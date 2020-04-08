@@ -30,16 +30,15 @@
 	 */
 
 	$(document).on("click", ".copy-action-btn", function() { 
-		var trigger = $(this);
-		$(".copy-action-btn").removeClass("text-success");
-		var $tempElement = $("<input>");
-		  $("body").append($tempElement);
-		  var copyText = this.value;
-		  $tempElement.val(copyText).select();
-		  document.execCommand("Copy");
-		  $tempElement.remove();
-		  $(trigger).addClass("text-success");
-  
+		let trigger = $( this );
+		$( ".copy-action-btn" ).removeClass( "text-success" );
+		let $tempElement = $( "<input>" );
+		$( "body").append( $tempElement );
+		let copyText = this.value;
+		$tempElement.val( copyText ).select();
+		document.execCommand( "Copy" );
+		$tempElement.remove();
+		$(trigger).addClass( "text-success" );
 	});
 
 })( jQuery );

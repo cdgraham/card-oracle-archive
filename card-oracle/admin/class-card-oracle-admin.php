@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.3
+ * @since      0.4.4
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin
@@ -25,7 +25,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.3
+	 * @since    0.4.4
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.3
+	 * @since    0.4.4
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @param	string	$plugin_name	The name of this plugin.
 	 * @param	string	$version		The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Add an options page under the Card Oracle menu
 	 *
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function add_card_oracle_options_page() {
 
@@ -73,7 +73,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get the total counts of a cpt
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @param	string	$card_oracle_cpt	The name of the custom post type.
 	 * @return	int							The count of custom post types.
 	 */
@@ -85,7 +85,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get the total counts of a cpt
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @param	string	$reading_id		The post ID of the reading.
 	 * @return	int		$count			The number of positions per reading.
 	 */
@@ -113,7 +113,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the options page for plugin
 	 *
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function display_card_oracle_options_page() {
 		global $wpdb;
@@ -122,7 +122,6 @@ class Card_Oracle_Admin {
 		/* translators: %d is a number */
 		$readings_text = esc_html( sprintf( _n( '%d Total', '%d Total', $readings_count, 'card-oracle' ), $readings_count ) );
 
-		
 		$cards_count = number_format_i18n( $this->get_card_oracle_cpt_count( 'co_cards' ) );
 		/* translators: %d is a number */
 		$cards_text = esc_html( sprintf( _n( '%d Total', '%d Total', $cards_count, 'card-oracle' ), $cards_count ) );
@@ -139,7 +138,7 @@ class Card_Oracle_Admin {
 
 		$reading_array = array();
 
-		for($i = 0; $i < count( $readings ); $i++ ) {
+		for ( $i = 0; $i < count( $readings ); $i++ ) {
 			$reading_array[$i] = new stdClass();
 			$reading_array[$i]->positions = count( $this->get_co_position_id_title( $readings[$i]->ID ) );
 			$reading_array[$i]->cards = count( $this->get_co_card_id_title( $readings[$i]->ID ) );
@@ -152,7 +151,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the reading post ids and titles
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$reading_ids	The array of IDs and Titles for all post_types co_readings
 	 */
 	public function get_co_reading_id_title() {
@@ -173,7 +172,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the card post ids and titles for a reading id and post_type co_cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$card_ids	The array of card IDs and Titles
 	 */
 	public function get_co_card_id_title( $reading_id ) {
@@ -198,7 +197,7 @@ class Card_Oracle_Admin {
 	 * can include all cards when $card_id is not set or one or more cards when it is set. $card_id
 	 * can be a single id or an array of ids.
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$description_ids	The array of description IDs and Content
 	 */
 	public function get_co_description_id_content( $reading_id, $card_id = NULL ) {
@@ -232,7 +231,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all the position post ids and titles for a reading id and post_type co_positions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	array of card IDs and Titles
 	 */
 	public function get_co_position_id_title( $reading_id ) {
@@ -255,7 +254,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function get_reading_dropdown_box( $selected_reading ) {
 		
@@ -271,7 +270,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for readings
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function add_meta_boxes_for_readings_cpt() {
 	
@@ -283,7 +282,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for positions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function add_meta_boxes_for_positions_cpt() {
 	
@@ -295,7 +294,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function add_meta_boxes_for_cards_cpt() {
 	
@@ -306,7 +305,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom metabox for descriptions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function add_meta_boxes_for_descriptions_cpt() {
 	
@@ -334,7 +333,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our menu and submenus
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function card_oracle_menu_items() {
 		$co_admin_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg height="100px" width="100px"  fill="black" 
@@ -375,7 +374,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Move the featured image box for card readings
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function cpt_image_box() {
 
@@ -398,7 +397,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Display the custom admin columns for Cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function custom_card_column( $column ) {
 
@@ -406,7 +405,7 @@ class Card_Oracle_Admin {
 		global $wpdb;
 	
 		switch ( $column ) {
-			case 'card_reading' :
+			case 'card_reading':
 				$readings = get_post_meta( $post->ID, 'co_reading_id', true );
 
 				if ( is_array( $readings ) ) {
@@ -416,29 +415,29 @@ class Card_Oracle_Admin {
 						echo '</p>';
 					}
 				}
-			break;
+				break;
 
-			case 'cards_position' :
+			case 'cards_position':
 				echo get_post_meta( $post->ID, 'co_card_position', true );
-			break;
+				break;
 
-			case 'card_order' :
+			case 'card_order':
 				echo get_post_meta( $post->ID, 'co_card_order', true );
-			break;
+				break;
 
-			case 'co_shortcode' :
+			case 'co_shortcode':
 				echo '<input class="co-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"><button class="copyAction copy-action-btn button" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"> <img src="' . PLUGIN_URL . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
-			break;
+				break;
 
-			case 'description_reading' :
+			case 'description_reading':
 				$position_id = get_post_meta( $post->ID, 'co_position_id', true );		
 				$reading_id = get_post_meta( $position_id, 'co_reading_id', true );
 				echo get_the_title( $reading_id[0] );
-			break;
+				break;
 
-			case 'number_card_descriptions' :
+			case 'number_card_descriptions':
 
 				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
 				$count = count( $this->get_co_description_id_content( $reading_id, $post->ID ) );
@@ -449,28 +448,28 @@ class Card_Oracle_Admin {
 				} else {
 					echo '<font color="red">' . $count . '</font>';
 				}
-			break;
+				break;
 
-			case 'number_reading_positions' :
+			case 'number_reading_positions':
 				echo $this->co_get_positions_per_reading( $post->ID );
-			break;
+				break;
 
-			case 'card_title' :
+			case 'card_title':
 				$card_id = get_post_meta( $post->ID, 'co_card_id', true );
 				$card_title = get_the_title( $card_id );
 				echo '<strong><a class="row-title" href="' . admin_url() . 'post.php?post=' . $post->ID . '&action=edit">' .
 				$card_title .'</a></strong>';
-			break;
+				break;
 
-			case 'position_title' :
+			case 'position_title':
 				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
 				echo get_the_title( $position_id );
-			break;
+				break;
 
-			case 'position_number' :
+			case 'position_number':
 				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
 				echo get_post_meta( $position_id, 'co_card_order', true );
-			break;
+				break;
 		}
 
 	}
@@ -478,7 +477,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function enqueue_styles() {
 
@@ -501,7 +500,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 */
 	public function enqueue_scripts() {
 
@@ -524,7 +523,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Limit the number of Readings and Positions custom post type
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	 
 	 */
 	public function limit_positions_cpt_count() {
@@ -581,7 +580,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Create our custom post type for card readings
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return
 	 */
 	public function register_card_oracle_cpt() {
@@ -604,7 +603,6 @@ class Card_Oracle_Admin {
 
 		// Settings for our post type
 		$args = array(
-			
 			'description'		=> 'Holds our card information',
 			'has_archive'		=> false,
 			'hierarchical'      => true,
@@ -639,7 +637,6 @@ class Card_Oracle_Admin {
 
 		// Settings for our post type
 		$args = array(
-			
 			'description'		=> 'Holds our card description information',
 			'has_archive'		=> false,
 			'hierarchical'      => true,
@@ -674,7 +671,6 @@ class Card_Oracle_Admin {
 
 		// Settings for our post type
 		$args = array(
-			
 			'description'		=> 'Holds our card reading information',
 			'has_archive'		=> false,
 			'hierarchical'      => true,
@@ -709,7 +705,6 @@ class Card_Oracle_Admin {
 
 		// Settings for our post type
 		$args = array(
-			
 			'description'		=> 'Holds our card position information',
 			'has_archive'		=> false,
 			'hierarchical'      => true,
@@ -733,7 +728,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading Metabox for Cards CPT
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	
 	 */
 	public function render_card_metabox() {
@@ -767,7 +762,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Card Metabox for Descriptions CPT
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	
 	 */
 	public function render_description_metabox() {
@@ -808,7 +803,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading and Order Metabox for Positions CPT
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	
 	 */
 	public function render_position_metabox() {
@@ -840,18 +835,34 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the Reading Metabox for Cards CPT
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	
 	 */
 	public function render_reading_metabox() {
 
 		global $post;
 		
+		$settings =   array(
+			'wpautop' => true,              // Whether to use wpautop for adding in paragraphs. Note that the paragraphs are added automatically when wpautop is false.
+			'media_buttons' => false,        // Whether to display media insert/upload buttons
+			'textarea_name' => 'footer_text',       // The name assigned to the generated textarea and passed parameter when the form is submitted.
+			'textarea_rows' => 5,          // The number of rows to display for the textarea
+			'tabindex' => '',               // The tabindex value used for the form field
+			'editor_css' => '',             // Additional CSS styling applied for both visual and HTML editors buttons, needs to include <style> tags, can use "scoped"
+			'editor_class' => '',           // Any extra CSS Classes to append to the Editor textarea
+			'teeny' => false,               // Whether to output the minimal editor configuration used in PressThis
+			'dfw' => false,                 // Whether to replace the default fullscreen editor with DFW (needs specific DOM elements and CSS)
+			'tinymce' => true,              // Load TinyMCE, can be used to pass settings directly to TinyMCE using an array
+			'quicktags' => true,            // Load Quicktags, can be used to pass settings directly to Quicktags using an array. Set to false to remove your editor's Visual and Text tabs.
+			'drag_drop_upload' => false     // Enable Drag & Drop Upload Support (since WordPress 3.9)
+		);
+
 		// Generate nonce
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
-		$display_input_checked = get_post_meta( $post->ID, 'display_question', true );
-		if ( $display_input_checked == "yes" ) {
+		// $display_input_checked = get_post_meta( $post->ID, 'display_question', true );
+		$display_input_checked = $post->display_question;
+		if ( $display_input_checked === "yes" ) {
 			$display_input_checked = 'checked="checked"';
 		}
 
@@ -867,26 +878,32 @@ class Card_Oracle_Admin {
 		echo '</label><br />';
 		echo '<input class="co-metabox" name="question_text" type="text" value="' . 
 			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
+		echo '<p><label for="footer_text" class="co-metabox">';
+		_e( 'Footer displayed on daily and random cards', 'card-oracle' );
+		echo '</label><br />';
+		wp_editor ( $post->footer_text, 'footer_text', $settings );
 		
 	} // render_reading_metabox
 
 	/**
 	 * Save the card post meta for Card Oracle
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	
 	 */
 	public function save_card_oracle_meta_data() {
 		global $post;
 
-		if ( ! $this->co_check_rights() ) return;
+		if ( ! $this->co_check_rights() ) {
+			return;
+		}
 
 		// If the Card Reading has been selected update it.
-		if (isset ( $_POST['co_reading_id'] ) ) {
+		if ( isset ( $_POST['co_reading_id'] ) ) {
 			update_post_meta( $post->ID, 'co_reading_id', is_array( $_POST['co_reading_id'] ) ? $_POST['co_reading_id'] : serialize( $_POST['co_reading_id'] ) );
 		}
 		
-		if (isset ( $_POST['co_reading_dropdown'] ) ) {
+		if ( isset ( $_POST['co_reading_dropdown'] ) ) {
 			update_post_meta( $post->ID, 'co_reading_id', array( $_POST['co_reading_dropdown'] ) );
 		}
 
@@ -897,6 +914,13 @@ class Card_Oracle_Admin {
 			delete_post_meta( $post->ID, 'display_question' );
 		}
 
+		// If the Card Reading Footer text has been selected update it.
+		if ( isset ( $_POST['footer_text'] ) ) {
+			update_post_meta( $post->ID, 'footer_text', $_POST['footer_text'] );
+		} else {
+			delete_post_meta( $post->ID, 'footer_text' );
+		}
+
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['question_text'] ) ) {
 			update_post_meta( $post->ID, 'question_text', $_POST['question_text'] );
@@ -905,29 +929,29 @@ class Card_Oracle_Admin {
 		}
 
 		// If the Card Position has been selected update it.
-		if ( isset( $_POST[ 'co_card_position' ] ) ) {
-			update_post_meta( $post->ID, 'co_card_position', wp_kses_post( $_POST[ 'co_card_position' ] ) );
+		if ( isset( $_POST['co_card_position'] ) ) {
+			update_post_meta( $post->ID, 'co_card_position', wp_kses_post( $_POST['co_card_position'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'co_card_position' );
 		}
 
 		// If the Card has been selected update it.
-		if ( isset( $_POST[ 'co_card_id' ] ) ) {
-			update_post_meta( $post->ID, 'co_card_id', wp_kses_post( $_POST[ 'co_card_id' ] ) );
+		if ( isset( $_POST['co_card_id'] ) ) {
+			update_post_meta( $post->ID, 'co_card_id', wp_kses_post( $_POST['co_card_id'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'co_card_id' );
 		}
 
 		// If the Card has been selected update it.
-		if ( isset( $_POST[ 'co_position_id' ] ) ) {
-			update_post_meta( $post->ID, 'co_position_id', wp_kses_post( $_POST[ 'co_position_id' ] ) );
+		if ( isset( $_POST['co_position_id'] ) ) {
+			update_post_meta( $post->ID, 'co_position_id', wp_kses_post( $_POST['co_position_id'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'co_position_id' );
 		}
 
 		// If the Card Position has been selected update it.
-		if ( isset( $_POST[ 'co_card_order' ] ) ) {
-			update_post_meta( $post->ID, 'co_card_order', wp_kses_post( $_POST[ 'co_card_order' ] ) );
+		if ( isset( $_POST['co_card_order'] ) ) {
+			update_post_meta( $post->ID, 'co_card_order', wp_kses_post( $_POST['co_card_order'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'co_card_order' );
 		}
@@ -937,7 +961,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns 
 	 */
 	public function set_custom_cards_columns( $columns ) {
@@ -954,7 +978,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Descriptions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return
 	 */
 	public function set_custom_descriptions_columns( $columns ) {
@@ -974,7 +998,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Readings
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function set_custom_readings_columns( $columns ) {
@@ -991,7 +1015,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the admin columns for Card Positions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function set_custom_positions_columns( $columns ) {
@@ -1008,7 +1032,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Cards
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_card_columns( $columns ) {
@@ -1023,7 +1047,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Descriptions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_description_columns( $columns ) {
@@ -1040,7 +1064,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Set the sortable columns for Positions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function set_custom_sortable_position_columns( $columns ) {
@@ -1055,7 +1079,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Check the user has permissions
 	 * 
-	 * @since	0.4.3
+	 * @since	0.4.4
 	 * @return	$columns
 	 */
 	public function co_check_rights() {
@@ -1063,28 +1087,27 @@ class Card_Oracle_Admin {
 		global $post;
 
         // Check nonce
-        if( ! isset( $_POST['meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['meta_box_nonce'], 'meta_box_nonce' ) ) return false;
+        if ( ! isset( $_POST['meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['meta_box_nonce'], 'meta_box_nonce' ) ) {
+			return false;
+		}
 
         // If this is an autosave, our form has not been submitted, so we don't want to do anything.
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return false;
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return false;
+		}
 
         // Prevent quick edit from clearing custom fields
-        if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) return false;
+        if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return false;
+		}
 
         // Check the user's permissions.
-        if ( ! current_user_can( 'edit_post', $post->ID ) ) return false;
+        if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+			return false;
+		}
 
         return true;
 
-	}
-
-	function console_log($output, $with_script_tags = true) {
-		$js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
-	');';
-		if ($with_script_tags) {
-			$js_code = '<script>' . $js_code . '</script>';
-		}
-		echo $js_code;
 	}
 
 }

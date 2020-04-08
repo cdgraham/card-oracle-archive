@@ -29,33 +29,33 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-	$(document).ready(function() {
-		var clickedButtons = new Array();
-		var count = 0;
-		var positions = $( "div.data" ).data( "positions" );
+	$( document ).ready( function() {
+		let clickedButtons = new Array();
+		let count = 0;
+		let positions = $( "div.data" ).data( "positions" );
 	
 		console.log( 'Number of card positions is ' + positions );
 
-		$(".btn-block").hide();
-		$("#Submit").prop( "disabled", true );
+		$( ".btn-block" ).hide();
+		$( "#Submit" ).prop( "disabled", true );
 	
-		$('button.clicked').click( function() {
+		$( 'button.clicked' ).click( function() {
 			count++;
 	
-			if (count <= positions) {
-				$(this).css('opacity','0.75');
-					clickedButtons.push(this.value);
-				$("#picks").val( clickedButtons.join());
+			if ( count <= positions ) {
+				$( this ).css( 'opacity', '0.75' );
+					clickedButtons.push( this.value );
+				$( "#picks" ).val( clickedButtons.join() );
 	
-			if (count == positions) {
-				$(".btn-block").show();
-				$("#Submit").prop("disabled", false);
-				$('html, body').animate({
-					scrollTop: ($("h1").offset().top)
-				},500);
+				if ( count == positions ) {
+					$( ".btn-block" ).show();
+					$( "#Submit" ).prop("disabled", false);
+					$( 'html, body' ).animate( {
+						scrollTop: ( $( "h1" ).offset().top )
+					}, 500 );
 			   }
 			}
-		  }) 
-	})
+		  } )
+	} )
 
 })( jQuery );

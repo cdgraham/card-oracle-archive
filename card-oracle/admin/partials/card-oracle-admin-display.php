@@ -6,7 +6,7 @@
  * This file is used to markup the admin-facing aspects of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.3
+ * @since      0.4.4
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/admin/partials
@@ -15,13 +15,13 @@
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <?php add_thickbox(); ?>
-<div class="admin-display">
+<div class="wrap admin-display">
     <div class="co__dashboard">
         <span class="dashicons dashicons-dashboard"></span>
         <h2><?php esc_html_e( 'Card Oracle', 'card-oracle' ); ?></h2>
     </div>
 
-    <?php $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'dashboard_options'; ?>
+    <?php $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard_options'; ?>
 
     <h2 class="nav-tab-wrapper">
         <a href="?page=sandbox_theme_options&tab=dashboard_options" class="nav-tab <?php echo $active_tab == 'dashboard_options' ? 'nav-tab-active' : ''; ?>">Dashboard</a>

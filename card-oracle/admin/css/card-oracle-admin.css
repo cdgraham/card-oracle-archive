@@ -4,27 +4,23 @@
  */
 
 .admin-display {
-    margin: 0 20px 20px 0;
     display: block;
+    margin: 0 20px 20px 0;
 }
 
 .co-metabox {
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 10px;
     margin-right: 10px;
 }
 
-.co-metabox-textbox {
-    width: 5em;
-}
-
 .co__shortcode-header {
-    justify-content: center;
-    display: flex;
     background-color: #cccccc;
-    font-size: 1.25rem;
     border-top: 4px solid darkcyan;
     color: #000000;
+    display: flex;
+    font-size: 1.25rem;
+    justify-content: center;
 }
 
 .co__shortcode-header p {
@@ -37,15 +33,15 @@
 }
 
 input.co-shortcode {
-    padding: 0 8px;
+    background-color: white;
+    border: 1px solid #7e8993;
     border-radius: 3px;
     box-shadow: 0 0 0 transparent;
-    border: 1px solid #7e8993;
-    background-color: white;
     color: #32373c;
     line-height: 2;
-    min-height: 30px;
     margin-right: 5px;
+    min-height: 30px;
+    padding: 0 8px;
 }
 
 .copy-action-btn img {
@@ -54,9 +50,9 @@ input.co-shortcode {
 }
 
 .co__dashboard {
+    align-items: center;
     display: flex;
     justify-content: left;
-    align-items: center;
 }
 
 .co__dashboard span {
@@ -64,24 +60,24 @@ input.co-shortcode {
 }
 
 .co__cards {
-    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
     border: 1px solid darkcyan;
     border-radius: 4px;
+    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
     margin: 0 auto;
     margin-bottom: 1rem;
     padding: 5px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    gap: 1rem;
 }
 
 .co__stats {
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
     display: grid;
     margin: 0 auto;
     margin-bottom: 1rem;
     padding: 5px;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
 }
 
 .co__card {
@@ -95,21 +91,21 @@ input.co-shortcode {
 
 .co__card-header,
 .co__stat-header {
-    padding: 15px;
-    display: flex;
     background-color: #cccccc;
-    font-size: 1.5rem;
     border-top: 4px solid darkcyan;
     color: #000000;
+    display: flex;
+    font-size: 1.5rem;
+    padding: 15px;
 }
 
 .co__card-body {
-    padding: 15px;
-    display: flex;
-    background-color: #eeeeee;
-    justify-content: space-between;
     align-items: center;
+    background-color: #eeeeee;
+    display: flex;
     font-size: 1.25rem;
+    justify-content: space-between;
+    padding: 15px;
 }
 
 .co__cards a {
@@ -120,23 +116,23 @@ input.co-shortcode {
     font-style: italic;
 }
 .co__readings {
-    margin: 1rem 0 1rem 0;
     display: grid;
     grid-template-columns: minmax(500px, 1fr);
+    margin: 1rem 0 1rem 0;
 }
 
 .co__stat,
 .co__card_reading_metabox {
-    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
     border: 1px solid darkcyan;
     border-radius: 4px;
+    box-shadow: 0 3rem 2rem -3rem rgba(0, 0, 0, 0.2);
     padding: 5px;
 }
 
 .co__stat-body p {
-    text-align: "." right;
     font-size: 1.25rem;
     padding-left: 15px;
+    text-align: "." right;
 }
 
 .co__stat-left {
@@ -153,11 +149,11 @@ input.co-shortcode {
     width: 24px;
 }
 
-#wpfooter {
+/* #wpfooter {
     background-color: #eeeeee;
+    bottom: 0;
+    display: inline-block;
     position: fixed;
     top: auto;
-    bottom: 0;
     width: 100%;
-    display: inline-block;
-}
+} */
