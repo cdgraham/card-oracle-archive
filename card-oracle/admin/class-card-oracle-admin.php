@@ -104,7 +104,6 @@ class Card_Oracle_Admin {
 		);
 
 		$cards = new WP_Query( $args );
-		echo $cards->request;
 
 		// The number of cards returned
 		$count = count( $cards->posts );
@@ -199,7 +198,7 @@ class Card_Oracle_Admin {
 	 * can include all cards when $card_id is not set or one or more cards when it is set. $card_id
 	 * can be a single id or an array of ids.
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.6
 	 * @return	$description_ids	The array of description IDs and Content
 	 */
 	public function get_co_description_id_content( $reading_id, $card_id = NULL ) {
@@ -221,7 +220,7 @@ class Card_Oracle_Admin {
 					"WHERE post_type = 'co_descriptions' " .
 					"AND post_status = 'publish' " .
 					"AND meta_key = 'co_card_id' " .
-					"AND meta_value IN (" . $subquery . ")";
+					"AND meta_value IN ('" . $subquery . "')";
 
 		// The $positions is an array of all the positions in a reading, it consists of
 		// the position title and position ID
@@ -241,17 +240,17 @@ class Card_Oracle_Admin {
 		$sql = "SELECT ID FROM $wpdb->posts 
 			INNER JOIN $wpdb->postmeta m1 ON ID = m1.post_id
 			INNER JOIN $wpdb->postmeta m2 ON ID = m2.post_id
-			WHERE ( m1.meta_key = 'co_card_id' AND m1.meta_value IN (
+			WHERE post_status = 'publish'
+			AND ( m1.meta_key = 'co_card_id' AND m1.meta_value IN (
 				SELECT ID FROM $wpdb->posts
 				INNER JOIN $wpdb->postmeta ON ID = post_id 
 				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
-				AND post_type = 'co_cards' AND ((post_status = 'publish')))
-			) AND ( m2.meta_key = 'co_position_id' AND m2.meta_value IN (
+				AND post_type = 'co_cards' AND ( ( post_status = 'publish' ) ) ) )
+			AND ( m2.meta_key = 'co_position_id' AND m2.meta_value IN (
 				SELECT ID FROM $wpdb->posts
 				INNER JOIN $wpdb->postmeta ON ID = post_id 
 				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
-				AND post_type = 'co_positions' AND ((post_status = 'publish')))
-			)";
+				AND post_type = 'co_positions' AND ( ( post_status = 'publish' ) ) )	)";
 
 		$description_ids = $wpdb->get_results( $sql, OBJECT );
 
@@ -428,7 +427,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Display the custom admin columns for Cards
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.6
 	 */
 	public function custom_card_column( $column ) {
 
@@ -471,13 +470,16 @@ class Card_Oracle_Admin {
 			case 'number_card_descriptions':
 
 				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
-				$count = count( $this->get_co_description_id_content( $reading_id, $post->ID ) );
-				$positions = $this->co_get_positions_per_reading( $reading_id );
-
-				if ( $count == $positions ) {
-					echo $count;
-				} else {
-					echo '<font color="red">' . $count . '</font>';
+				
+				for ( $i = 0; $i < count( $reading_id ); $i++ ) {
+					$count = count( $this->get_co_description_id_content( $reading_id[$i], $post->ID ) );
+					$positions = $this->co_get_positions_per_reading( $reading_id[$i] );
+	
+					if ( $count == $positions ) {
+						echo '<p>' . $count . '</p>';
+					} else {
+						echo '<p><font color="red">' . $count . '</font></p>';
+					}
 				}
 				break;
 

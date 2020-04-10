@@ -22,7 +22,7 @@ msgid "Card Oracle"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://cuspstudios.com/card-oracle"
+msgid "https://chillichalli.com/card-oracle"
 msgstr ""
 
 #. Description of the plugin

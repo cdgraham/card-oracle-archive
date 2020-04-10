@@ -4,7 +4,7 @@
  * The public-facing functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.4
+ * @since      0.4.5
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/public
@@ -25,7 +25,7 @@ class Card_Oracle_Public {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.5
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Public {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.5
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Public {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.5
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.5
 	 */
 	public function enqueue_styles() {
 
@@ -80,7 +80,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.5
 	 */
 	public function enqueue_scripts() {
 
@@ -103,7 +103,7 @@ class Card_Oracle_Public {
 	/**
 	 * Get all the published cards for a specific reading
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.5
 	 * @return
 	 */
 	public function get_cards_for_reading( $reading_id ) {
@@ -121,7 +121,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.5
 	 * @return
 	 */
 	public function display_card_oracle_card_of_day( $atts ) {
@@ -157,7 +157,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.5
 	 * @return
 	 */
 	public function display_card_oracle_random_card( $atts ) {
@@ -196,7 +196,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.4
+	 * @since	0.4.6
 	 * @return
 	 */
 	public function display_card_oracle_set( $atts ) {
@@ -231,11 +231,14 @@ class Card_Oracle_Public {
 		$question_text = get_post_meta( $id, 'question_text', true );
 
 		if ( !isset( $_POST['Submit'] ) ):
+			// Get the image for the back of the card
+			$card_back_url = get_the_post_thumbnail_url( $id, 'medium' );
+
 			// Get all the published cards for this reading
 			$card_ids = $this->get_cards_for_reading( $id );
 
 			// The number of cards returned
-			$card_count = $wpdb->num_rows;
+			$card_count = count( $card_ids );
 
 			// Get just the card ids and shuffle them
 			shuffle( $card_ids );
@@ -263,12 +266,11 @@ class Card_Oracle_Public {
 			// Display the back of the cards
 			for ( $i = 0; $i < $card_count; $i++) {
 				$page_display .= '<button type="button" value="'. $card_ids[$i]->ID .
-					'" id="id' . $card_ids[$i]->ID .
-					'" onclick="this.disabled = true;" 
-					class="btn btn-default clicked" 
-					><img class="img-btn" src="' . get_the_post_thumbnail_url( $id, 'medium' ) . '">
+					'" id="id' . $card_ids[$i]->ID . '" onclick="this.disabled = true;" 
+					class="btn btn-default clicked"><img class="img-btn" src="' . $card_back_url . '">
 					</button>';
 			}
+
 			$page_display .= '</div>';
 		endif;
 
