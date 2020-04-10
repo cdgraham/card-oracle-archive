@@ -115,7 +115,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Render the options page for plugin
 	 *
-	 * @since	0.4.4
+	 * @since	0.4.5
 	 */
 	public function display_card_oracle_options_page() {
 		global $wpdb;
@@ -229,6 +229,12 @@ class Card_Oracle_Admin {
 
 	}
 
+	/**
+	 * Get all the descriptions post ids and reading id and post_type co_descriptions
+	 * 
+	 * @since	0.4.5
+	 * @return	$description_ids	The array of description IDs and Content
+	 */
 	function get_co_description_ids( $reading_id ) {
 		global $wpdb;
 
