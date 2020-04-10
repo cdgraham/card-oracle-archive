@@ -36,7 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 if ( ! defined( 'CARD_ORACLE_VERSION' ) ) {
-	define( 'CARD_ORACLE_VERSION', '0.4.4' );
+	define( 'CARD_ORACLE_VERSION', '0.4.6' );
 }
 
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
