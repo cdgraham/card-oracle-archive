@@ -133,13 +133,25 @@ class Card_Oracle_Public {
 		$card_ids = $this->get_cards_for_reading( $atts['id'] );
 		$index = date( 'z' ) % count( $card_ids );
 		$card_of_day = get_post( $card_ids[$index]->ID );
+		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
+		$footer = get_post_meta( $atts['id'], 'footer_text', true );
 
-		return '<div class="cotd-wrapper">
-				<cotd-header>' . $card_of_day->post_title . '</cotd-header>
-				<cotd-aside><img src="' . get_the_post_thumbnail_url( $card_of_day, 'medium' ) . '"></cotd-aside>
-				<cotd-main>' . $card_of_day->post_content . '</cotd-main>
-				<cotd-footer>' . get_post_meta( $atts['id'], 'footer_text', true ) . '</cotd-footer>
-			  </div>';
+		$display_html = '<div class="cotd-wrapper">
+			<cotd-header>' . $card_of_day->post_title . '</cotd-header>
+			<cotd-main>' . $card_of_day->post_content . '</cotd-main>';
+
+			
+		if ( ! empty( $image ) ) {
+			$display_html .= '<cotd-aside><img src="' . $image . '"></cotd-aside>';
+		}
+
+		if ( ! empty( $footer ) ) {
+			$display_html .= '<cotd-footer>' . $footer . '</cotd-footer>';
+		}
+
+		$display_html .= '</div>';
+
+		return $display_html;
 	}
 
 	/**
@@ -157,13 +169,28 @@ class Card_Oracle_Public {
 		$card_ids = $this->get_cards_for_reading( $atts['id'] );
 		$card_count = count( $card_ids ) - 1;
 		$card_of_day = get_post( $card_ids[rand( 0, $card_count )]->ID );
+		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
+		$footer = get_post_meta( $atts['id'], 'footer_text', true );
 
-		return '<div class="cotd-wrapper">
+		if ( ! empty( $footer ) ) {
+			$footer_html = '<cotd-footer>' . $footer . '</cotd-footer>';
+		}
+
+		$display_html = '<div class="cotd-wrapper">
 				<cotd-header>' . $card_of_day->post_title . '</cotd-header>
-				<cotd-aside><img src="' . get_the_post_thumbnail_url( $card_of_day, 'medium' ) . '"></cotd-aside>
-				<cotd-main>' . $card_of_day->post_content . '</cotd-main>
-				<cotd-footer>' . get_post_meta( $atts['id'], 'footer_text', true ) . '</cotd-footer>
-			  </div>';
+				<cotd-main>' . $card_of_day->post_content . '</cotd-main>';
+
+		if ( ! empty( $image ) ) {
+			$display_html .= '<cotd-aside><img src="' . $image . '"></cotd-aside>';
+		}
+
+		if ( ! empty( $footer ) ) {
+			$display_html .= '<cotd-footer>' . $footer . '</cotd-footer>';
+		}
+
+		$display_html .= '</div>';
+
+		return $display_html;
 	}
 
 	/**

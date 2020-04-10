@@ -98,11 +98,13 @@ class Card_Oracle_Admin {
 				array(
 					'key' => 'co_reading_id',
 					'value' => $reading_id,
+					'compare' => 'LIKE',
 				),
 			),
 		);
 
 		$cards = new WP_Query( $args );
+		echo $cards->request;
 
 		// The number of cards returned
 		$count = count( $cards->posts );
@@ -142,7 +144,7 @@ class Card_Oracle_Admin {
 			$reading_array[$i] = new stdClass();
 			$reading_array[$i]->positions = count( $this->get_co_position_id_title( $readings[$i]->ID ) );
 			$reading_array[$i]->cards = count( $this->get_co_card_id_title( $readings[$i]->ID ) );
-			$reading_array[$i]->descriptions = count( $this->get_co_description_id_content( $readings[$i]->ID ) );
+			$reading_array[$i]->descriptions = count( $this->get_co_description_ids( $readings[$i]->ID ) );
 		}
 
 		include_once 'partials/card-oracle-admin-display.php';
@@ -223,9 +225,32 @@ class Card_Oracle_Admin {
 
 		// The $positions is an array of all the positions in a reading, it consists of
 		// the position title and position ID
+		return $wpdb->get_results( $sql, OBJECT );
+
+	}
+
+	function get_co_description_ids( $reading_id ) {
+		global $wpdb;
+
+		$sql = "SELECT ID FROM $wpdb->posts 
+			INNER JOIN $wpdb->postmeta m1 ON ID = m1.post_id
+			INNER JOIN $wpdb->postmeta m2 ON ID = m2.post_id
+			WHERE ( m1.meta_key = 'co_card_id' AND m1.meta_value IN (
+				SELECT ID FROM $wpdb->posts
+				INNER JOIN $wpdb->postmeta ON ID = post_id 
+				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
+				AND post_type = 'co_cards' AND ((post_status = 'publish')))
+			) AND ( m2.meta_key = 'co_position_id' AND m2.meta_value IN (
+				SELECT ID FROM $wpdb->posts
+				INNER JOIN $wpdb->postmeta ON ID = post_id 
+				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
+				AND post_type = 'co_positions' AND ((post_status = 'publish')))
+			)";
+
 		$description_ids = $wpdb->get_results( $sql, OBJECT );
 
 		return $description_ids;
+
 	}
 
 	/**
@@ -539,7 +564,7 @@ class Card_Oracle_Admin {
 		}
 
 		if ( $typenow === 'co_readings' ) {
-			$type = 'Readings';
+			$message = __( 'Sorry, the maximum number of Readings has been reached.', 'card-oracle' );
 			$limit = 1;
 			// Grab all our Readings CPT
 			$total = get_posts( array( 
@@ -548,7 +573,7 @@ class Card_Oracle_Admin {
 				'post_status' => 'publish, future, draft' 
 			));
 		} elseif ( $typenow === 'co_positions' ) {
-			$type = 'Positions';
+			$message = __( 'Sorry, the maxiumum number of Positions has been reached.', 'card-oracle' );
 			$limit = 5;
 			// Grab all our Positions CPT
 			$total = get_posts( array( 
@@ -556,18 +581,28 @@ class Card_Oracle_Admin {
 				'numberposts' => -1, 
 				'post_status' => 'publish, future, draft' 
 			));
+		} elseif ( $typenow === 'co_cards' ) {
+			$message = __( 'Sorry, the maxiumum number of Cards has been reached.', 'card-oracle' );
+			$limit = 25;
+			// Grab all our Positions CPT
+			$total = get_posts( array( 
+				'post_type' => 'co_cards', 
+				'numberposts' => -1, 
+				'post_status' => 'publish, future, draft' 
+			));
 		} else {
 			return;
+			
 		}
 	
 		# Condition match, block new post
 		if ( !empty( $total ) && count( $total ) >= $limit ) {
-			echo '<p>Sorry, the maximum number of '. $type . ' for the free version of the plugin have been reached.</p>';
-			echo '<p>Please consider upgrading to our premium version.</p>';
+			echo '<p>' . $message . '</p>';
+			echo '<p>' . __( 'Please consider upgrading to our premium version.', 'card-oracle' ) . '</p>';
 
 			wp_die(
-				'You can purchase it here:', 
-				'Maximum reached',  
+				__( 'You can purchase it here:', 'card-oracle' ), 
+				__( 'Maximum reached', 'card-oracle' ),  
 				array( 
 					'response' => 500, 
 					'back_link' => true 
@@ -879,7 +914,7 @@ class Card_Oracle_Admin {
 		echo '<input class="co-metabox" name="question_text" type="text" value="' . 
 			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
 		echo '<p><label for="footer_text" class="co-metabox">';
-		_e( 'Footer displayed on daily and random cards', 'card-oracle' );
+		_e( 'Footer to be displayed on daily and random cards', 'card-oracle' );
 		echo '</label><br />';
 		wp_editor ( $post->footer_text, 'footer_text', $settings );
 		
