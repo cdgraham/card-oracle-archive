@@ -286,8 +286,7 @@ class Card_Oracle_Admin {
 	 * 
 	 * @since	0.4.4
 	 */
-	public function get_reading_dropdown_box( $selected_reading ) {
-		
+	public function get_reading_dropdown_box( $selected_reading ) {	
 		if ( TRUE ) { // Unlimited Readings in Premium
 			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_dropdown', 
 				'show_option_none' => __( '(no reading)' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
@@ -295,6 +294,7 @@ class Card_Oracle_Admin {
 			return wp_dropdown_pages( array( 'post_type' => 'co_readings', 'selected' => $selected_reading, 'name' => 'co_reading_dropdown', 
 				'sort_column'=> 'post_title', 'number' => 1, 'echo' => 0 ) );
 		}
+
 	}
 
 	/**
@@ -389,7 +389,7 @@ class Card_Oracle_Admin {
 		add_menu_page( __( 'Card Oracle', 'card-oracle' ), __( 'Card Oracle', 'card-oracle' ),
 		'manage_options', 'card-oracle-admin-menu', array( $this, 'display_card_oracle_options_page'), $co_admin_icon, 40 );
 		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle Options', 'card-oracle' ), __( 'Dashboard', 'card-oracle' ),
-			'manage_options', 'card-oracle-admin-menu', array ($this, 'display_card_oracle_options_page') );
+			'manage_options', 'card-oracle-admin-menu', array ( $this, 'display_card_oracle_options_page' ) );
 		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle Readings Admin', 'card-oracle' ), __( 'Readings', 'card-oracle' ),
 			'manage_options', 'edit.php?post_type=co_readings' );
 		add_submenu_page( 'card-oracle-admin-menu', __( 'Card Oracle positions Admin', 'card-oracle' ), __( 'Positions', 'card-oracle' ),
@@ -784,7 +784,7 @@ class Card_Oracle_Admin {
 		$readings = $this->get_co_reading_id_title();
 		$selected_readings = get_post_meta( $post->ID, 'co_reading_id', true );
 
-		echo '<div class=""><p><label class="co-metabox" for="co_reading_id">';
+		echo '<div class=""><p><label class="co__metabox" for="co_reading_id">';
 		_e( 'Card Reading', 'card-oracle' );
 		echo '</label></p>';
 
@@ -796,7 +796,7 @@ class Card_Oracle_Admin {
 			}
 
 			echo '<p><input type="checkbox" name="co_reading_id[]" value="' . 
-				$id->ID . '" ' . $checked . ' />' . $id->post_title . '</p>';
+				$id->ID . '" ' . $checked . ' />' . esc_html( $id->post_title ) . '</p>';
 		}
 		echo '</div>';
 		
@@ -819,7 +819,7 @@ class Card_Oracle_Admin {
 
 		$selected_card = get_post_meta( $post->ID, 'co_card_id', true );
 
-		echo '<p><label class="co-metabox">';
+		echo '<p><label class="co__metabox">';
 		_e( 'Card', 'card-oracle' );
 		echo '</label><br />';
 
@@ -831,7 +831,7 @@ class Card_Oracle_Admin {
 
 		$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
 
-		echo '<label class="co-metabox">';
+		echo '<label class="co__metabox">';
 		_e( 'Description Position', 'card-oracle' );
 		echo '</label><br />';
 
@@ -857,21 +857,21 @@ class Card_Oracle_Admin {
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
 		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
+		$reading_id = is_array( $selected_reading ) ? $selected_reading[0] : "";
 		
-		echo '<p><label class="co-metabox">';
+
+		echo '<p><label class="co__metabox">';
 		_e( 'Card Reading', 'card-oracle' );
 		echo '</label><br />';
-		echo $this->get_reading_dropdown_box( $selected_reading[0] );
+		echo $this->get_reading_dropdown_box( $reading_id );
 		echo '</p>';
 
-		echo '<p><label class="co-metabox" for="co_card_order">';
+		echo '<p><label class="co__metabox" for="co_card_order">';
 		_e( 'Card Order', 'card-oracle' );
 		echo '</label><br />';
-		echo '<input class="co-metabox-textbox" name="co_card_order" type="number" min="1" ' . 
+		echo '<input class="co__metabox-number" name="co_card_order" type="number" min="1" ' . 
 			 'ondrop="return false" onpaste="return false" value="' . 
 			 esc_html( $post->co_card_order ) . '" /></p>';
-
-//			 esc_html( get_post_meta( $post->ID, "co_card_order", true ) ) . '" /></p>';
 		
 	} // render_position_metabox
 
@@ -909,19 +909,19 @@ class Card_Oracle_Admin {
 			$display_input_checked = 'checked="checked"';
 		}
 
-		echo '<p><input class="co-metabox" type="checkbox" name="display_question" value="yes" ' . $display_input_checked . ' />';
-		echo '<label for="display_question" class="co-metabox">';
+		echo '<p><input class="co__metabox" type="checkbox" name="display_question" value="yes" ' . $display_input_checked . ' />';
+		echo '<label for="display_question" class="co__metabox">';
 		_e( 'Display Input Box', 'card-oracle' );
 		echo '</label></p>';
 		echo '<p class="co__help-text">';
 		_e( 'Checking this box will display an input field to the users to enter a question.', 'card-oracle' );
 		echo '</p>';
-		echo '<p><label for="question_text" class="co-metabox">';
+		echo '<p><label for="question_text" class="co__metabox">';
 		_e( 'Text for question input box', 'card-oracle' );
 		echo '</label><br />';
-		echo '<input class="co-metabox" name="question_text" type="text" value="' . 
+		echo '<input class="co__metabox" name="question_text" type="text" value="' . 
 			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
-		echo '<p><label for="footer_text" class="co-metabox">';
+		echo '<p><label for="footer_text" class="co__metabox">';
 		_e( 'Footer to be displayed on daily and random cards', 'card-oracle' );
 		echo '</label><br />';
 		wp_editor ( $post->footer_text, 'footer_text', $settings );

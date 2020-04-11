@@ -34,9 +34,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	$sql = "DELETE posts, terms, meta
 	FROM wpl9_posts posts
 	LEFT JOIN wpl9_term_relationships terms
-		ON (posts.ID = terms.object_id)
+		ON ( posts.ID = terms.object_id )
 	LEFT JOIN wpl9_postmeta meta
-		ON (posts.ID = meta.post_id)
+		ON ( posts.ID = meta.post_id )
 	WHERE posts.post_type in ( 'co_cards', 'co_descriptions', 'co_positions', 'co_readings' );";
 
 	$wpdb->get_results( $sql, OBJECT );

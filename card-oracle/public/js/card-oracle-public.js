@@ -1,4 +1,4 @@
-(function( $ ) {
+( function( $ ) {
 	'use strict';
 
 	/**
@@ -11,13 +11,13 @@
 	 *
 	 * This enables you to define handlers, for when the DOM is ready:
 	 *
-	 * $(function() {
+	 * $( function() {
 	 *
 	 * });
 	 *
 	 * When the window is loaded:
 	 *
-	 * $( window ).load(function() {
+	 * $( window ).load( function() {
 	 *
 	 * });
 	 *
@@ -49,7 +49,7 @@
 	
 				if ( count == positions ) {
 					$( ".btn-block" ).show();
-					$( "#Submit" ).prop("disabled", false);
+					$( "#Submit" ).prop( "disabled", false );
 					$( 'html, body' ).animate( {
 						scrollTop: ( $( "h1" ).offset().top )
 					}, 500 );

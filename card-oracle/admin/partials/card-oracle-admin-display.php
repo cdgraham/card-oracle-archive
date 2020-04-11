@@ -19,13 +19,14 @@
     <div class="co__dashboard">
         <span class="dashicons dashicons-dashboard"></span>
         <h2><?php esc_html_e( 'Card Oracle', 'card-oracle' ); ?></h2>
+        <p>Version: <?php echo $this->version; ?></p>
     </div>
 
     <?php $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard_options'; ?>
 
     <h2 class="nav-tab-wrapper">
-        <a href="?page=sandbox_theme_options&tab=dashboard_options" class="nav-tab <?php echo $active_tab == 'dashboard_options' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
-        <a href="?page=sandbox_theme_options&tab=settings_options" class="nav-tab <?php echo $active_tab == 'settings_options' ? 'nav-tab-active' : ''; ?>">Settings</a>
+        <a href="?page=card-oracle-admin-menu&tab=dashboard_options" class="nav-tab <?php echo $active_tab == 'dashboard_options' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
+        <a href="?page=card-oracle-admin-menu&tab=settings_options" class="nav-tab <?php echo $active_tab == 'settings_options' ? 'nav-tab-active' : ''; ?>">Settings</a>
     </h2>
     <div id="co_dashboard" class="dashboardcontent">
         <div class="co__cards">
@@ -36,7 +37,7 @@
                     </div>
                     <div class="co__card-body">
                         <div class="count"><?php echo ( $readings_text ); ?></div>
-                        <div class="icon-container push-right dashicons dashicons-welcome-view-site"></div>
+                        <div class="co__icon-container dashicons dashicons-welcome-view-site"></div>
                     </div>
                 </a>
             </div>
@@ -47,7 +48,7 @@
                     </div>
                     <div class="co__card-body">
                         <div class="count"><?php echo ( $positions_text ); ?></div>
-                        <div class="icon-container push-right dashicons dashicons-editor-ol"></div>
+                        <div class="co__icon-container dashicons dashicons-editor-ol"></div>
                     </div>
                 </a>
             </div>
@@ -58,7 +59,7 @@
                     </div>
                     <div class="co__card-body">
                         <div class="count"><?php echo ( $cards_text ); ?></div>
-                        <div class="icon-container push-right dashicons dashicons-admin-page"></div>
+                        <div class="co__icon-container dashicons dashicons-admin-page"></div>
                     </div>
                 </a>
             </div>
@@ -70,7 +71,7 @@
                     </div>
                     <div class="co__card-body">
                         <div class="count"><?php echo ( $descriptions_text ); ?></div>
-                        <div class="icon-container push-right dashicons dashicons-media-text"></div>
+                        <div class="co__icon-container dashicons dashicons-media-text"></div>
                     </div>
                 </a>
             </div>
@@ -95,14 +96,16 @@
                 
                     <div class="co__stat">
                         <div class="co__stat-header">
-                            <?php echo ( $readings[$i]->post_title ); ?>
+                            <?php echo esc_html( $readings[$i]->post_title ); ?>
                         </div>
                         <div class="co__stat-body">
                             <p><?php echo $position_text ?></p>
                             <p><?php echo $card_text; ?></p>
                             <p><?php echo $description_text; ?></p>
-                            <a href="#TB_inline?&width=274&height=350&inlineId=co-shortcodes-<?php echo $i?>" 
-                                class="thickbox" name="Card Oracle Shortcodes"><?php esc_html_e( 'Reading Shortcodes' ); ?></a>	
+                            <div class="co__shortcode-links">
+                                <a href="#TB_inline?&width=274&height=350&inlineId=co-shortcodes-<?php echo $i?>" 
+                                    class="thickbox" name="Card Oracle Shortcodes"><?php esc_html_e( 'Reading Shortcodes' ); ?></a>
+                            </div>
                             <div id="co-shortcodes-<?php echo $i?>" style="display:none;">
                                 <p class="co__shortcode-header"><?php esc_html_e( 'Reading Shortcode' ); ?></p>
                                 <div class="co__shortcode-body">

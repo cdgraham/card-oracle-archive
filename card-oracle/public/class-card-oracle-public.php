@@ -233,6 +233,9 @@ class Card_Oracle_Public {
 		if ( !isset( $_POST['Submit'] ) ):
 			// Get the image for the back of the card
 			$card_back_url = get_the_post_thumbnail_url( $id, 'medium' );
+			if ( empty( $card_back_url ) ) {
+				$card_back_url = PLUGIN_URL . 'assets/images/cardback.png';
+			}
 
 			// Get all the published cards for this reading
 			$card_ids = $this->get_cards_for_reading( $id );
@@ -279,7 +282,7 @@ class Card_Oracle_Public {
 			$cards = explode( ',', $_POST['picks'] );
 
 			$page_display .= '<div class="w3-container">
-			<h2>' . $question_text . '</h2><h3>' . $_POST["question"] . '</h3>';
+				<h2>' . $question_text . '</h2><h3>' . sanitize_text_field( $_POST["question"] ) . '</h3>';
 
 			for ( $i = 0; $i < count( $cards ); $i++ ) {
 		

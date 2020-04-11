@@ -23,9 +23,9 @@
 class Card_Oracle_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Sets Card Oracle Version during activation.
 	 *
-	 * Long Description.
+	 * Sets Card Oracle Version during activation.
 	 *
 	 * @since    0.4.4
 	 */

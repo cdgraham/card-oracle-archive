@@ -11,13 +11,13 @@
 	 *
 	 * This enables you to define handlers, for when the DOM is ready:
 	 *
-	 * $(function() {
+	 * $( function() {
 	 *
 	 * });
 	 *
 	 * When the window is loaded:
 	 *
-	 * $( window ).load(function() {
+	 * $( window ).load( function() {
 	 *
 	 * });
 	 *
@@ -29,7 +29,7 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-	$(document).on("click", ".copy-action-btn", function() { 
+	$( document ).on( "click", ".copy-action-btn", function() { 
 		let trigger = $( this );
 		$( ".copy-action-btn" ).removeClass( "text-success" );
 		let $tempElement = $( "<input>" );
@@ -38,7 +38,7 @@
 		$tempElement.val( copyText ).select();
 		document.execCommand( "Copy" );
 		$tempElement.remove();
-		$(trigger).addClass( "text-success" );
+		$( trigger ).addClass( "text-success" );
 	});
 
 })( jQuery );
