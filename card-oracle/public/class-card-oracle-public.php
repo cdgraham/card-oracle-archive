@@ -121,7 +121,7 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.5
+	 * @since	0.4.7
 	 * @return
 	 */
 	public function display_card_oracle_card_of_day( $atts ) {

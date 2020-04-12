@@ -86,7 +86,7 @@ class Card_Oracle_Admin {
 	/**
 	 * Get all positions cpt
 	 * 
-	 * @since	0.4.6
+	 * @since	0.4.7
 	 * @param	
 	 * @return	array	All positions ids.
 	 */

@@ -64,13 +64,13 @@ class Card_Oracle {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.7
 	 */
 	public function __construct() {
 		if ( defined( 'CARD_ORACLE_VERSION' ) ) {
 			$this->version = CARD_ORACLE_VERSION;
 		} else {
-			$this->version = '0.4.4';
+			$this->version = '0.4.7';
 		}
 		$this->plugin_name = 'card-oracle';
 
@@ -154,7 +154,7 @@ class Card_Oracle {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.4.7
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
