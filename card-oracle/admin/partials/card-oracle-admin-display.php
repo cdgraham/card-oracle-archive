@@ -22,13 +22,14 @@
         <p>Version: <?php echo $this->version; ?></p>
     </div>
 
-    <?php $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard_options'; ?>
+    <?php $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard'; ?>
 
     <h2 class="nav-tab-wrapper">
-        <a href="?page=card-oracle-admin-menu&tab=dashboard_options" class="nav-tab <?php echo $active_tab == 'dashboard_options' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
-        <a href="?page=card-oracle-admin-menu&tab=settings_options" class="nav-tab <?php echo $active_tab == 'settings_options' ? 'nav-tab-active' : ''; ?>">Settings</a>
+        <a href="?page=card-oracle-admin-menu&tab=dashboard" class="nav-tab <?php echo $active_tab == 'dashboard' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
+        <a href="?page=card-oracle-admin-menu&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
     </h2>
-    <div id="co_dashboard" class="dashboardcontent">
+    <?php if ( $active_tab === 'dashboard' ) { ?>
+    <div id="co_dashboard" class="co__dashboard-content">
         <div class="co__cards">
             <div class="co__card">
                 <a class="stats-link" href="<?php echo admin_url( 'edit.php?post_type=co_readings' ); ?>">
@@ -143,10 +144,19 @@
                 <?php } ?>
 
             </div> <!-- Statistics for each Reading -->
-
     </div> <!-- co_dashboard -->
+    <?php } else { ?>
+        <div id="co_settings wrap" class="settingscontent">
+            
+            <form method="post" action="<?php echo esc_url( add_query_arg( 'tab', $active_tab, admin_url( 'options.php' ) ) ); ?>">
+                <?php
+                    settings_fields( 'card-oracle-admin-menu' );
+                    do_settings_sections( 'card-oracle-admin-menu' );
+                    submit_button();
+                ?>
+            </form>
 
-    <div id="co_settings" class="settingscontent">
-    </div> <!-- co_settings -->
+        </div> <!-- co_settings -->
+    <?php } ?>
 
 </div> <!-- the-admin-display -->

@@ -280,22 +280,25 @@ class Card_Oracle_Public {
 		if ( isset( $_POST['Submit'] ) )
 		{
 			$cards = explode( ',', $_POST['picks'] );
+			$page_display .= '<div class="">';
 
-			$page_display .= '<div class="w3-container">
-				<h2>' . $question_text . '</h2><h3>' . sanitize_text_field( $_POST["question"] ) . '</h3>';
+			if ( ! empty( $_POST["question"] ) ) {
+				$page_display .= '<h2>' . $question_text . '</h2><h3>' . sanitize_text_field( $_POST["question"] ) . '</h3>';
+			}
 
 			for ( $i = 0; $i < count( $cards ); $i++ ) {
 		
 				$sql = "SELECT m1.post_id FROM " . $wpdb->prefix . "postmeta m1 " .
-					"INNER JOIN " . $wpdb->prefix . "postmeta m2 " . 
-					"ON m1.post_id = m2.post_id " .
-					"AND m2.meta_key = 'co_card_id' " .
-					"AND m2.meta_value = " . $cards[$i] . " " .
-					"WHERE m1.meta_key = 'co_position_id' " . 
-					"AND m1.meta_value = " . $positions[$i]->ID;
+				"INNER JOIN " . $wpdb->prefix . "posts p1 " .
+				"ON p1.ID = m1.post_id AND p1.post_status = 'publish' " .
+				"INNER JOIN " . $wpdb->prefix . "postmeta m2 " . 
+				"ON m1.post_id = m2.post_id " .
+				"AND m2.meta_key = 'co_card_id' " .
+				"AND m2.meta_value = " . $cards[$i] . " " .
+				"WHERE m1.meta_key = 'co_position_id' " . 
+				"AND m1.meta_value LIKE '%" . serialize( $positions[$i]->ID ) . "%';";
 
 				$description_id = $wpdb->get_results( $sql, OBJECT );
-				
 				if ( $description_id ) {
 					$description = get_post( $description_id[0]->post_id );
 					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3>' .

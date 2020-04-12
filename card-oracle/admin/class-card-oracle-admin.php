@@ -82,8 +82,30 @@ class Card_Oracle_Admin {
 		return ( wp_count_posts( $card_oracle_cpt )->publish );
 
 	}
+
 	/**
-	 * Get the total counts of a cpt
+	 * Get all positions cpt
+	 * 
+	 * @since	0.4.6
+	 * @param	
+	 * @return	array	All positions ids.
+	 */
+	public function co_get_positions_ids() {
+		$args = array(
+			'fields'		=> 'ids',
+			'post_type'		=> 'co_positions',
+			'post_status'	=> 'publish',
+			'nopaging'		=> true,
+		);
+
+		$data = new WP_Query( $args );
+
+		return $data;
+
+	}
+
+	/**
+	 * Get the total counts of positions cpt
 	 * 
 	 * @since	0.4.4
 	 * @param	string	$reading_id		The post ID of the reading.
@@ -147,6 +169,89 @@ class Card_Oracle_Admin {
 		}
 
 		include_once 'partials/card-oracle-admin-display.php';
+	}
+
+	public function co_setup_sections() {
+		add_settings_section( 'general_section', __( 'General Settings', 'card-oracle' ), 
+			array( $this, 'co_section_callback' ), 'card-oracle-admin-menu' );
+	}
+
+	public function co_section_callback( $arguments ) {
+		switch( $arguments['id'] ){
+			case 'general_section':
+				echo 'This is the first description here!';
+				break;
+			case 'our_second_section':
+				echo 'This one is number two';
+				break;
+			case 'our_third_section':
+				echo 'Third time is the charm!';
+				break;
+		}
+	}
+
+	/**
+	 * Get all the reading post ids and titles
+	 * 
+	 * @since	0.4.4
+	 * @return	$reading_ids	The array of IDs and Titles for all post_types co_readings
+	 */
+	public function co_setup_fields() {
+		$fields = array(
+			array(
+				'uid' => 'multiple_positions',
+				'label' => __( 'Multiple Positions for a Description', 'card-oracle' ),
+				'section' => 'general_section',
+				'type' => 'checkbox',
+				'options' => false,
+				'value' => 'yes',
+				'supplemental' => __( 'Enabling this will allow you to select multiple Positions for a Description', 'card-oracle' ),
+			)
+		);
+		
+		foreach ( $fields as $field ) {
+			add_settings_field( $field['uid'], $field['label'], array( $this, 'co_field_callback' ), 
+				'card-oracle-admin-menu', $field['section'], $field );
+			register_setting( 'card-oracle-admin-menu', 'multiple_positions' );
+		}
+
+	}
+
+	/**
+	 * Get all the reading post ids and titles
+	 * 
+	 * @since	0.4.4
+	 * @return	$reading_ids	The array of IDs and Titles for all post_types co_readings
+	 */
+	public function co_field_callback( $arguments ) {
+		$value = get_option( $arguments['uid'] );
+		if ( ! $value && ! empty( $arguments['default'] ) ) {
+			$value = $arguments['default']; // Set to our default
+		}
+
+		switch ( $arguments['type'] ) {
+			case 'checkbox':
+				if ( $value === "yes" ) {
+					$checked = 'checked="checked"';
+				} else {
+					$checked = '';
+				}
+
+				printf( '<label class="co__switch"><input name="%1$s" id="%1$s" type="%2$s"  
+					 value="%3$s" %4$s /><span class="co__slider round"></span></label>',
+					$arguments['uid'], $arguments['type'], $arguments['value'], $checked );
+				break;
+		}
+
+		// If there is help text
+		if ( ! empty( $arguments['helper'] ) ) {
+			printf( '<span class="helper"> %s</span>', $arguments['helper'] ); // Show it
+		}
+	
+		// If there is supplemental text
+		if ( ! empty( $arguments['supplemental'] ) ) {
+			printf( '<p class="description">%s</p>', $arguments['supplemental'] ); // Show it
+		}
 	}
 
 	/**
@@ -496,12 +601,16 @@ class Card_Oracle_Admin {
 
 			case 'position_title':
 				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
-				echo get_the_title( $position_id );
+				foreach ( $position_id as $id ) {
+					echo '<p>' . get_the_title( $id ) . '</p>';
+				}
 				break;
 
 			case 'position_number':
 				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
-				echo get_post_meta( $position_id, 'co_card_order', true );
+				foreach ( $position_id as $id ) {
+					echo '<p>' . get_post_meta( $id, 'co_card_order', true ) . '</p>';
+				}
 				break;
 		}
 
@@ -631,17 +740,17 @@ class Card_Oracle_Admin {
 		// Register the Cards cpt
 		// Set the labels for the custom post type
 		$labels = array(
-			'name'				 => __( 'Cards' ),
-			'singular_name'		 => __( 'Card' ),
-			'add_new'			 => __( 'Add New Card'),
-			'add_new_item'		 => __( 'Add New Card'),
-			'edit_item'			 => __( 'Edit Card'),
-			'new_item'			 => __( 'New Card'),
-			'all_items'			 => __( 'All Cards'),
-			'view_item'			 => __( 'View Card'),
-			'search_items'		 => __( 'Search Cards'),
-			'featured_image'	 => 'Card Image',
-			'set_featured_image' => 'Add Card Image'
+			'name'				 => __( 'Cards', 'card-oracle' ),
+			'singular_name'		 => __( 'Card', 'card-oracle' ),
+			'add_new'			 => __( 'Add New Card', 'card-oracle' ),
+			'add_new_item'		 => __( 'Add New Card', 'card-oracle' ),
+			'edit_item'			 => __( 'Edit Card', 'card-oracle' ),
+			'new_item'			 => __( 'New Card', 'card-oracle' ),
+			'all_items'			 => __( 'All Cards', 'card-oracle' ),
+			'view_item'			 => __( 'View Card', 'card-oracle' ),
+			'search_items'		 => __( 'Search Cards', 'card-oracle' ),
+			'featured_image'	 => __( 'Card Image', 'card-oracle' ),
+			'set_featured_image' => __( 'Add Card Image', 'card-oracle' )
 		);
 
 		// Settings for our post type
@@ -665,17 +774,17 @@ class Card_Oracle_Admin {
 		// Register the Descriptions cpt
 		// Set the labels for the custom post type
 		$labels = array(
-			'name'				 => __( 'Card Descriptions' ),
-			'singular_name'		 => __( 'Card Description' ),
-			'add_new'			 => __( 'Add New Card Description'),
-			'add_new_item'		 => __( 'Add New Card Description'),
-			'edit_item'			 => __( 'Edit Card Description'),
-			'new_item'			 => __( 'New Card Description'),
-			'all_items'			 => __( 'All Card Descriptions'),
-			'view_item'			 => __( 'View Card Description'),
-			'search_items'		 => __( 'Search Card Descriptions'),
-			'featured_image'	 => 'Card Description Image',
-			'set_featured_image' => 'Add Card Description Image'
+			'name'				 => __( 'Card Descriptions', 'card-oracle' ),
+			'singular_name'		 => __( 'Card Description', 'card-oracle' ),
+			'add_new'			 => __( 'Add New Card Description', 'card-oracle' ),
+			'add_new_item'		 => __( 'Add New Card Description', 'card-oracle' ),
+			'edit_item'			 => __( 'Edit Card Description', 'card-oracle' ),
+			'new_item'			 => __( 'New Card Description', 'card-oracle' ),
+			'all_items'			 => __( 'All Card Descriptions', 'card-oracle' ),
+			'view_item'			 => __( 'View Card Description', 'card-oracle' ),
+			'search_items'		 => __( 'Search Card Descriptions', 'card-oracle' ),
+			'featured_image'	 => __( 'Card Description Image', 'card-oracle' ),
+			'set_featured_image' => __( 'Add Card Description Image', 'card-oracle' ) 
 		);
 
 		// Settings for our post type
@@ -690,7 +799,7 @@ class Card_Oracle_Admin {
 			'show_in_menu'      => false,
 			'show_in_admin_bar'	=> true,
 			'show_in_nav_menus'	=> false,
-			'supports'			=> array( 'editor' ),
+			'supports'			=> array( 'title', 'editor' ),
 			'query_var'			=> true,
 		);
 
@@ -699,17 +808,17 @@ class Card_Oracle_Admin {
 		// register the Card Readings cpt
 		// Set the labels for the custom post type
 		$labels = array(
-			'name'				 => __( 'Card Readings' ),
-			'singular_name'		 => __( 'Card Reading' ),
-			'add_new'			 => __( 'Add New Card Reading'),
-			'add_new_item'		 => __( 'Add New Card Reading'),
-			'edit_item'			 => __( 'Edit Card Reading'),
-			'new_item'			 => __( 'New Card Reading'),
-			'all_items'			 => __( 'All Card Readings'),
-			'view_item'			 => __( 'View Card Reading'),
-			'search_items'		 => __( 'Search Card Readings'),
-			'featured_image'	 => 'Card Back',
-			'set_featured_image' => 'Add Card Back'
+			'name'				 => __( 'Card Readings', 'card-oracle' ),
+			'singular_name'		 => __( 'Card Reading', 'card-oracle' ),
+			'add_new'			 => __( 'Add New Card Reading', 'card-oracle' ),
+			'add_new_item'		 => __( 'Add New Card Reading', 'card-oracle' ),
+			'edit_item'			 => __( 'Edit Card Reading', 'card-oracle' ),
+			'new_item'			 => __( 'New Card Reading', 'card-oracle' ),
+			'all_items'			 => __( 'All Card Readings', 'card-oracle' ),
+			'view_item'			 => __( 'View Card Reading', 'card-oracle' ),
+			'search_items'		 => __( 'Search Card Readings', 'card-oracle' ),
+			'featured_image'	 => __( 'Card Back', 'card-oracle' ),
+			'set_featured_image' => __( 'Add Card Back', 'card-oracle' )
 		);
 
 		// Settings for our post type
@@ -733,17 +842,17 @@ class Card_Oracle_Admin {
 		// Register the Positions cpt
 		// Set the labels for the custom post type
 		$labels = array(
-			'name'				 => __( 'Card Positions' ),
-			'singular_name'		 => __( 'Card Position' ),
-			'add_new'			 => __( 'Add New Card Position'),
-			'add_new_item'		 => __( 'Add New Card Position'),
-			'edit_item'			 => __( 'Edit Card Position'),
-			'new_item'			 => __( 'New Card Position'),
-			'all_items'			 => __( 'All Card Positions'),
-			'view_item'			 => __( 'View Card Position'),
-			'search_items'		 => __( 'Search Card Positions'),
-			'featured_image'	 => 'Card Position Image',
-			'set_featured_image' => 'Add Card Position Image'
+			'name'				 => __( 'Card Positions', 'card-oracle' ),
+			'singular_name'		 => __( 'Card Position', 'card-oracle' ),
+			'add_new'			 => __( 'Add New Card Position', 'card-oracle' ),
+			'add_new_item'		 => __( 'Add New Card Position', 'card-oracle' ),
+			'edit_item'			 => __( 'Edit Card Position', 'card-oracle' ),
+			'new_item'			 => __( 'New Card Position', 'card-oracle' ),
+			'all_items'			 => __( 'All Card Positions', 'card-oracle' ),
+			'view_item'			 => __( 'View Card Position', 'card-oracle' ),
+			'search_items'		 => __( 'Search Card Positions', 'card-oracle' ),
+			'featured_image'	 => __( 'Card Position Image', 'card-oracle' ),
+			'set_featured_image' => __( 'Add Card Position Image', 'card-oracle' )
 		);
 
 		// Settings for our post type
@@ -769,6 +878,17 @@ class Card_Oracle_Admin {
 	} // register_card_oracle_cpt
 		
 	/**
+	 * Create the admin settings for Card Oracle
+	 * 
+	 * @since	0.4.6
+	 * @return	
+	 */
+	function register_card_oracle_admin_settings() {
+		add_option( 'multi_positions_for_description', __( 'Allow multiple Positions for a Card Description.', 'card-oracle'  ) );
+		register_setting( 'card_oracle_options_group', 'multi_positions_for_description', );
+	}
+
+	/**
 	 * Render the Reading Metabox for Cards CPT
 	 * 
 	 * @since	0.4.4
@@ -784,10 +904,11 @@ class Card_Oracle_Admin {
 		$readings = $this->get_co_reading_id_title();
 		$selected_readings = get_post_meta( $post->ID, 'co_reading_id', true );
 
-		echo '<div class=""><p><label class="co__metabox" for="co_reading_id">';
+		echo '<p class="co__metabox">';
 		_e( 'Card Reading', 'card-oracle' );
-		echo '</label></p>';
+		echo '</p>';
 
+		echo '<div class="co__multiflex">';
 		foreach ( $readings as $id ) {
 			if ( is_array( $selected_readings ) && in_array( $id->ID, $selected_readings ) ) {
 				$checked = 'checked="checked"';
@@ -795,8 +916,9 @@ class Card_Oracle_Admin {
 				$checked = null;
 			}
 
-			echo '<p><input type="checkbox" name="co_reading_id[]" value="' . 
-				$id->ID . '" ' . $checked . ' />' . esc_html( $id->post_title ) . '</p>';
+			echo '<div class="co__multiitem"><input id="reading' . $id->ID . '" type="checkbox" 
+				name="co_reading_id[]" value="' . $id->ID . '" ' . $checked . ' />
+				<label for="reading' .$id->ID . '">' . esc_html( $id->post_title ) . '</label></div>';
 		}
 		echo '</div>';
 		
@@ -819,27 +941,48 @@ class Card_Oracle_Admin {
 
 		$selected_card = get_post_meta( $post->ID, 'co_card_id', true );
 
-		echo '<p><label class="co__metabox">';
+		echo '<p class="co__metabox">';
 		_e( 'Card', 'card-oracle' );
-		echo '</label><br />';
+		echo '</p>';
 
-		$pages = wp_dropdown_pages( array( 'post_type' => 'co_cards', 'selected' => $selected_card, 'name' => 'co_card_id', 
-			'show_option_none' => __( '(no card)' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
+		$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_cards', 'selected' => $selected_card, 'name' => 'co_card_id', 
+			'show_option_none' => __( '(no card)', 'card-oracle' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
 
-		echo $pages;
+		echo $dropdown;
 		echo '</p>';
 
 		$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
 
-		echo '<label class="co__metabox">';
+		echo '<p class="co__metabox">';
 		_e( 'Description Position', 'card-oracle' );
-		echo '</label><br />';
-
-		$pages = wp_dropdown_pages( array( 'post_type' => 'co_positions', 'selected' => $selected_position, 'name' => 'co_position_id', 
-		'show_option_none' => __( '(no card)' ), 'sort_column'=> 'co_card_order', 'echo' => 0 ) );
-
-		echo $pages;
 		echo '</p>';
+
+		if ( get_option( 'multiple_positions' ) === 'yes' ) {
+			$positions = $this->co_get_positions_ids();
+			echo '<div class="co__multiflex">';
+			
+			foreach ( $positions->posts as $id ) {
+				$selected = get_post_meta( $post->ID, 'co_position_id', true );
+
+				if ( is_array( $selected_position ) && in_array( $id, $selected_position ) ) {
+					$checked = 'checked="checked"';
+				} else {
+					$checked = null;
+				}
+	
+				echo '<div class="co__multiitem"><input id="position'. $id . '" class="co__multibox" type="checkbox" name="co_position_id[]" value="' . 
+						$id . '" ' . $checked . ' /><label for="position' . $id . '">' . esc_html( get_the_title( $id ) ) . 
+						'</label></div>';
+			}
+
+			echo '</div>';
+		} else {
+			$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
+
+			$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_positions', 'selected' => $selected_position, 'name' => 'co_position_id', 
+				'show_option_none' => __( '(no card)', 'card-oracle' ), 'sort_column'=> 'co_card_order', 'echo' => 0 ) );
+			echo $dropdown;
+		}
 
 	} // render_description_metabox
 
@@ -903,27 +1046,48 @@ class Card_Oracle_Admin {
 		// Generate nonce
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
-		// $display_input_checked = get_post_meta( $post->ID, 'display_question', true );
-		$display_input_checked = $post->display_question;
-		if ( $display_input_checked === "yes" ) {
-			$display_input_checked = 'checked="checked"';
+		// Get whether or not the Multiple Positions box should be checked
+		$multiple_positions_checked = $post->multiple_positions;
+		
+		if ( $multiple_positions_checked === "yes" ) {
+			$multiple_positions_checked = 'checked="checked"';
 		}
 
-		echo '<p><input class="co__metabox" type="checkbox" name="display_question" value="yes" ' . $display_input_checked . ' />';
-		echo '<label for="display_question" class="co__metabox">';
-		_e( 'Display Input Box', 'card-oracle' );
-		echo '</label></p>';
-		echo '<p class="co__help-text">';
-		_e( 'Checking this box will display an input field to the users to enter a question.', 'card-oracle' );
-		echo '</p>';
-		echo '<p><label for="question_text" class="co__metabox">';
+		// Get whether or not the Display Input box should be checked
+		$display_question_checked = $post->display_question;
+
+		if ( $display_question_checked === "yes" ) {
+			$display_question_checked = 'checked="checked"';
+		}
+
+		echo '<table class="co__reading-table">';
+		echo '<tr><th>';
+		_e( 'Multiple Positions for a Description', 'card-oracle' );
+		echo '</th><td>';
+		echo '<label class="co__switch">';
+		echo '<input type="checkbox" name="multiple_positions" value="yes" ' . $multiple_positions_checked . ' />';
+		echo '<span class="co__slider round"></span>';
+		echo '</label>';
+		echo '</td></tr>';
+		echo '<tr><th>';
+		_e( 'Display Question Input Box', 'card-oracle' );
+		echo '</th><td>';
+		echo '<label class="co__switch">';
+		echo '<input type="checkbox" name="display_question" value="yes" ' . $display_question_checked . ' />';
+		echo '<span class="co__slider round"></span>';
+		echo '</label><p>';
+		_e( 'Enabling this will display an input field to the users to enter a question.', 'card-oracle' );
+		echo '</p></td></tr>';
+		echo '<tr><th>';
 		_e( 'Text for question input box', 'card-oracle' );
-		echo '</label><br />';
+		echo '</th><td>';
 		echo '<input class="co__metabox" name="question_text" type="text" value="' . 
-			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" /></p>';
-		echo '<p><label for="footer_text" class="co__metabox">';
+			wp_kses( get_post_meta( $post->ID, 'question_text', true ), array() ) . '" />';
+		echo '</td></tr>';
+		echo '</table>';
+		echo '<p class="co__reading">';
 		_e( 'Footer to be displayed on daily and random cards', 'card-oracle' );
-		echo '</label><br />';
+		echo '</p>';
 		wp_editor ( $post->footer_text, 'footer_text', $settings );
 		
 	} // render_reading_metabox
@@ -957,6 +1121,13 @@ class Card_Oracle_Admin {
 			delete_post_meta( $post->ID, 'display_question' );
 		}
 
+		// If the Card Reading Display has been selected update it.
+		if ( isset ( $_POST['multiple_positions'] ) ) {
+			update_post_meta( $post->ID, 'multiple_positions', $_POST['multiple_positions'] );
+		} else {
+			delete_post_meta( $post->ID, 'multiple_positions' );
+		}
+
 		// If the Card Reading Footer text has been selected update it.
 		if ( isset ( $_POST['footer_text'] ) ) {
 			update_post_meta( $post->ID, 'footer_text', $_POST['footer_text'] );
@@ -987,7 +1158,7 @@ class Card_Oracle_Admin {
 
 		// If the Card has been selected update it.
 		if ( isset( $_POST['co_position_id'] ) ) {
-			update_post_meta( $post->ID, 'co_position_id', wp_kses_post( $_POST['co_position_id'] ) );
+			update_post_meta( $post->ID, 'co_position_id', $_POST['co_position_id'] );
 		} else {
 			delete_post_meta( $post->ID, 'co_position_id' );
 		}
@@ -1026,11 +1197,10 @@ class Card_Oracle_Admin {
 	 */
 	public function set_custom_descriptions_columns( $columns ) {
 		// unset the date so we can move it to the end
-		unset( $columns['title'] );
 		unset( $columns['date'] );
 
 		$columns['card_title'] = __( 'Card', 'card-oracle' );
-		$columns['description_reading'] = __( 'Card Reading', 'card-oracle' );
+		//$columns['description_reading'] = __( 'Card Reading', 'card-oracle' );
 		$columns['position_title'] = __( 'Position', 'card-oracle' );
 		$columns['position_number'] = __( 'Position Number', 'card-oracle' );
 		$columns['date'] = __( 'Date', 'card-oracle' );

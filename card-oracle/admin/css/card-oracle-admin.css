@@ -73,6 +73,10 @@ input.co-shortcode {
     margin-right: 7px;
 }
 
+.co__dashboard-content {
+    margin-top: 10px;
+}
+
 .co__cards {
     border: 1px solid darkcyan;
     border-radius: 4px;
@@ -130,6 +134,35 @@ input.co-shortcode {
 .co__help-text {
     font-style: italic;
 }
+
+.co__multiflex {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px;
+    margin-top: -10px;
+}
+
+.co__multiitem {
+    background: darkcyan;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: white;
+    flex: 0 0 200px;
+    flex-shrink: 0;
+	margin-left: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.co__multiitem label {
+    vertical-align: baseline;
+}
+
+.co__multibox {
+    margin-right: 10px;
+}
+
 .co__readings {
     display: grid;
     grid-template-columns: minmax(500px, 1fr);
@@ -159,6 +192,90 @@ input.co-shortcode {
     font-size: 24px;
     height: 24px;
     width: 24px;
+}
+
+/* The switch - the box around the slider */
+.co__switch {
+    display: inline-block;
+    width: 55px;
+    position: relative;
+    height: 29px;
+}
+
+/* Hide default HTML checkbox */
+.co__switch input {
+    display: none;
+}
+
+/* The slider */
+.co__slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    -webkit-transition: .4s;
+}
+ 
+.co__slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 21px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 21px;
+    -webkit-transition: .4s;
+}
+  
+input:checked + .co__slider {
+    background-color: darkcyan;
+}
+  
+input:focus + .co__slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+  
+input:checked + .co__slider:before {
+    transform: translateX(26px);
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.co__slider.round {
+    border-radius: 29px;
+}
+  
+.co__slider.round:before {
+    border-radius: 50%;
+}
+
+.co__reading {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.co__reading-table p {
+    margin-top: 0;
+}
+
+.co__reading-table th {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 18px 10px 20px 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+.co__reading-table td {
+    padding: 15px 10px;
+    text-align: left;
+    vertical-align: middle;
 }
 
 /* #wpfooter {

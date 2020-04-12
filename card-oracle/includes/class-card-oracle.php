@@ -183,6 +183,10 @@ class Card_Oracle {
 		// Add Menu items
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'card_oracle_menu_items' );
 
+		// Add Options items
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'co_setup_sections' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'co_setup_fields' );
+
 		// Add metaboxes
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_readings_cpt' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_positions_cpt' );

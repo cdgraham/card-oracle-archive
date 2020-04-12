@@ -132,7 +132,7 @@ msgid "Card Order"
 msgstr ""
 
 #: admin/class-card-oracle-admin.php:859
-msgid "Display Input Box"
+msgid "Display Question Input Box"
 msgstr ""
 
 #: admin/class-card-oracle-admin.php:862
