@@ -93,14 +93,14 @@ class Card_Oracle_Admin {
 	public function co_get_positions_ids() {
 		$args = array(
 			'fields'		=> 'ids',
-			'post_type'		=> 'co_positions',
-			'post_status'	=> 'publish',
 			'nopaging'		=> true,
+			'order'			=> 'ASC',
+			'orderby'		=> 'title',
+			'post_status'	=> 'publish',
+			'post_type'		=> 'co_positions',
 		);
 
-		$data = new WP_Query( $args );
-
-		return $data;
+		return get_posts( $args );
 
 	}
 
@@ -114,23 +114,27 @@ class Card_Oracle_Admin {
 	public function co_get_positions_per_reading( $reading_id ) {
 		$args = array(
 			'fields' => 'ids',
+			'numberposts'	=> -1,
+			'nopaging'		=> true,
 			'post_type' => 'co_positions',
 			'post_status' => 'publish',
 			'meta_query' => array(
 				array(
-					'key' => 'co_reading_id',
+					'key' => '_co_reading_id',
 					'value' => $reading_id,
-					'compare' => 'LIKE',
+					'compare' => 'IN',
 				),
 			),
 		);
 
+		//return count ( get_posts( $args ) );
 		$cards = new WP_Query( $args );
 
 		// The number of cards returned
 		$count = count( $cards->posts );
 		
 		return $count;
+
 	}
 
 	/**
@@ -261,18 +265,16 @@ class Card_Oracle_Admin {
 	 * @return	$reading_ids	The array of IDs and Titles for all post_types co_readings
 	 */
 	public function get_co_reading_id_title() {
-		global $wpdb;
+		$args = array(
+			'numberposts'	=> -1,
+			'order'			=> 'ASC',
+			'orderby'		=> 'title',
+			'post_status'	=> 'publish',
+			'post_type'		=> 'co_readings',
+		);
 
-		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
-					"WHERE post_type = 'co_readings' " .
-					"AND post_status = 'publish' " . 
-					"ORDER BY post_title";
-					
-		// The $positions is an array of all the positions in a reading, it consists of
-		// the position title and position ID
-		$reading_ids = $wpdb->get_results( $sql, OBJECT );
+		return get_posts( $args );
 
-		return $reading_ids;
 	}
 
 	/**
@@ -282,20 +284,23 @@ class Card_Oracle_Admin {
 	 * @return	$card_ids	The array of card IDs and Titles
 	 */
 	public function get_co_card_id_title( $reading_id ) {
-		global $wpdb;
+		$args = array(
+			'numberposts'	=> -1,
+			'order'			=> 'ASC',
+			'orderby'		=> 'title',
+			'post_type' => 'co_cards',
+			'post_status' => 'publish',
+			'meta_query' => array(
+				array(
+					'key' => '_co_reading_id',
+					'value' => $reading_id,
+					'compare' => 'LIKE',
+				),
+			),
+		);
 
-		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
-					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
-					"WHERE post_type = 'co_cards' " .
-					"AND post_status = 'publish' " .
-					"AND meta_value LIKE '%" . serialize( $reading_id ) . "%' " . 
-					"ORDER BY post_title";
+		return get_posts( $args );
 
-		// The $positions is an array of all the positions in a reading, it consists of
-		// the position title and position ID
-		$card_ids = $wpdb->get_results( $sql, OBJECT );
-
-		return $card_ids;
 	}
 
 	/**
@@ -316,15 +321,15 @@ class Card_Oracle_Admin {
 			"INNER JOIN $wpdb->postmeta ON ID = post_id " .
 			"WHERE post_type = 'co_cards' " . 
 			"AND post_status = 'publish' " .
-			"AND meta_key = 'co_reading_id' " . 
-			"AND meta_value LIKE '%" . serialize( $reading_id ) . "%'";
+			"AND meta_key = '_co_reading_id' " . 
+			"AND meta_value LIKE '%" . $reading_id . "%'";
 		}
 
 		$sql = "SELECT ID, post_content FROM " . $wpdb->posts . " " .
 					"INNER JOIN $wpdb->postmeta ON ID = post_id " .
 					"WHERE post_type = 'co_descriptions' " .
 					"AND post_status = 'publish' " .
-					"AND meta_key = 'co_card_id' " .
+					"AND meta_key = '_co_card_id' " .
 					"AND meta_value IN ('" . $subquery . "')";
 
 		// The $positions is an array of all the positions in a reading, it consists of
@@ -346,16 +351,16 @@ class Card_Oracle_Admin {
 			INNER JOIN $wpdb->postmeta m1 ON ID = m1.post_id
 			INNER JOIN $wpdb->postmeta m2 ON ID = m2.post_id
 			WHERE post_status = 'publish'
-			AND ( m1.meta_key = 'co_card_id' AND m1.meta_value IN (
+			AND ( m1.meta_key = '_co_card_id' AND m1.meta_value IN (
 				SELECT ID FROM $wpdb->posts
 				INNER JOIN $wpdb->postmeta ON ID = post_id 
-				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
-				AND post_type = 'co_cards' AND ( ( post_status = 'publish' ) ) ) )
-			AND ( m2.meta_key = 'co_position_id' AND m2.meta_value IN (
+				WHERE meta_key = '_co_reading_id' AND meta_value LIKE '%" . $reading_id . "%' 
+				AND post_type = 'co_cards' AND post_status = 'publish' ) )
+			AND ( m2.meta_key = '_co_position_id' AND m2.meta_value IN (
 				SELECT ID FROM $wpdb->posts
 				INNER JOIN $wpdb->postmeta ON ID = post_id 
-				WHERE ( meta_key = 'co_reading_id' AND meta_value LIKE '%" . serialize( $reading_id ) . "%' )
-				AND post_type = 'co_positions' AND ( ( post_status = 'publish' ) ) )	)";
+				WHERE meta_key = '_co_reading_id' AND meta_value LIKE '%" . $reading_id . "%'
+				AND post_type = 'co_positions' AND post_status = 'publish' ) )";
 
 		$description_ids = $wpdb->get_results( $sql, OBJECT );
 
@@ -370,20 +375,21 @@ class Card_Oracle_Admin {
 	 * @return	array of card IDs and Titles
 	 */
 	public function get_co_position_id_title( $reading_id ) {
-		global $wpdb;
+		$args = array(
+			'nopaging'		=> true,
+			'post_type' => 'co_positions',
+			'post_status' => 'publish',
+			'meta_query' => array(
+				array(
+					'key' => '_co_reading_id',
+					'value' => $reading_id,
+					'compare' => 'LIKE',
+				),
+			),
+		);
 
-		$sql = "SELECT ID, post_title FROM " . $wpdb->posts . " " .
-					"INNER JOIN $wpdb->postmeta ON ID = post_id AND meta_key = 'co_reading_id' " .
-					"WHERE post_type = 'co_positions' " .
-					"AND post_status = 'publish' " .
-					"AND meta_value LIKE '%" . serialize( $reading_id ) . "%'" . 
-					"ORDER BY post_title";
-					
-		// The $positions is an array of all the positions in a reading, it consists of
-		// the position title and position ID
-		$results = $wpdb->get_results( $sql, OBJECT );
+		return get_posts( $args );
 
-		return $results;
 	}
 
 	/**
@@ -541,14 +547,11 @@ class Card_Oracle_Admin {
 	
 		switch ( $column ) {
 			case 'card_reading':
-				$readings = get_post_meta( $post->ID, 'co_reading_id', true );
-
-				if ( is_array( $readings ) ) {
-					foreach ( $readings as $reading ) {
-						echo '<p>';
-						echo get_the_title( $reading );
-						echo '</p>';
-					}
+				$readings = get_post_meta( $post->ID, '_co_reading_id', false );
+				foreach ( $readings as $reading ) {
+					echo '<p>';
+					echo get_the_title( $reading );
+					echo '</p>';
 				}
 				break;
 
@@ -557,7 +560,7 @@ class Card_Oracle_Admin {
 				break;
 
 			case 'card_order':
-				echo get_post_meta( $post->ID, 'co_card_order', true );
+				echo get_post_meta( $post->ID, '_co_card_order', true );
 				break;
 
 			case 'co_shortcode':
@@ -567,25 +570,24 @@ class Card_Oracle_Admin {
 				break;
 
 			case 'description_reading':
-				$position_id = get_post_meta( $post->ID, 'co_position_id', true );		
-				$reading_id = get_post_meta( $position_id, 'co_reading_id', true );
+				$position_id = get_post_meta( $post->ID, '_co_position_id', false );		
+				$reading_id = get_post_meta( $position_id, '_co_reading_id', false );
 				echo get_the_title( $reading_id[0] );
 				break;
 
 			case 'number_card_descriptions':
+				$reading_ids = get_post_meta( $post->ID, '_co_reading_id', false );
 
-				$reading_id = get_post_meta( $post->ID, 'co_reading_id', true );
-				
-				for ( $i = 0; $i < count( $reading_id ); $i++ ) {
-					$count = count( $this->get_co_description_id_content( $reading_id[$i], $post->ID ) );
-					$positions = $this->co_get_positions_per_reading( $reading_id[$i] );
+				foreach ( $reading_ids as $reading_id ) {
+					$count = count( $this->get_co_description_id_content( $reading_id, $post->ID ) );
+					$positions = $this->co_get_positions_per_reading( $reading_id );
 	
 					if ( $count == $positions ) {
 						echo '<p>' . $count . '</p>';
 					} else {
 						echo '<p><font color="red">' . $count . '</font></p>';
 					}
-				}
+				}		
 				break;
 
 			case 'number_reading_positions':
@@ -593,23 +595,23 @@ class Card_Oracle_Admin {
 				break;
 
 			case 'card_title':
-				$card_id = get_post_meta( $post->ID, 'co_card_id', true );
+				$card_id = get_post_meta( $post->ID, '_co_card_id', true );
 				$card_title = get_the_title( $card_id );
 				echo '<strong><a class="row-title" href="' . admin_url() . 'post.php?post=' . $post->ID . '&action=edit">' .
 				$card_title .'</a></strong>';
 				break;
 
 			case 'position_title':
-				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
+				$position_id = get_post_meta( $post->ID, '_co_position_id', false );
 				foreach ( $position_id as $id ) {
 					echo '<p>' . get_the_title( $id ) . '</p>';
 				}
 				break;
 
 			case 'position_number':
-				$position_id = get_post_meta( $post->ID, 'co_position_id', true );
+				$position_id = get_post_meta( $post->ID, '_co_position_id', false );
 				foreach ( $position_id as $id ) {
-					echo '<p>' . get_post_meta( $id, 'co_card_order', true ) . '</p>';
+					echo '<p>' . get_post_meta( $id, '_co_card_order', true ) . '</p>';
 				}
 				break;
 		}
@@ -902,7 +904,7 @@ class Card_Oracle_Admin {
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
 		$readings = $this->get_co_reading_id_title();
-		$selected_readings = get_post_meta( $post->ID, 'co_reading_id', true );
+		$selected_readings = get_post_meta( $post->ID, '_co_reading_id', false );
 
 		echo '<p class="co__metabox">';
 		_e( 'Card Reading', 'card-oracle' );
@@ -917,7 +919,7 @@ class Card_Oracle_Admin {
 			}
 
 			echo '<div class="co__multiitem"><input id="reading' . $id->ID . '" type="checkbox" 
-				name="co_reading_id[]" value="' . $id->ID . '" ' . $checked . ' />
+				name="_co_reading_id[]" value="' . $id->ID . '" ' . $checked . ' />
 				<label for="reading' .$id->ID . '">' . esc_html( $id->post_title ) . '</label></div>';
 		}
 		echo '</div>';
@@ -939,19 +941,22 @@ class Card_Oracle_Admin {
 		// Generate nonce
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
-		$selected_card = get_post_meta( $post->ID, 'co_card_id', true );
+		$selected_card = get_post_meta( $post->ID, '_co_card_id', true );
 
 		echo '<p class="co__metabox">';
 		_e( 'Card', 'card-oracle' );
 		echo '</p>';
 
-		$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_cards', 'selected' => $selected_card, 'name' => 'co_card_id', 
+		$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_cards', 'selected' => $selected_card, 'name' => '_co_card_id', 
 			'show_option_none' => __( '(no card)', 'card-oracle' ), 'sort_column'=> 'post_title', 'echo' => 0 ) );
 
 		echo $dropdown;
 		echo '</p>';
 
-		$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
+		$selected_position = get_post_meta( $post->ID, '_co_position_id', false );
+		echo '<p>';
+		print_r( $selected_position );
+		echo '</p>';
 
 		echo '<p class="co__metabox">';
 		_e( 'Description Position', 'card-oracle' );
@@ -961,8 +966,8 @@ class Card_Oracle_Admin {
 			$positions = $this->co_get_positions_ids();
 			echo '<div class="co__multiflex">';
 			
-			foreach ( $positions->posts as $id ) {
-				$selected = get_post_meta( $post->ID, 'co_position_id', true );
+			foreach ( $positions as $id ) {
+				$selected = get_post_meta( $post->ID, '_co_position_id', false );
 
 				if ( is_array( $selected_position ) && in_array( $id, $selected_position ) ) {
 					$checked = 'checked="checked"';
@@ -970,17 +975,17 @@ class Card_Oracle_Admin {
 					$checked = null;
 				}
 	
-				echo '<div class="co__multiitem"><input id="position'. $id . '" class="co__multibox" type="checkbox" name="co_position_id[]" value="' . 
+				echo '<div class="co__multiitem"><input id="position'. $id . '" class="co__multibox" type="checkbox" name="_co_position_id[]" value="' . 
 						$id . '" ' . $checked . ' /><label for="position' . $id . '">' . esc_html( get_the_title( $id ) ) . 
 						'</label></div>';
 			}
 
 			echo '</div>';
 		} else {
-			$selected_position = get_post_meta( $post->ID, 'co_position_id', true );
+			$selected_position = get_post_meta( $post->ID, '_co_position_id', false );
 
-			$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_positions', 'selected' => $selected_position, 'name' => 'co_position_id', 
-				'show_option_none' => __( '(no card)', 'card-oracle' ), 'sort_column'=> 'co_card_order', 'echo' => 0 ) );
+			$dropdown = wp_dropdown_pages( array( 'post_type' => 'co_positions', 'selected' => $selected_position, 'name' => '_co_position_id', 
+				'show_option_none' => __( '(no card)', 'card-oracle' ), 'sort_column'=> '_co_card_order', 'echo' => 0 ) );
 			echo $dropdown;
 		}
 
@@ -993,28 +998,26 @@ class Card_Oracle_Admin {
 	 * @return	
 	 */
 	public function render_position_metabox() {
-
 		global $post;
 		
 		// Generate nonce
 		wp_nonce_field( 'meta_box_nonce', 'meta_box_nonce' );
 
-		$selected_reading = get_post_meta( $post->ID, 'co_reading_id', true );
-		$reading_id = is_array( $selected_reading ) ? $selected_reading[0] : "";
-		
+		$selected_reading = get_post_meta( $post->ID, '_co_reading_id', true );
+		//$reading_id = is_array( $selected_reading ) ? $selected_reading[0] : "";
 
 		echo '<p><label class="co__metabox">';
 		_e( 'Card Reading', 'card-oracle' );
 		echo '</label><br />';
-		echo $this->get_reading_dropdown_box( $reading_id );
+		echo $this->get_reading_dropdown_box( $selected_reading );
 		echo '</p>';
 
-		echo '<p><label class="co__metabox" for="co_card_order">';
+		echo '<p><label class="co__metabox" for="_co_card_order">';
 		_e( 'Card Order', 'card-oracle' );
 		echo '</label><br />';
-		echo '<input class="co__metabox-number" name="co_card_order" type="number" min="1" ' . 
+		echo '<input class="co__metabox-number" name="_co_card_order" type="number" min="1" ' . 
 			 'ondrop="return false" onpaste="return false" value="' . 
-			 esc_html( $post->co_card_order ) . '" /></p>';
+			 esc_html( $post->_co_card_order ) . '" /></p>';
 		
 	} // render_position_metabox
 
@@ -1105,15 +1108,44 @@ class Card_Oracle_Admin {
 			return;
 		}
 
-		// If the Card Reading has been selected update it.
-		if ( isset ( $_POST['co_reading_id'] ) ) {
-			update_post_meta( $post->ID, 'co_reading_id', is_array( $_POST['co_reading_id'] ) ? $_POST['co_reading_id'] : serialize( $_POST['co_reading_id'] ) );
+		// If the Card Reading ID has been selected then update it.
+		if ( isset ( $_POST['_co_reading_id'] ) || isset ( $_POST['co_reading_dropdown'] ) ) {
+			$current_readings = get_post_meta( $post->ID, '_co_reading_id', false );
+
+			// Multiple Readings ID update
+			if ( isset ( $_POST['_co_reading_id'] ) ) {
+				$post_readings = $_POST['_co_reading_id'];
+
+				// If a current _co_position_id is not in the POST array then remove it.
+				if ( ! empty( $current_readings ) ) {
+					foreach ( $current_readings as $current_reading ) {
+						if ( ! in_array( $current_reading, $post_readings ) ) {
+							delete_post_meta( $post->ID, '_co_reading_id', $current_reading );
+						}
+					}
+				}
+				
+				// If a POST position is not in the current array then add it.
+				if ( ! empty( $post_readings ) ) {
+					foreach ( $post_readings as $reading ) {
+						if ( ! in_array( $reading, $current_readings ) ) {
+							add_post_meta( $post->ID, '_co_reading_id', $reading );
+						}
+					}
+				}
+			// Dropdown value update
+			} elseif ( isset ( $_POST['co_reading_dropdown'] ) ) {
+				// If there is no value set remove the meta data otherwise update it
+				if ( empty( $_POST['co_reading_dropdown'] ) ) {
+					delete_post_meta( $post->ID, '_co_reading_id' );
+				} else {
+					update_post_meta( $post->ID, '_co_reading_id', $_POST['co_reading_dropdown'] );
+				}
+			}
+		} else {
+			delete_post_meta( $post->ID, '_co_reading_id' );
 		}
 		
-		if ( isset ( $_POST['co_reading_dropdown'] ) ) {
-			update_post_meta( $post->ID, 'co_reading_id', array( $_POST['co_reading_dropdown'] ) );
-		}
-
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['display_question'] ) ) {
 			update_post_meta( $post->ID, 'display_question', $_POST['display_question'] );
@@ -1150,24 +1182,38 @@ class Card_Oracle_Admin {
 		}
 
 		// If the Card has been selected update it.
-		if ( isset( $_POST['co_card_id'] ) ) {
-			update_post_meta( $post->ID, 'co_card_id', wp_kses_post( $_POST['co_card_id'] ) );
+		if ( isset( $_POST['_co_card_id'] ) ) {
+			update_post_meta( $post->ID, '_co_card_id', wp_kses_post( $_POST['_co_card_id'] ) );
 		} else {
-			delete_post_meta( $post->ID, 'co_card_id' );
+			delete_post_meta( $post->ID, '_co_card_id' );
 		}
 
 		// If the Card has been selected update it.
-		if ( isset( $_POST['co_position_id'] ) ) {
-			update_post_meta( $post->ID, 'co_position_id', $_POST['co_position_id'] );
+		if ( isset( $_POST['_co_position_id'] ) ) {
+			$current_positions = get_post_meta( $post->ID, '_co_position_id', false );
+
+			// If a current _co_position_id is not in the POST array then remove it.
+			foreach ( $current_positions as $current_position ) {
+				if ( ! in_array( $current_position, $_POST['_co_position_id'] ) ) {
+					delete_post_meta( $post->ID, '_co_position_id', $current_position );
+				}
+			}
+
+			// If a current POST position is not in the current array then add it.
+			foreach ( $_POST['_co_position_id'] as $position ) {
+				if ( ! in_array( $position, $current_positions ) ) {
+					add_post_meta( $post->ID, '_co_position_id', $position );
+				}
+			}
 		} else {
-			delete_post_meta( $post->ID, 'co_position_id' );
+			delete_post_meta( $post->ID, '_co_position_id' );
 		}
 
 		// If the Card Position has been selected update it.
-		if ( isset( $_POST['co_card_order'] ) ) {
-			update_post_meta( $post->ID, 'co_card_order', wp_kses_post( $_POST['co_card_order'] ) );
+		if ( isset( $_POST['_co_card_order'] ) ) {
+			update_post_meta( $post->ID, '_co_card_order', wp_kses_post( $_POST['_co_card_order'] ) );
 		} else {
-			delete_post_meta( $post->ID, 'co_card_order' );
+			delete_post_meta( $post->ID, '_co_card_order' );
 		}
 
 	}

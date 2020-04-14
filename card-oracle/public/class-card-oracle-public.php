@@ -112,8 +112,8 @@ class Card_Oracle_Public {
 		$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
 			"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
 			"ON ( p1.ID = m1.post_id ) " . 
-			"WHERE ( ( m1.meta_key = 'co_reading_id' AND m1.meta_value LIKE '%" . serialize( $reading_id ) . 
-			"%' ) ) AND p1.post_type = 'co_cards' AND p1.post_status = 'publish' ORDER BY p1.ID";
+			"WHERE ( ( m1.meta_key = '_co_reading_id' AND m1.meta_value = '" .  $reading_id . 
+			"' ) ) AND p1.post_type = 'co_cards' AND p1.post_status = 'publish' ORDER BY p1.ID";
 
 		return $wpdb->get_results( $sql, OBJECT );
 	}
@@ -131,7 +131,7 @@ class Card_Oracle_Public {
 		}
 
 		$card_ids = $this->get_cards_for_reading( $atts['id'] );
-		$index = date( 'z' ) % count( $card_ids );
+		$index = date( 'z' ) % max( count( $card_ids ), 1 );
 		$card_of_day = get_post( $card_ids[$index]->ID );
 		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
 		$footer = get_post_meta( $atts['id'], 'footer_text', true );
@@ -161,16 +161,17 @@ class Card_Oracle_Public {
 	 * @return
 	 */
 	public function display_card_oracle_random_card( $atts ) {
+		$reading_id = $atts['id'];
 
-		if ( empty( $atts['id'] ) ) {
+		if ( empty( $reading_id ) ) {
 			return;
 		}
 
-		$card_ids = $this->get_cards_for_reading( $atts['id'] );
+		$card_ids = $this->get_cards_for_reading( $reading_id );
 		$card_count = count( $card_ids ) - 1;
 		$card_of_day = get_post( $card_ids[rand( 0, $card_count )]->ID );
 		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
-		$footer = get_post_meta( $atts['id'], 'footer_text', true );
+		$footer = get_post_meta( $reading_id, 'footer_text', true );
 
 		if ( ! empty( $footer ) ) {
 			$footer_html = '<cotd-footer>' . $footer . '</cotd-footer>';
@@ -214,9 +215,9 @@ class Card_Oracle_Public {
 					"ON p1.id = mt1.post_id " .
 					"INNER JOIN " . $wpdb->prefix . "postmeta mt2" . " " . 
 					"ON p1.id = mt2.post_id " .
-					"WHERE mt1.meta_key = 'co_reading_id' " . 
+					"WHERE mt1.meta_key = '_co_reading_id' " . 
 					"AND mt1.meta_value LIKE '%" . serialize( $atts['id'] ) . "%' " .
-					"AND mt2.meta_key = 'co_card_order' " .
+					"AND mt2.meta_key = '_co_card_order' " .
 					"AND p1.post_type = 'co_positions' " .
 					"AND post_status = 'publish' " . 
 					"ORDER BY mt2.meta_value";
@@ -293,9 +294,9 @@ class Card_Oracle_Public {
 				"ON p1.ID = m1.post_id AND p1.post_status = 'publish' " .
 				"INNER JOIN " . $wpdb->prefix . "postmeta m2 " . 
 				"ON m1.post_id = m2.post_id " .
-				"AND m2.meta_key = 'co_card_id' " .
+				"AND m2.meta_key = '_co_card_id' " .
 				"AND m2.meta_value = " . $cards[$i] . " " .
-				"WHERE m1.meta_key = 'co_position_id' " . 
+				"WHERE m1.meta_key = '_co_position_id' " . 
 				"AND m1.meta_value LIKE '%" . serialize( $positions[$i]->ID ) . "%';";
 
 				$description_id = $wpdb->get_results( $sql, OBJECT );

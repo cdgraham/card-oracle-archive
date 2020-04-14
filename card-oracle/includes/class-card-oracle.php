@@ -64,13 +64,13 @@ class Card_Oracle {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    0.4.7
+	 * @since    0.4.1
 	 */
 	public function __construct() {
 		if ( defined( 'CARD_ORACLE_VERSION' ) ) {
 			$this->version = CARD_ORACLE_VERSION;
 		} else {
-			$this->version = '0.4.7';
+			$this->version = '0.4.8';
 		}
 		$this->plugin_name = 'card-oracle';
 
@@ -78,6 +78,7 @@ class Card_Oracle {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+
 		// Check update when plugin loaded
 		$this->card_oracle_check_version();
 
@@ -275,7 +276,7 @@ class Card_Oracle {
 		if ( $this->get_version() !== get_option( 'card_oracle_version' ) ) {
 			// Add any updates required to the DB or options here when 
 			// updating from one version to another
-			
+
 			update_option( 'card_oracle_version', CARD_ORACLE_VERSION );
 		}
 
