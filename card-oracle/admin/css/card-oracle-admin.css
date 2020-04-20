@@ -187,6 +187,11 @@ input.co-shortcode {
     float: left;
 }
 
+.co__back-button {
+    display: block;
+    margin-left: auto;
+}
+
 .co__icon-container{
     float: right;
     font-size: 24px;

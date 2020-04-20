@@ -67,10 +67,11 @@ class Card_Oracle {
 	 * @since    0.4.1
 	 */
 	public function __construct() {
+
 		if ( defined( 'CARD_ORACLE_VERSION' ) ) {
 			$this->version = CARD_ORACLE_VERSION;
 		} else {
-			$this->version = '0.4.8';
+			$this->version = '0.4.10';
 		}
 		$this->plugin_name = 'card-oracle';
 
@@ -222,6 +223,10 @@ class Card_Oracle {
 		$this->loader->add_shortcode( 'card-oracle-daily', $plugin_public, 'display_card_oracle_card_of_day' );
 		$this->loader->add_shortcode( 'card-oracle-random', $plugin_public, 'display_card_oracle_random_card' );
 
+		// Add Ajax for sending emails
+		$this->loader->add_action( 'wp_ajax_send_reading_email', $plugin_public, 'card_oracle_send_reading_email' );
+		$this->loader->add_action( 'wp_ajax_nopriv_send_reading_email', $plugin_public, 'card_oracle_send_reading_email' );
+
 	}
 
 	/**
@@ -230,7 +235,9 @@ class Card_Oracle {
 	 * @since    0.4.4
 	 */
 	public function run() {
+
 		$this->loader->run();
+
 	}
 
 	/**
@@ -241,7 +248,9 @@ class Card_Oracle {
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
+
 		return $this->plugin_name;
+
 	}
 
 	/**
@@ -251,7 +260,9 @@ class Card_Oracle {
 	 * @return    Card_Oracle_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
+
 		return $this->loader;
+
 	}
 
 	/**
@@ -261,7 +272,9 @@ class Card_Oracle {
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {
+
 		return $this->version;
+
 	}
 	
 	/**

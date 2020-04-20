@@ -73,7 +73,8 @@ class Card_Oracle_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/card-oracle-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/card-oracle-public.css', 
+			array(), $this->version, 'all' );
 
 	}
 
@@ -95,8 +96,9 @@ class Card_Oracle_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/card-oracle-public.js', array( 'jquery' ), $this->version, false );
+		
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/card-oracle-public.js', 
+			array( 'jquery' ), $this->version, false );
 
 	}
 
@@ -107,15 +109,63 @@ class Card_Oracle_Public {
 	 * @return
 	 */
 	public function get_cards_for_reading( $reading_id ) {
-		global $wpdb;
 
-		$sql = "SELECT p1.ID FROM " . $wpdb->prefix . "posts p1 " . 
-			"INNER JOIN " . $wpdb->prefix . "postmeta m1 " . 
-			"ON ( p1.ID = m1.post_id ) " . 
-			"WHERE ( ( m1.meta_key = '_co_reading_id' AND m1.meta_value = '" .  $reading_id . 
-			"' ) ) AND p1.post_type = 'co_cards' AND p1.post_status = 'publish' ORDER BY p1.ID";
+		$args = array(
+			'fields'		=> 'ids',
+			'numberposts'	=> -1,
+			'post_type' 	=> 'co_cards',
+			'post_status'	=> 'publish',
+			'meta_query' 	=> array(
+								array(
+									'key' => '_co_reading_id',
+									'value' => $reading_id,
+								),
+			),
+		);
+		return get_posts( $args );
+		
+	}
 
-		return $wpdb->get_results( $sql, OBJECT );
+	
+	/**
+	 * Card Oracle sends an email with the reading via ajax
+	 * 
+	 * @since	0.4.7
+	 * @return
+	 */
+	public function card_oracle_send_reading_email() {
+		$body = '<style>' . wp_remote_retrieve_body( 
+			wp_remote_get( plugin_dir_url( __FILE__ ) . 'css/card-oracle-public.css' ) ) . 
+			'</style>';
+
+		if ( isset( $_POST['email'] ) ) {
+			//$site_title = get_bloginfo( 'name' );
+
+			$to = sanitize_email( $_POST['email'] );
+			$subject = get_option( 'email_subject', __( 'Your Reading', 'card-oracle' ) );
+
+			if ( get_option( 'from_email_name' ) ) {
+				$from_email_name = get_option( 'from_email_name' );
+			} else {
+				$from_email_name = get_bloginfo( 'name' );
+			}
+
+			if ( get_option( 'from_email' ) ) {
+				$from_email = '<' . get_option( 'from_email' ) . '>';
+			} else {
+				$from_email = '<' . get_bloginfo( 'admin_email' ) . '>';
+			}
+			
+			// Create the headers. Add From name and address if options are set
+			$headers = array( 'Content-Type: text/html; charset=UTF-8', 'From: ' . $from_email_name . ' ' . $from_email );
+			$body .= base64_decode( $_POST['emailcontent'] );
+
+			wp_mail( $to, $subject, $body, $headers );
+
+			wp_send_json_success( __( 'Your email has been sent. Make sure to check your spam folder.', 'readingsend' ) );
+		}
+
+		wp_die();
 	}
 
 	/**
@@ -126,6 +176,7 @@ class Card_Oracle_Public {
 	 */
 	public function display_card_oracle_card_of_day( $atts ) {
 
+		// If the reading id is not set return
 		if ( empty( $atts['id'] ) ) {
 			return;
 		} else {
@@ -134,7 +185,7 @@ class Card_Oracle_Public {
 
 		$card_ids = $this->get_cards_for_reading( $reading_id );
 		$index = date( 'z' ) % max( count( $card_ids ), 1 );
-		$card_of_day = get_post( $card_ids[$index]->ID );
+		$card_of_day = get_post( $card_ids[$index] );
 		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
 		$footer = get_post_meta( $reading_id, 'footer_text', true );
 
@@ -154,7 +205,7 @@ class Card_Oracle_Public {
 		$display_html .= '</div>';
 
 		return $display_html;
-	}
+	} // End display_card_oracle_card_of_day
 
 	/**
 	 * Card Oracle shortcode to display card reading
@@ -164,6 +215,7 @@ class Card_Oracle_Public {
 	 */
 	public function display_card_oracle_random_card( $atts ) {
 
+		// If the reading id is not set return
 		if ( empty( $atts['id'] ) ) {
 			return;
 		} else {
@@ -172,7 +224,7 @@ class Card_Oracle_Public {
 
 		$card_ids = $this->get_cards_for_reading( $reading_id );
 		$card_count = count( $card_ids ) - 1;
-		$card_of_day = get_post( $card_ids[rand( 0, $card_count )]->ID );
+		$card_of_day = get_post( $card_ids[rand( 0, $card_count )] );
 		$image = get_the_post_thumbnail_url( $card_of_day, 'medium' );
 		$footer = get_post_meta( $reading_id, 'footer_text', true );
 
@@ -195,7 +247,7 @@ class Card_Oracle_Public {
 		$display_html .= '</div>';
 
 		return $display_html;
-	}
+	} // End display_card_oracle_random_card
 
 	/**
 	 * Card Oracle shortcode to display card reading
@@ -204,37 +256,45 @@ class Card_Oracle_Public {
 	 * @return
 	 */
 	public function display_card_oracle_set( $atts ) {
-		global $wpdb;
+
 		$page_display = '';
 
+		// If the id is not set return
 		if ( empty( $atts['id'] ) ) {
 			return;
 		} else {
 			$reading_id = $atts['id'];
 		}
 
-		$sql = "SELECT p1.post_title, p1.ID FROM " . $wpdb->posts . " p1 " .
-					"INNER JOIN " . $wpdb->prefix . "postmeta mt1" . " " . 
-					"ON p1.id = mt1.post_id " .
-					"INNER JOIN " . $wpdb->prefix . "postmeta mt2" . " " . 
-					"ON p1.id = mt2.post_id " .
-					"WHERE mt1.meta_key = '_co_reading_id' " . 
-					"AND mt1.meta_value = '" . $reading_id . "' " .
-					"AND mt2.meta_key = '_co_card_order' " .
-					"AND p1.post_type = 'co_positions' " .
-					"AND post_status = 'publish' " . 
-					"ORDER BY mt2.meta_value";
-			
 		// The $positions is an array of all the positions in a reading, it consists of
-		// the position title and position ID
-		$positions = $wpdb->get_results( $sql, OBJECT );
+		// the position title and position ID		
+		$args = array(
+			'numberposts'	=> -1,
+			'order' => 'ASC',
+			'orderby' => 'card_order_clause',
+			'post_type' 	=> 'co_positions',
+			'post_status'	=> 'publish',
+			'meta_query' 	=> array(
+								'reading_clause' => array(
+									'key' => '_co_reading_id',
+									'value' => $reading_id,
+								),
+								'card_order_clause' => array(
+									'key' => '_co_card_order',
+									'type' => 'NUMBERIC',
+								),
+			),
+		);
+		$positions = get_posts( $args );
+
 		// Get the number of positions for this reading type.
-		$positions_count = $wpdb->num_rows;
+		$positions_count = count( $positions );
 
 		// Get the question text
 		$question_text = get_post_meta( $reading_id, 'question_text', true );
 
-		if ( !isset( $_POST['Submit'] ) ):
+		// Initial screen show question (if required) and backs of cards.
+		if ( ! isset( $_POST['Submit'] ) && ! isset( $_POST['sendmail'] ) ) {
 			// Get the image for the back of the card
 			$card_back_url = get_the_post_thumbnail_url( $reading_id, 'medium' );
 			if ( empty( $card_back_url ) ) {
@@ -270,55 +330,93 @@ class Card_Oracle_Public {
 			</form>
 			<h2>' . $select_cards . '</h2>';
 
-			// Display the back of the cards
+			// Display the back of the cards.
 			for ( $i = 0; $i < $card_count; $i++) {
-				$page_display .= '<button type="button" value="'. $card_ids[$i]->ID .
-					'" id="id' . $card_ids[$i]->ID . '" onclick="this.disabled = true;" 
+				$page_display .= '<button type="button" value="'. $card_ids[$i] .
+					'" id="id' . $card_ids[$i] . '" onclick="this.disabled = true;" 
 					class="btn btn-default clicked"><img class="img-btn" src="' . $card_back_url . '">
 					</button>';
 			}
 
 			$page_display .= '</div>';
-		endif;
+		} // ! isset( $_POST['Submit'] ) 
 
-		if ( isset( $_POST['Submit'] ) )
-		{
+		// Post submitted display cards and descriptions.
+		if ( isset( $_POST['Submit'] ) ) {
+			
 			$cards = explode( ',', $_POST['picks'] );
-			$page_display .= '<div class="">';
+			$description_content = '';
+			$email_body = '<table><thead>';
+			$form_text = get_option( 'email_text', __( 'Email this Reading to:', 'card-oracle' ) );
+			$page_display = '<div class="">';
+
 
 			if ( ! empty( $_POST["question"] ) ) {
 				$page_display .= '<h2>' . $question_text . '</h2><h3>' . sanitize_text_field( $_POST["question"] ) . '</h3>';
+				$email_body .= '<tr><th><h1>' . sanitize_text_field( $_POST["question"] ) . '</h1></th></tr>';
 			}
 
-			for ( $i = 0; $i < count( $cards ); $i++ ) {
-		
-				$sql = "SELECT m1.post_id FROM " . $wpdb->prefix . "postmeta m1 " .
-				"INNER JOIN " . $wpdb->prefix . "posts p1 " .
-				"ON p1.ID = m1.post_id AND p1.post_status = 'publish' " .
-				"INNER JOIN " . $wpdb->prefix . "postmeta m2 " . 
-				"ON m1.post_id = m2.post_id " .
-				"AND m2.meta_key = '_co_card_id' " .
-				"AND m2.meta_value = " . $cards[$i] . " " .
-				"WHERE m1.meta_key = '_co_position_id' " . 
-				"AND m1.meta_value LIKE '%" . serialize( $positions[$i]->ID ) . "%';";
+			$email_body .= '</thead><tbody>';
 
-				$description_id = $wpdb->get_results( $sql, OBJECT );
+			for ( $i = 0; $i < count( $cards ); $i++ ) {
+				$args = array(
+					'post_type' 	=> 'co_descriptions',
+					'post_status'	=> 'publish',
+					'meta_query' 	=> array(
+										array(
+											'key' => '_co_card_id',
+											'value' => $cards[$i],
+										),
+										array(
+											'key' => '_co_position_id',
+											'value' => $positions[$i]->ID,
+										),
+					),
+				);
+				$description_id = get_posts( $args );
+				
+				$email_body .= '<tr><td colspan="2"><center><h2>' . $positions[$i]->post_title . '</h2></center></td></tr>';
+
 				if ( $description_id ) {
-					$description = get_post( $description_id[0]->post_id );
+					$description_content = apply_filters('the_content', $description_id[0]->post_content );
 					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3>' .
-						apply_filters('the_content', $description->post_content ) . '</cotd-main>';
+						$description_content . '</cotd-main>';
 				} else {
 					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3></cotd-main>';
 				}
 
+				$image = get_the_post_thumbnail_url( $cards[$i], 'medium' );
+
 				$page_display .= '<div class="cotd-wrapper">
 						<cotd-header>' . $positions[$i]->post_title . '</cotd-header>
-						<cotd-aside><img src="' . get_the_post_thumbnail_url( $cards[$i], 'medium' ) . '"></cotd-aside>' . 
+						<cotd-aside><img src="' . $image . '"></cotd-aside>' . 
 						$main_text . 
 					 '</div>';
+				
+				// Add the Image, Card title, and the Position description to the email
+				$email_body .= '<tr><td width="200" rowspan="2" valign="top"><img src="' . $image . 
+					'" /></td><td><h3>' . get_the_title( $cards[$i] ) . 
+					'</h3></td></tr><tr><td style="vertical-align:top">' . 
+					apply_filters('the_content', $description_content ) . '</td></tr><tr height="20"></tr>';
+				
 			}
 
 			$page_display .= '</div>';
+			$email_body .= '</tbody></table>';
+
+			// Add email button to page
+			if ( get_option( 'allow_email' ) ) {
+				$page_display .= '<div class="co__email">';
+				$page_display .= '<p>' . $form_text . '</p>';
+				$page_display .= '<input type="text" name="emailaddress" placeholder="Email Address" id="emailaddress" />';
+				$page_display .= '<input type="submit" name="reading-send" value="Send" id="reading-send" />';
+				$page_display .= '<input type="hidden" id="ajax_url" name="ajax_url" value="' . admin_url('admin-ajax.php') . '">';
+				$page_display .= '<input type="hidden" id="emailcontent" name="emailcontent" value="' . base64_encode( $email_body ) . '">';
+				$page_display .= '<p class="card-oracle-response"></p>';
+				$page_display .= '</div>';
+			}
+			
+
 		} // End POST submit
 
 		return $page_display;

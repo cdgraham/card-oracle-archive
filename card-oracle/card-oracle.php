@@ -16,7 +16,7 @@
  * Plugin Name:       Card Oracle
  * Plugin URI:        https://chillichalli.com/card-oracle
  * Description:       This plugin lets you create tarot and oracle readings using your own cards, spreads and interpretations.
- * Version:           0.4.8
+ * Version:           0.4.10
  * Author:            Christopher Graham
  * Author URI:        https://cdgraham.com
  * License:           GPL-2.0+
@@ -36,7 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 if ( ! defined( 'CARD_ORACLE_VERSION' ) ) {
-	define( 'CARD_ORACLE_VERSION', '0.4.8' );
+	define( 'CARD_ORACLE_VERSION', '0.4.10' );
 }
 
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -46,8 +46,10 @@ define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  * This action is documented in includes/class-card-oracle-activator.php
  */
 function activate_card_oracle() {
+
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-card-oracle-activator.php';
 	Card_Oracle_Activator::activate();
+
 }
 
 /**
@@ -55,8 +57,10 @@ function activate_card_oracle() {
  * This action is documented in includes/class-card-oracle-deactivator.php
  */
 function deactivate_card_oracle() {
+
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-card-oracle-deactivator.php';
 	Card_Oracle_Deactivator::deactivate();
+
 }
 
 register_activation_hook( __FILE__, 'activate_card_oracle' );
@@ -83,4 +87,5 @@ function run_card_oracle() {
 	$plugin->run();
 
 }
+
 run_card_oracle();

@@ -25,8 +25,12 @@
     <?php $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard'; ?>
 
     <h2 class="nav-tab-wrapper">
-        <a href="?page=card-oracle-admin-menu&tab=dashboard" class="nav-tab <?php echo $active_tab == 'dashboard' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
-        <a href="?page=card-oracle-admin-menu&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
+        <a href="?page=card-oracle-admin-menu&tab=dashboard" class="nav-tab 
+            <?php echo $active_tab == 'dashboard' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
+            <a href="?page=card-oracle-admin-menu&tab=general" class="nav-tab 
+                <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
+            <a href="?page=card-oracle-admin-menu&tab=validation" class="nav-tab 
+                <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">Validation</a>
     </h2>
     <?php if ( $active_tab === 'dashboard' ) { ?>
     <div id="co_dashboard" class="co__dashboard-content">
@@ -145,8 +149,8 @@
 
             </div> <!-- Statistics for each Reading -->
     </div> <!-- co_dashboard -->
-    <?php } else { ?>
-        <div id="co_settings wrap" class="settingscontent">
+    <?php } elseif ( $active_tab === 'general' ) { ?>
+        <div id="co_settings wrap" class="wrap settingscontent">
             
             <form method="post" action="<?php echo esc_url( add_query_arg( 'tab', $active_tab, admin_url( 'options.php' ) ) ); ?>">
                 <?php
@@ -156,7 +160,17 @@
                 ?>
             </form>
 
-        </div> <!-- co_settings -->
+        </div> <!-- active_tab general -->
+    <?php } elseif ( $active_tab === 'validation' ) { ?>
+        <div id="co_settings wrap" class="wrap settingscontent">
+            
+            
+
+        </div> <!-- active_tab validation -->
+    <?php } else { ?>
+        <!-- Unknown active_tab -->
     <?php } ?>
+
+
 
 </div> <!-- the-admin-display -->
