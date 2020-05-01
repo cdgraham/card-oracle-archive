@@ -61,20 +61,18 @@
 			
 			e.preventDefault(); // if the clicked element is a link
 				
-			$.post($("#ajax_url").val(), {
+			$.post( $( "#ajax_url" ).val(), {
 				action: 'send_reading_email',
 				email: $( "#emailaddress" ).val(),
 				emailcontent: $( "#emailcontent" ).val(),
 			}, function( response ) {
 				// handle a successful response
-				
-				$('.card-oracle-response').html( response.data );
-
+				$( '.card-oracle-response' ).html( response.data );
 				console.log( response )
 			});
 
 			// display success message
-			$('.card-oracle-response').html( response.data );
+			$( '.card-oracle-response' ).html( response.data );
 		});
 		
 	} )

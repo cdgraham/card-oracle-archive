@@ -20,7 +20,7 @@
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
  * @link       https://cdgraham.com
- * @since      0.4.4
+ * @since      0.5.0
  *
  * @package    Card_Oracle
  */

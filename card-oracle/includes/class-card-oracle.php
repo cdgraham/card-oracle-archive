@@ -7,7 +7,7 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://cdgraham.com
- * @since      0.4.4
+ * @since      0.5.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
@@ -22,7 +22,7 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      0.4.4
+ * @since      0.5.0
  * @package    Card_Oracle
  * @subpackage Card_Oracle/includes
  * @author     Christopher Graham <chris@chillichalli.com>
@@ -33,7 +33,7 @@ class Card_Oracle {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   protected
 	 * @var      Card_Oracle_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
@@ -42,7 +42,7 @@ class Card_Oracle {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
@@ -51,7 +51,7 @@ class Card_Oracle {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
@@ -64,14 +64,14 @@ class Card_Oracle {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    0.4.1
+	 * @since    0.5.0
 	 */
 	public function __construct() {
 
 		if ( defined( 'CARD_ORACLE_VERSION' ) ) {
 			$this->version = CARD_ORACLE_VERSION;
 		} else {
-			$this->version = '0.4.10';
+			$this->version = '0.5.0';
 		}
 		$this->plugin_name = 'card-oracle';
 
@@ -98,7 +98,7 @@ class Card_Oracle {
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   private
 	 */
 	private function load_dependencies() {
@@ -141,7 +141,7 @@ class Card_Oracle {
 	 * Uses the Card_Oracle_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   private
 	 */
 	private function set_locale() {
@@ -156,7 +156,7 @@ class Card_Oracle {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    0.4.7
+	 * @since    0.5.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -196,9 +196,6 @@ class Card_Oracle {
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_meta_boxes_for_descriptions_cpt' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_card_oracle_meta_data' );
 		$this->loader->add_action( 'do_meta_boxes', $plugin_admin, 'cpt_image_box' );
-
-		// Add Quickedit
-		$this->loader->add_action( 'quick_edit_custom_box', $plugin_admin, 'display_card_oracle_quick_edit' );
 		
 		// Limit number of Readings and Positions
 		$this->loader->add_action( 'wp_insert_post', $plugin_admin, 'limit_positions_cpt_count' );
@@ -208,7 +205,7 @@ class Card_Oracle {
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
 	 * @access   private
 	 */
 	private function define_public_hooks() {
@@ -232,7 +229,8 @@ class Card_Oracle {
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
-	 * @since    0.4.4
+	 * @since    0.5.0
+	 * @return	 void
 	 */
 	public function run() {
 
@@ -244,7 +242,7 @@ class Card_Oracle {
 	 * The name of the plugin used to uniquely identify it within the context of
 	 * WordPress and to define internationalization functionality.
 	 *
-	 * @since     0.4.4
+	 * @since     0.5.0
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
@@ -256,7 +254,7 @@ class Card_Oracle {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @since     0.4.4
+	 * @since     0.5.0
 	 * @return    Card_Oracle_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
@@ -268,7 +266,7 @@ class Card_Oracle {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     0.4.4
+	 * @since     0.5.0
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {
@@ -280,8 +278,8 @@ class Card_Oracle {
 	/**
 	 * Update anything after the version number of the plugin changes.
 	 *
-	 * @since     0.4.4
-	 * @return    
+	 * @since     0.5.0
+	 * @return    void
 	 */
 	public function card_oracle_check_version() {
 
