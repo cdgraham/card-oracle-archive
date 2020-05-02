@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://cdgraham.com
- * @since             0.4.4
+ * @since             0.5.0
  * @package           Card_Oracle
  *
  * @wordpress-plugin
  * Plugin Name:       Card Oracle
  * Plugin URI:        https://chillichalli.com/card-oracle
  * Description:       This plugin lets you create tarot and oracle readings using your own cards, spreads and interpretations.
- * Version:           0.4.10
+ * Version:           0.5.0
  * Author:            Christopher Graham
  * Author URI:        https://cdgraham.com
  * License:           GPL-2.0+
@@ -32,11 +32,11 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Currently plugin version.
- * Start at version 0.4.4 and use SemVer - https://semver.org
+ * Start at version 0.5.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
 if ( ! defined( 'CARD_ORACLE_VERSION' ) ) {
-	define( 'CARD_ORACLE_VERSION', '0.4.10' );
+	define( 'CARD_ORACLE_VERSION', '0.5.0' );
 }
 
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -79,7 +79,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-card-oracle.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    0.4.4
+ * @since    0.5.0
  */
 function run_card_oracle() {
 

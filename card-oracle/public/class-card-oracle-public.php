@@ -4,7 +4,7 @@
  * The public-facing functionality of the plugin.
  *
  * @link       https://cdgraham.com
- * @since      0.4.5
+ * @since      0.5.0
  *
  * @package    Card_Oracle
  * @subpackage Card_Oracle/public
@@ -25,7 +25,7 @@ class Card_Oracle_Public {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    0.4.5
+	 * @since    0.5.0
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -34,7 +34,7 @@ class Card_Oracle_Public {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    0.4.5
+	 * @since    0.5.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -43,7 +43,7 @@ class Card_Oracle_Public {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.4.5
+	 * @since    0.5.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -57,7 +57,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
-	 * @since    0.4.5
+	 * @since    0.5.0
 	 */
 	public function enqueue_styles() {
 
@@ -81,7 +81,7 @@ class Card_Oracle_Public {
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
-	 * @since    0.4.5
+	 * @since    0.5.0
 	 */
 	public function enqueue_scripts() {
 
@@ -105,8 +105,8 @@ class Card_Oracle_Public {
 	/**
 	 * Get all the published cards for a specific reading
 	 * 
-	 * @since	0.4.5
-	 * @return
+	 * @since	0.5.0
+	 * @return	void
 	 */
 	public function get_cards_for_reading( $reading_id ) {
 
@@ -130,8 +130,8 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle sends an email with the reading via ajax
 	 * 
-	 * @since	0.4.7
-	 * @return
+	 * @since	0.5.0
+	 * @return	void
 	 */
 	public function card_oracle_send_reading_email() {
 		$body = '<style>' . wp_remote_retrieve_body( 
@@ -162,7 +162,8 @@ class Card_Oracle_Public {
 
 			wp_mail( $to, $subject, $body, $headers );
 
-			wp_send_json_success( __( 'Your email has been sent. Make sure to check your spam folder.', 'readingsend' ) );
+			$email_success = get_option('email_success', __( 'Your email has been sent. Please make sure to check your spam folder.', 'card-oracle' ) );
+			wp_send_json_success( $email_success, 'readingsend' );
 		}
 
 		wp_die();
@@ -171,8 +172,8 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.7
-	 * @return
+	 * @since	0.5.0
+	 * @return	void
 	 */
 	public function display_card_oracle_card_of_day( $atts ) {
 
@@ -210,8 +211,8 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.5
-	 * @return
+	 * @since	0.5.0
+	 * @return	void
 	 */
 	public function display_card_oracle_random_card( $atts ) {
 
@@ -252,8 +253,8 @@ class Card_Oracle_Public {
 	/**
 	 * Card Oracle shortcode to display card reading
 	 * 
-	 * @since	0.4.6
-	 * @return
+	 * @since	0.5.0
+	 * @return	void
 	 */
 	public function display_card_oracle_set( $atts ) {
 
@@ -311,8 +312,8 @@ class Card_Oracle_Public {
 			shuffle( $card_ids );
 
 			// Display the form
-			$page_display = '<div class="data" data-positions="' . $positions_count .'">
-				<form name="form2" action="" method="post">';
+			$page_display = '<div class="data" data-positions="' . $positions_count .
+				'"><form name="form2" action="" method="post">';
 
 			if ( get_post_meta( $reading_id, 'display_question', true ) === "yes" ) {
 				$page_display .= '<input name="question" id="question" type="text" size="40" placeholder="' . 
@@ -332,10 +333,9 @@ class Card_Oracle_Public {
 
 			// Display the back of the cards.
 			for ( $i = 0; $i < $card_count; $i++) {
-				$page_display .= '<button type="button" value="'. $card_ids[$i] .
-					'" id="id' . $card_ids[$i] . '" onclick="this.disabled = true;" 
-					class="btn btn-default clicked"><img class="img-btn" src="' . $card_back_url . '">
-					</button>';
+				$page_display .= '<button type="button" value="'. $card_ids[$i] . '" id="id' . $card_ids[$i] . 
+					'" onclick="this.disabled = true;" class="btn btn-default clicked"><img class="card-oracle-img-btn" src="' . 
+					$card_back_url . '"></button>';
 			}
 
 			$page_display .= '</div>';
@@ -346,9 +346,9 @@ class Card_Oracle_Public {
 			
 			$cards = explode( ',', $_POST['picks'] );
 			$description_content = '';
-			$email_body = '<table><thead>';
+			$email_body = '<table class="card-oracle-table"><thead>';
 			$form_text = get_option( 'email_text', __( 'Email this Reading to:', 'card-oracle' ) );
-			$page_display = '<div class="">';
+			$page_display = '<div class="wrap">';
 
 
 			if ( ! empty( $_POST["question"] ) ) {
@@ -385,17 +385,14 @@ class Card_Oracle_Public {
 					$main_text = '<cotd-main><h3>' . get_the_title( $cards[$i] ) . '</h3></cotd-main>';
 				}
 
-				$image = get_the_post_thumbnail_url( $cards[$i], 'medium' );
-
-				$page_display .= '<div class="cotd-wrapper">
-						<cotd-header>' . $positions[$i]->post_title . '</cotd-header>
-						<cotd-aside><img src="' . $image . '"></cotd-aside>' . 
-						$main_text . 
-					 '</div>';
+				$image = get_the_post_thumbnail( $cards[$i] );
+				
+				$page_display .= '<div class="cotd-wrapper"><cotd-header>' . $positions[$i]->post_title . 
+					'</cotd-header><cotd-aside>' . $image . '</cotd-aside>' . $main_text . '</div>';
 				
 				// Add the Image, Card title, and the Position description to the email
-				$email_body .= '<tr><td width="200" rowspan="2" valign="top"><img src="' . $image . 
-					'" /></td><td><h3>' . get_the_title( $cards[$i] ) . 
+				$email_body .= '<tr><td width="200" rowspan="2" valign="top">' . $image . 
+					'</td><td><h3>' . get_the_title( $cards[$i] ) . 
 					'</h3></td></tr><tr><td style="vertical-align:top">' . 
 					apply_filters('the_content', $description_content ) . '</td></tr><tr height="20"></tr>';
 				
@@ -404,9 +401,9 @@ class Card_Oracle_Public {
 			$page_display .= '</div>';
 			$email_body .= '</tbody></table>';
 
-			// Add email button to page
+			// Add email button to page if option enabled
 			if ( get_option( 'allow_email' ) ) {
-				$page_display .= '<div class="co__email">';
+				$page_display .= '<div class="card-oracle-email">';
 				$page_display .= '<p>' . $form_text . '</p>';
 				$page_display .= '<input type="text" name="emailaddress" placeholder="Email Address" id="emailaddress" />';
 				$page_display .= '<input type="submit" name="reading-send" value="Send" id="reading-send" />';
