@@ -25,8 +25,15 @@ plugins screen directly.
 3. Use the Card Oracle->Dashboard General tab to configure the plugin
 
 == Frequently Asked Questions ==
+= What is the best way to build a reading =
+1. Start by creating a Reading.
+2. Create all the card Positions for the Reading.
+3. Create all the Cards.
+4. Create a Description for each Card in all the different Positions.
 
 == Screenshots ==
+1. Card Oracle Dashboard - Dashboard showing statistics for Card Oracle. Giving you the totals of all Readings, Positions, 
+Cards, and Descriptions. As well, as breaking down the individual Readings.
 
 == Changelog ==
 = 0.5 =

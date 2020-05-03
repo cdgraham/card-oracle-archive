@@ -299,7 +299,7 @@ class Card_Oracle_Public {
 			// Get the image for the back of the card
 			$card_back_url = get_the_post_thumbnail_url( $reading_id, 'medium' );
 			if ( empty( $card_back_url ) ) {
-				$card_back_url = PLUGIN_URL . 'assets/images/cardback.png';
+				$card_back_url = CARD_ORACLE_PLUGIN_URL . 'assets/images/cardback.png';
 			}
 
 			// Get all the published cards for this reading
@@ -317,7 +317,7 @@ class Card_Oracle_Public {
 
 			if ( get_post_meta( $reading_id, 'display_question', true ) === "yes" ) {
 				$page_display .= '<input name="question" id="question" type="text" size="40" placeholder="' . 
-					$question_text . '" required/>';
+					esc_attr( $question_text ) . '" required/>';
 			}
 
 			/* translators: %d is a number */
@@ -405,7 +405,8 @@ class Card_Oracle_Public {
 			if ( get_option( 'allow_email' ) ) {
 				$page_display .= '<div class="card-oracle-email">';
 				$page_display .= '<p>' . $form_text . '</p>';
-				$page_display .= '<input type="text" name="emailaddress" placeholder="Email Address" id="emailaddress" />';
+				$page_display .= '<input type="text" name="emailaddress" placeholder="' .
+					esc_attr__( 'Email Address', 'card-oracle' ) . '" id="emailaddress" />';
 				$page_display .= '<input type="submit" name="reading-send" value="Send" id="reading-send" />';
 				$page_display .= '<input type="hidden" id="ajax_url" name="ajax_url" value="' . admin_url('admin-ajax.php') . '">';
 				$page_display .= '<input type="hidden" id="emailcontent" name="emailcontent" value="' . base64_encode( $email_body ) . '">';

@@ -648,7 +648,7 @@ class Card_Oracle_Admin {
 			case 'co_shortcode':
 				echo '<input class="card-oracle-shortcode" id="copy'. $post->ID . '" value="[card-oracle id=&quot;' . $post->ID . 
 					'&quot;]"><button class="copyAction copy-action-btn button" value="[card-oracle id=&quot;' . $post->ID . 
-					'&quot;]"> <img src="' . PLUGIN_URL . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
+					'&quot;]"> <img src="' . CARD_ORACLE_PLUGIN_URL . 'assets/images/clippy.svg" alt="Copy to clipboard"></button>';
 				break;
 
 			case 'description_reading':
@@ -1242,7 +1242,7 @@ class Card_Oracle_Admin {
 				if ( ! empty( $post_readings ) ) {
 					foreach ( $post_readings as $reading ) {
 						if ( ! in_array( $reading, $current_readings ) ) {
-							add_post_meta( $post->ID, '_co_reading_id', $reading );
+							add_post_meta( $post->ID, '_co_reading_id', sanitize_text_field( $reading ) );
 						}
 					}
 				}
@@ -1252,7 +1252,7 @@ class Card_Oracle_Admin {
 				if ( empty( $_POST['co_reading_dropdown'] ) ) {
 					delete_post_meta( $post->ID, '_co_reading_id' );
 				} else {
-					update_post_meta( $post->ID, '_co_reading_id', $_POST['co_reading_dropdown'] );
+					update_post_meta( $post->ID, '_co_reading_id', sanitize_text_field( $_POST['co_reading_dropdown'] ) );
 				}
 			}
 		} else {
@@ -1261,42 +1261,42 @@ class Card_Oracle_Admin {
 		
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['display_question'] ) ) {
-			update_post_meta( $post->ID, 'display_question', $_POST['display_question'] );
+			update_post_meta( $post->ID, 'display_question', sanitize_text_field( $_POST['display_question'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'display_question' );
 		}
 
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['multiple_positions'] ) ) {
-			update_post_meta( $post->ID, 'multiple_positions', $_POST['multiple_positions'] );
+			update_post_meta( $post->ID, 'multiple_positions', sanitize_text_field( $_POST['multiple_positions'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'multiple_positions' );
 		}
 
 		// If the Card Reading Footer text has been selected update it.
 		if ( isset ( $_POST['footer_text'] ) ) {
-			update_post_meta( $post->ID, 'footer_text', $_POST['footer_text'] );
+			update_post_meta( $post->ID, 'footer_text', wp_kses_post( $_POST['footer_text'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'footer_text' );
 		}
 
 		// If the Card Reading Display has been selected update it.
 		if ( isset ( $_POST['question_text'] ) ) {
-			update_post_meta( $post->ID, 'question_text', $_POST['question_text'] );
+			update_post_meta( $post->ID, 'question_text', sanitize_text_field( $_POST['question_text'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'question_text' );
 		}
 
 		// If the Card Position has been selected update it.
 		if ( isset( $_POST['co_card_position'] ) ) {
-			update_post_meta( $post->ID, 'co_card_position', wp_kses_post( $_POST['co_card_position'] ) );
+			update_post_meta( $post->ID, 'co_card_position', sanitize_text_field( $_POST['co_card_position'] ) );
 		} else {
 			delete_post_meta( $post->ID, 'co_card_position' );
 		}
 
 		// If the Card has been selected update it.
 		if ( isset( $_POST['_co_card_id'] ) ) {
-			update_post_meta( $post->ID, '_co_card_id', wp_kses_post( $_POST['_co_card_id'] ) );
+			update_post_meta( $post->ID, '_co_card_id', sanitize_text_field( $_POST['_co_card_id'] ) );
 		} else {
 			delete_post_meta( $post->ID, '_co_card_id' );
 		}
@@ -1315,7 +1315,7 @@ class Card_Oracle_Admin {
 			// If a current POST position is not in the current array then add it.
 			foreach ( $_POST['_co_position_id'] as $position ) {
 				if ( ! in_array( $position, $current_positions ) ) {
-					add_post_meta( $post->ID, '_co_position_id', $position );
+					add_post_meta( $post->ID, '_co_position_id', sanitize_text_field( $position ) );
 				}
 			}
 		} else {
@@ -1324,7 +1324,7 @@ class Card_Oracle_Admin {
 
 		// If the Card Position has been selected update it.
 		if ( isset( $_POST['_co_card_order'] ) ) {
-			update_post_meta( $post->ID, '_co_card_order', wp_kses_post( $_POST['_co_card_order'] ) );
+			update_post_meta( $post->ID, '_co_card_order', sanitize_text_field( $_POST['_co_card_order'] ) );
 		} else {
 			delete_post_meta( $post->ID, '_co_card_order' );
 		}

@@ -124,7 +124,7 @@
                                     <button class="copyAction copy-action-btn button"
                                         title="<?php esc_html_e( 'Click to copy shortcode', 'card-oracle' ); ?>"
                                         value="[card-oracle id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
-                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
+                                        <img src="<?php echo CARD_ORACLE_PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
                                     </button>
                                 </div>
                                 <p class="card-oracle-shortcode-header"><?php esc_html_e( 'Daily Card Shortcode', 'card-oracle' ); ?></p>
@@ -134,7 +134,7 @@
                                     <button class="copyAction copy-action-btn button"
                                         title="<?php esc_html_e( 'Click to copy shortcode', 'card-oracle' ); ?>"
                                         value="[card-oracle-daily id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
-                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
+                                        <img src="<?php echo CARD_ORACLE_PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
                                     </button>
                                 </div>
                                 <p class="card-oracle-shortcode-header"><?php esc_html_e( 'Random Card Shortcode', 'card-oracle' ); ?></p>
@@ -144,7 +144,7 @@
                                     <button class="copyAction copy-action-btn button"
                                         title="<?php esc_html_e( 'Click to copy shortcode', 'card-oracle' ); ?>"
                                         value="[card-oracle-random id=&quot;<?php echo $readings[$i]->ID;?>&quot;]">
-                                        <img src="<?php echo PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
+                                        <img src="<?php echo CARD_ORACLE_PLUGIN_URL ?>assets/images/clippy.svg" alt="<?php echo $clippy_alt ?>">
                                     </button>
                                 </div>
                             </div>

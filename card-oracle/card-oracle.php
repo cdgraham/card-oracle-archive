@@ -39,7 +39,7 @@ if ( ! defined( 'CARD_ORACLE_VERSION' ) ) {
 	define( 'CARD_ORACLE_VERSION', '0.5.0' );
 }
 
-define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'CARD_ORACLE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
