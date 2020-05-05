@@ -1,3 +1,5 @@
 .vscode/sftp.json
 *.zip
 Documents/
+svn/
+wp-deploy/
