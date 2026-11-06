@@ -1,0 +1,40 @@
+# Forgejo CI for card-oracle-archive, the check master requires: named CI with job id test so
+# "CI / test (pull_request)" matches; keep both names stable.
+# card-oracle-archive had no CI on GitHub, so this is new: syntax of every
+# tracked PHP and JS file (the plugin lives under git/; no composer.json or
+# test suite). Its default branch stays master: renaming it would delete
+# GitHub's master through the mirror and break links to it.
+# Runs on runner-agent in a Debian bookworm LXC job container as root: tools
+# from apt (PHP 8.2); Node is the job image's (v24).
+name: CI
+'on':
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: agent
+    timeout-minutes: 15
+    steps:
+      - name: Tools
+        run: apt-get update -qq && apt-get install -y -qq --no-install-recommends git ca-certificates php-cli >/dev/null
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: PHP syntax (php -l, every tracked .php)
+        run: |
+          git ls-files -z -- '*.php' | xargs -0 -r -n1 php -d display_errors=stderr -l >/dev/null
+          echo "php -l: $(git ls-files -- '*.php' | wc -l) files, no syntax errors"
+      - name: JavaScript syntax (node --check, every tracked .js)
+        run: |
+          git ls-files -z -- '*.js' | xargs -0 -r -n1 node --check
+          echo "node --check: $(git ls-files -- '*.js' | wc -l) files OK"
